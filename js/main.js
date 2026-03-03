@@ -1,471 +1,221 @@
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+/* ============================================================
+   DULE ABERA PORTFOLIO — main.js
+   Clean, bug-free JavaScript with no CSS conflicts
+   ============================================================ */
+
+'use strict';
+
+// ── LOADING SCREEN ──────────────────────────────────────────
+window.addEventListener('load', () => {
+    const screen = document.getElementById('loadingScreen');
+    if (screen) {
+        setTimeout(() => screen.classList.add('hidden'), 600);
+    }
+});
+
+// ── THEME TOGGLE ────────────────────────────────────────────
+(function initTheme() {
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const applyTheme = (dark) => {
+        html.setAttribute('data-theme', dark ? 'dark' : 'light');
+        if (icon) {
+            icon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
         }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+    };
+
+    // Initialise from storage or system preference
+    const isDark = stored ? stored === 'dark' : prefersDark;
+    applyTheme(isDark);
+
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            const currentlyDark = html.getAttribute('data-theme') === 'dark';
+            applyTheme(!currentlyDark);
+        });
+    }
+})();
+
+// ── NAVBAR — SCROLL & ACTIVE LINK ───────────────────────────
+(function initNavbar() {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    // Scroll: add .scrolled class (CSS handles the visual change — no inline style)
+    const onScroll = () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // run once on load
+
+    // Active nav link via IntersectionObserver
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+            }
+        });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => sectionObserver.observe(s));
+})();
+
+// ── SMOOTH SCROLL ────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const navH = document.querySelector('.navbar')?.offsetHeight ?? 64;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH;
+        window.scrollTo({ top, behavior: 'smooth' });
     });
 });
 
-// Navbar background change on scroll
-window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (window.scrollY > 50) {
-            navbar.classList.add('navbar-scrolled');
-        } else {
-            navbar.classList.remove('navbar-scrolled');
-        }
-    }
-});
+// ── MOBILE HAMBURGER ─────────────────────────────────────────
+(function initMobileNav() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    if (!hamburger || !mobileNav) return;
 
-// Settings Management
-class PortfolioSettings {
-    constructor() {
-        this.defaultSettings = {
-            theme: 'light',
-            accent: 'blue',
-            viewMode: 'desktop',
-            reducedMotion: false,
-            highContrast: false,
-            projectsPerPage: 9,
-            showTechBadges: true,
-            showProjectStats: true,
-            autoPlayVideos: false,
-            imageQuality: 'medium',
-            lazyLoading: true,
-            preloadImages: false,
-            language: 'en',
-            dateFormat: 'MM/DD/YYYY',
-            analytics: true,
-            cookies: true,
-            tracking: false
-        };
-        
-        this.settings = this.loadSettings();
-        this.init();
-    }
-    
-    init() {
-        this.applySettings();
-        this.bindEvents();
-        this.updateUI();
-        this.detectSystemPreferences();
-    }
-    
-    loadSettings() {
-        try {
-            const saved = localStorage.getItem('portfolioSettings');
-            return saved ? { ...this.defaultSettings, ...JSON.parse(saved) } : this.defaultSettings;
-        } catch (error) {
-            console.warn('Failed to load settings:', error);
-            return this.defaultSettings;
+    const toggle = (open) => {
+        hamburger.classList.toggle('open', open);
+        mobileNav.classList.toggle('open', open);
+        hamburger.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    hamburger.addEventListener('click', () => {
+        toggle(!hamburger.classList.contains('open'));
+    });
+
+    // Close when a link is clicked
+    mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => toggle(false));
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggle(false);
+    });
+})();
+
+// ── STAGGERED FADE-IN ────────────────────────────────────────
+(function initFadeIn() {
+    const fadeEls = document.querySelectorAll('.fade-in');
+    if (!fadeEls.length) return;
+
+    // Assign --i index per parent group for sequential stagger
+    fadeEls.forEach((el) => {
+        // If --i already set via inline style (HTML), respect it.
+        // Otherwise, assign based on DOM order within parent.
+        if (!el.style.getPropertyValue('--i')) {
+            const siblings = el.parentElement
+                ? [...el.parentElement.querySelectorAll('.fade-in')]
+                : [];
+            el.style.setProperty('--i', siblings.indexOf(el));
         }
-    }
-    
-    saveSettings() {
-        try {
-            localStorage.setItem('portfolioSettings', JSON.stringify(this.settings));
-            this.showNotification('Settings saved successfully!', 'success');
-        } catch (error) {
-            console.error('Failed to save settings:', error);
-            this.showNotification('Failed to save settings', 'error');
-        }
-    }
-    
-    applySettings() {
-        const html = document.documentElement;
-        
-        // Apply theme
-        html.setAttribute('data-theme', this.settings.theme === 'auto' ? this.getSystemTheme() : this.settings.theme);
-        html.setAttribute('data-accent', this.settings.accent);
-        html.setAttribute('data-view-mode', this.settings.viewMode);
-        html.setAttribute('data-reduced-motion', this.settings.reducedMotion);
-        html.setAttribute('data-high-contrast', this.settings.highContrast);
-        
-        // Apply content settings
-        this.applyContentSettings();
-        
-        // Apply performance settings
-        this.applyPerformanceSettings();
-        
-        // Apply language settings
-        html.setAttribute('lang', this.settings.language);
-    }
-    
-    applyContentSettings() {
-        // Show/hide tech badges
-        const techBadges = document.querySelectorAll('.tech-badge, .badge');
-        techBadges.forEach(badge => {
-            badge.style.display = this.settings.showTechBadges ? '' : 'none';
-        });
-        
-        // Show/hide project stats
-        const projectStats = document.querySelectorAll('.project-stats');
-        projectStats.forEach(stat => {
-            stat.style.display = this.settings.showProjectStats ? '' : 'none';
-        });
-        
-        // Auto-play videos
-        const videos = document.querySelectorAll('video');
-        videos.forEach(video => {
-            video.autoplay = this.settings.autoPlayVideos;
-        });
-    }
-    
-    applyPerformanceSettings() {
-        // Image quality
-        const images = document.querySelectorAll('img');
-        images.forEach(img => {
-            if (this.settings.imageQuality === 'low') {
-                img.style.imageRendering = 'pixelated';
-            } else {
-                img.style.imageRendering = 'auto';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); // animate once
             }
         });
-        
-        // Lazy loading
-        if (!this.settings.lazyLoading) {
-            images.forEach(img => {
+    }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+
+    fadeEls.forEach(el => observer.observe(el));
+})();
+
+// ── PROJECT FILTERING ────────────────────────────────────────
+(function initProjectFilter() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const allCards = document.querySelectorAll('.project-card');
+    const featuredWrap = document.getElementById('featuredProjects');
+    const gridWrap = document.getElementById('projectsGrid');
+
+    if (!filterBtns.length || !allCards.length) return;
+
+    let activeFilter = 'all';
+
+    const filterCards = (category) => {
+        activeFilter = category;
+
+        allCards.forEach(card => {
+            const cat = card.getAttribute('data-category') || '';
+            const visible = category === 'all' || cat === category;
+
+            // Use CSS class for hide/show — avoids display:none flash
+            card.classList.toggle('hidden-card', !visible);
+        });
+
+        // When a specific category is active, collapse the featured/grid split
+        // and show everything in one flat grid
+        if (featuredWrap && gridWrap) {
+            const showSplit = category === 'all';
+            featuredWrap.style.display = showSplit ? '' : 'none';
+            gridWrap.style.gridTemplateColumns = showSplit ? '' : 'repeat(3, 1fr)';
+
+            // Move filtered cards to the grid when split is hidden
+            if (!showSplit) {
+                allCards.forEach(card => {
+                    if (!card.classList.contains('hidden-card')) {
+                        gridWrap.appendChild(card);
+                    }
+                });
+            }
+        }
+    };
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterCards(btn.getAttribute('data-filter') || 'all');
+        });
+    });
+})();
+
+// ── LAZY IMAGE LOADING ───────────────────────────────────────
+(function initLazyImages() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const imageObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
                 if (img.dataset.src) {
                     img.src = img.dataset.src;
                     img.removeAttribute('data-src');
+                    img.classList.remove('lazy');
                 }
-            });
-        }
-    }
-    
-    bindEvents() {
-        // Theme change
-        document.querySelectorAll('input[name="theme"]').forEach(input => {
-            input.addEventListener('change', (e) => {
-                this.settings.theme = e.target.value;
-                this.applySettings();
-                this.saveSettings();
-            });
-        });
-        
-        // Accent color change
-        document.querySelectorAll('input[name="accent"]').forEach(input => {
-            input.addEventListener('change', (e) => {
-                this.settings.accent = e.target.value;
-                this.applySettings();
-                this.saveSettings();
-            });
-        });
-        
-        // View mode change
-        document.querySelectorAll('input[name="viewMode"]').forEach(input => {
-            input.addEventListener('change', (e) => {
-                this.settings.viewMode = e.target.value;
-                this.applySettings();
-                this.saveSettings();
-            });
-        });
-        
-        // All other settings
-        const settingInputs = [
-            'reducedMotion', 'highContrast', 'showTechBadges', 'showProjectStats',
-            'autoPlayVideos', 'lazyLoading', 'preloadImages', 'analytics', 'cookies', 'tracking'
-        ];
-        
-        settingInputs.forEach(setting => {
-            const input = document.getElementById(setting);
-            if (input) {
-                input.addEventListener('change', (e) => {
-                    this.settings[setting] = e.target.checked;
-                    this.applySettings();
-                    this.saveSettings();
-                });
+                obs.unobserve(img);
             }
         });
-        
-        // Select inputs
-        const selectInputs = ['projectsPerPage', 'imageQuality', 'language', 'dateFormat'];
-        selectInputs.forEach(setting => {
-            const select = document.getElementById(setting);
-            if (select) {
-                select.addEventListener('change', (e) => {
-                    this.settings[setting] = e.target.value;
-                    this.applySettings();
-                    this.saveSettings();
-                });
-            }
-        });
-        
-        // Save settings button
-        const saveButton = document.getElementById('saveSettings');
-        if (saveButton) {
-            saveButton.addEventListener('click', () => {
-                this.saveSettings();
-                const modalElement = document.getElementById('settingsModal');
-                if (modalElement && typeof bootstrap !== 'undefined') {
-                    const modal = bootstrap.Modal.getInstance(modalElement);
-                    if (modal) {
-                        modal.hide();
-                    }
-                }
-            });
-        }
-        
-        // Reset settings button
-        const resetButton = document.getElementById('resetSettings');
-        if (resetButton) {
-            resetButton.addEventListener('click', () => {
-                if (confirm('Are you sure you want to reset all settings to default?')) {
-                    this.resetSettings();
-                }
-            });
-        }
-        
-        // Export settings button
-        const exportButton = document.getElementById('exportSettings');
-        if (exportButton) {
-            exportButton.addEventListener('click', () => {
-                this.exportSettings();
-            });
-        }
-    }
-    
-    updateUI() {
-        // Update form inputs to match current settings
-        Object.keys(this.settings).forEach(key => {
-            const input = document.getElementById(key) || document.querySelector(`input[name="${key}"][value="${this.settings[key]}"]`);
-            if (input) {
-                if (input.type === 'checkbox') {
-                    input.checked = this.settings[key];
-                } else if (input.type === 'radio') {
-                    input.checked = true;
-                } else {
-                    input.value = this.settings[key];
-                }
-            }
-        });
-    }
-    
-    resetSettings() {
-        this.settings = { ...this.defaultSettings };
-        this.applySettings();
-        this.updateUI();
-        this.saveSettings();
-        this.showNotification('Settings reset to default', 'info');
-    }
-    
-    exportSettings() {
-        const dataStr = JSON.stringify(this.settings, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'portfolio-settings.json';
-        link.click();
-        
-        URL.revokeObjectURL(url);
-        this.showNotification('Settings exported successfully', 'success');
-    }
-    
-    detectSystemPreferences() {
-        // Auto theme detection
-        if (this.settings.theme === 'auto') {
-            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            mediaQuery.addEventListener('change', () => {
-                this.applySettings();
-            });
-        }
-        
-        // Reduced motion detection
-        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-        if (reducedMotionQuery.matches && !this.settings.reducedMotion) {
-            this.settings.reducedMotion = true;
-            this.applySettings();
-            this.saveSettings();
-        }
-    }
-    
-    getSystemTheme() {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    
-    showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
-        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 3000);
-    }
-}
+    }, { rootMargin: '200px 0px' });
 
-// Project card animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
     });
-}, observerOptions);
+})();
 
-// Project filtering functionality
-let filterButtons, projectItems, noResults, searchInput;
-
-// Filter projects by category
-function filterProjects(category) {
-    if (!projectItems || !searchInput || !noResults) return;
-    
-    let visibleCount = 0;
-    
-    projectItems.forEach(item => {
-        const itemCategories = item.dataset.category ? item.dataset.category.split(' ') : [];
-        const searchTerm = searchInput.value.toLowerCase();
-        const keywords = item.dataset.keywords ? item.dataset.keywords.toLowerCase() : '';
-        
-        const matchesCategory = category === 'all' || itemCategories.includes(category);
-        const matchesSearch = searchTerm === '' || keywords.includes(searchTerm);
-        
-        if (matchesCategory && matchesSearch) {
-            item.style.display = 'block';
-            visibleCount++;
-        } else {
-            item.style.display = 'none';
-        }
-    });
-    
-    // Show/hide no results message
-    if (noResults) {
-        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-    }
-}
-
-// Initialize DOM-dependent functionality
-function initializeDOMElements() {
-    // Initialize project filtering elements
-    filterButtons = document.querySelectorAll('.filter-btn');
-    projectItems = document.querySelectorAll('.project-item');
-    noResults = document.getElementById('noResults');
-    searchInput = document.getElementById('projectSearch');
-    
-    // Observe all project cards for animations
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(card);
-    });
-    
-    // Add event listeners to filter buttons
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Filter projects
-            const category = this.dataset.filter;
-            filterProjects(category);
-        });
-    });
-    
-    // Search functionality
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const activeFilter = document.querySelector('.filter-btn.active');
-            const category = activeFilter ? activeFilter.dataset.filter : 'all';
-            filterProjects(category);
-        });
-    }
-    
-    // Contact link hover effects
-    document.querySelectorAll('.contact-link').forEach(link => {
-        link.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.transition = 'transform 0.3s ease';
-        });
-        
-        link.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-    
-    // Skill card animations
-    document.querySelectorAll('.skill-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
-            this.style.transition = 'all 0.3s ease';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-            this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-        });
-    });
-    
-    // Initialize tooltips if Bootstrap is available
-    if (typeof bootstrap !== 'undefined') {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    }
-    
-    // Lazy loading for images
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazy');
-                        imageObserver.unobserve(img);
-                    }
-                }
-            });
-        });
-        
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize settings
-    window.portfolioSettings = new PortfolioSettings();
-    
-    // Initialize DOM-dependent functionality
-    initializeDOMElements();
-});
-
-// Performance tracking (optional)
+// ── PERFORMANCE LOG ──────────────────────────────────────────
 if ('performance' in window) {
-    window.addEventListener('load', function() {
-        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        console.log('Page load time:', loadTime + 'ms');
+    window.addEventListener('load', () => {
+        const t = performance.timing;
+        console.log(`Page load: ${t.loadEventEnd - t.navigationStart}ms`);
     });
 }

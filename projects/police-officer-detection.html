@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Officer Detection System | Dule Abera</title>
+    <meta name="description"
+        content="YOLOv8-powered system that distinguishes police officers from civilians in real-time using uniform and badge recognition — built by Dule Abera.">
+    <meta name="author" content="Dule Abera">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* ── TOKENS ── */
+        :root {
+            --primary: hsl(222, 72%, 45%);
+            --primary-light: hsl(222, 90%, 95%);
+            --accent: hsl(168, 55%, 40%);
+            --cat-cv: hsl(168, 55%, 40%);
+            --bg: hsl(220, 18%, 97%);
+            --surface: hsl(0, 0%, 100%);
+            --surface-2: hsl(220, 16%, 96%);
+            --text-1: hsl(222, 35%, 10%);
+            --text-2: hsl(222, 18%, 38%);
+            --text-3: hsl(222, 12%, 58%);
+            --border: hsl(220, 18%, 88%);
+            --shadow-2: 0 4px 12px hsl(222 30% 8% / 0.08), 0 1px 3px hsl(222 30% 8% / 0.04);
+            --shadow-3: 0 12px 32px hsl(222 30% 8% / 0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: hsl(222, 80%, 62%);
+                --primary-light: hsl(222, 40%, 16%);
+                --bg: hsl(222, 22%, 10%);
+                --surface: hsl(222, 22%, 15%);
+                --surface-2: hsl(222, 20%, 19%);
+                --text-1: hsl(220, 28%, 92%);
+                --text-2: hsl(220, 16%, 64%);
+                --text-3: hsl(220, 10%, 44%);
+                --border: hsl(222, 20%, 22%);
+                --shadow-2: 0 4px 12px hsl(222 40% 4% / 0.4);
+                --shadow-3: 0 12px 32px hsl(222 40% 4% / 0.5);
+            }
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-1);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img,
+        video {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ── NAV ── */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: hsl(0 0% 100% / 0.9);
+            backdrop-filter: blur(14px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .topnav {
+                background: hsl(222 22% 10% / 0.9);
+            }
+        }
+
+        .topnav-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+        }
+
+        .topnav-brand span {
+            color: var(--primary);
+        }
+
+        .topnav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-2);
+            transition: color 0.15s;
+        }
+
+        .topnav-back:hover {
+            color: var(--primary);
+        }
+
+        /* ── HERO HEADER ── */
+        .project-hero {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 4rem 2rem 3rem;
+        }
+
+        .project-hero .inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-3);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb-row a {
+            color: var(--primary);
+        }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: hsl(168 55% 90%);
+            color: hsl(168 55% 26%);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        .project-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-2);
+            max-width: 640px;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-2);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 3px 10px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .hs-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .hs-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .hs-lab {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-1);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 999px;
+        }
+
+        .sec-desc {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── STAT CARDS ROW ── */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .sc-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .sc-lab {
+            font-size: 0.78rem;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        /* ── IMAGE GALLERY ── */
+        .img-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .img-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: box-shadow 0.25s, transform 0.3s;
+        }
+
+        .img-card:hover {
+            box-shadow: var(--shadow-3);
+            transform: translateY(-4px);
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-cap {
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .img-cap-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .img-cap-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: hsl(168 55% 88%);
+            color: hsl(168 55% 25%);
+        }
+
+        /* ── VIDEO GRID ── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .video-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-2);
+        }
+
+        .video-card video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .vid-info {
+            padding: 0.85rem 1rem;
+        }
+
+        .vid-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 2px;
+        }
+
+        .vid-desc {
+            font-size: 0.8rem;
+            color: var(--text-3);
+        }
+
+        /* ── OVERVIEW LAYOUT ── */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 720px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-body p {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1rem;
+        }
+
+        .overview-body ul {
+            padding-left: 1.25rem;
+            font-size: 0.95rem;
+            color: var(--text-2);
+        }
+
+        .overview-body ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* ── SIDEBAR CARDS ── */
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+
+        .detail-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-list li strong {
+            color: var(--text-1);
+            font-weight: 600;
+        }
+
+        .btn-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-2);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+        }
+
+        .btn-sidebar:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: hsl(222, 22%, 8%);
+            color: hsl(220 14% 45%);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: hsl(222, 80%, 62%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="topnav">
+        <a href="../index.html" class="topnav-brand">Dule<span>.</span></a>
+        <a href="../index.html#projects" class="topnav-back">
+            <i class="fas fa-arrow-left"></i> Back to Projects
+        </a>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="project-hero">
+        <div class="inner">
+            <div class="breadcrumb-row">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <a href="../index.html#projects">Projects</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <span>Police Officer Detection</span>
+            </div>
+
+            <div class="cat-badge">
+                <i class="fas fa-eye"></i> Computer Vision
+            </div>
+
+            <h1>Police Officer Detection System</h1>
+            <p class="hero-desc">
+                A YOLOv8-based computer vision system that accurately distinguishes police officers from civilians in
+                real-time video streams — using uniform color, badge, and equipment recognition trained on annotated
+                image datasets.
+            </p>
+
+            <div class="tag-row">
+                <span class="tag">YOLOv8</span>
+                <span class="tag">Python</span>
+                <span class="tag">OpenCV</span>
+                <span class="tag">PyTorch</span>
+                <span class="tag">Roboflow</span>
+                <span class="tag">Object Detection</span>
+                <span class="tag">Real-time Inference</span>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hs-item">
+                    <span class="hs-num">2</span>
+                    <span class="hs-lab">Detection Classes</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">YOLOv8</span>
+                    <span class="hs-lab">Model Architecture</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">Real-time</span>
+                    <span class="hs-lab">Inference Speed</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">3</span>
+                    <span class="hs-lab">Demo Videos</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Detection Image Examples -->
+        <section>
+            <p class="sec-label">Detection Outputs</p>
+            <h2>Model Detection Results</h2>
+            <p class="sec-desc">Sample frames showing the model distinguishing police officers (bounding boxes labeled
+                "Officer") from civilians ("Person") across different environments.</p>
+
+            <div class="img-grid">
+                <div class="img-card">
+                    <img src="../assets/images/Police_Detection/Screenshot 2025-12-12 161219.png"
+                        alt="Police officer detection output — street scenario" loading="lazy">
+                    <div class="img-cap">
+                        <span class="img-cap-title">Street Scenario</span>
+                        <span class="img-cap-badge">Officer Detected</span>
+                    </div>
+                </div>
+
+                <div class="img-card">
+                    <img src="../assets/images/Police_Detection/07afb92380c4cbe6ba256cdb3872c30620c1b10cb5a7451d5d7aac27.jpg"
+                        alt="Police officer detection — crowd environment" loading="lazy">
+                    <div class="img-cap">
+                        <span class="img-cap-title">Crowd Environment</span>
+                        <span class="img-cap-badge">Mixed Classification</span>
+                    </div>
+                </div>
+
+                <div class="img-card">
+                    <img src="../assets/images/Police_Detection/123ad0439efa49f269ebc4d893f8ab589a9ab82abf9f1b6c651cf8fe.jpg"
+                        alt="Police officer detection — indoor scene" loading="lazy">
+                    <div class="img-cap">
+                        <span class="img-cap-title">Indoor Scene</span>
+                        <span class="img-cap-badge">High Confidence</span>
+                    </div>
+                </div>
+
+                <div class="img-card">
+                    <img src="../assets/images/Police_Detection/71a9abd41fceac682d42f97892205971f2eab372900998677c06ecc4.jpg"
+                        alt="Police officer detection — multi-person frame" loading="lazy">
+                    <div class="img-cap">
+                        <span class="img-cap-title">Multi-person Frame</span>
+                        <span class="img-cap-badge">Class Separation</span>
+                    </div>
+                </div>
+
+                <div class="img-card">
+                    <img src="../assets/images/Police_Detection/f0d6ce935f52a5def01292499338ee7e19bc2d8e042ae4c5badbdc90.jpg"
+                        alt="Police officer detection — outdoor patrol" loading="lazy">
+                    <div class="img-cap">
+                        <span class="img-cap-title">Outdoor Patrol</span>
+                        <span class="img-cap-badge">Officer Detected</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Videos -->
+        <section>
+            <p class="sec-label">Live Demos</p>
+            <h2>Detection Demo Videos</h2>
+            <p class="sec-desc">Recorded inference runs demonstrating real-time classification of police officers versus
+                civilians across multiple scenarios.</p>
+
+            <div class="video-grid">
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/Police_Detection/0303.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Demo — Scenario 1</div>
+                        <div class="vid-desc">Initial detection run showing officer vs. civilian separation in outdoor
+                            setting.</div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/Police_Detection/0303(1).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Demo — Scenario 2</div>
+                        <div class="vid-desc">Crowd-scene inference with multiple subjects — testing class boundary
+                            robustness.</div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/Police_Detection/0303(3).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Demo — Scenario 3</div>
+                        <div class="vid-desc">Dynamic movement scenario demonstrating tracking stability across frames.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview & Technical -->
+        <section>
+            <p class="sec-label">Technical Deep-Dive</p>
+            <h2>Project Overview</h2>
+            <div class="overview-grid">
+
+                <div class="overview-body">
+                    <p>
+                        This project trains a YOLOv8 object detection model to perform binary classification in a joint
+                        detection–classification pipeline. The model learns to identify police officers specifically by
+                        their <strong>uniforms, badges, helmets, and equipment</strong>, distinguishing them from
+                        civilians even in crowded or cluttered environments.
+                    </p>
+                    <p>
+                        Training data was collected and annotated using Roboflow, covering diverse lighting conditions,
+                        camera angles, and crowd densities. The model is fine-tuned from the YOLOv8 pretrained weights
+                        using transfer learning, significantly reducing the data and compute required to achieve high
+                        classification confidence.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem">Key Features</h3>
+                    <ul>
+                        <li>Two-class detection: <em>Police Officer</em> vs. <em>Civilian</em> with confidence scores
+                        </li>
+                        <li>Bounding-box annotations rendered on every inference frame</li>
+                        <li>Supports both video file input and live webcam/CCTV stream</li>
+                        <li>Configurable confidence threshold and NMS IoU cutoff</li>
+                        <li>Frame-by-frame export of annotated results as images and video</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Training Approach</h3>
+                    <ul>
+                        <li>Base model: <code>yolov8m.pt</code> (medium variant) pretrained on COCO</li>
+                        <li>Custom dataset annotated in Roboflow with bounding boxes per class</li>
+                        <li>Data augmentation: horizontal flip, mosaic, random brightness/contrast</li>
+                        <li>Training hardware: GPU-accelerated (Google Colab / Kaggle)</li>
+                        <li>Loss functions: Box regression (CIoU), classification (BCE), objectness</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Applications</h3>
+                    <ul>
+                        <li>Public safety — automated situational awareness for surveillance systems</li>
+                        <li>Smart city CCTV analytics</li>
+                        <li>Crowd management during events</li>
+                        <li>Law enforcement deployment verification</li>
+                    </ul>
+                </div>
+
+                <!-- Sidebar -->
+                <aside>
+                    <div class="sidebar-card">
+                        <h3>Project Details</h3>
+                        <ul class="detail-list">
+                            <li><strong>Category</strong> <span>Computer Vision</span></li>
+                            <li><strong>Model</strong> <span>YOLOv8</span></li>
+                            <li><strong>Classes</strong> <span>2 (Officer / Civilian)</span></li>
+                            <li><strong>Inference</strong> <span>Real-time video</span></li>
+                            <li><strong>Framework</strong> <span>PyTorch / Ultralytics</span></li>
+                            <li><strong>Annotation</strong> <span>Roboflow</span></li>
+                            <li><strong>Status</strong> <span>Completed</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Source Code</h3>
+                        <p style="font-size:0.875rem;color:var(--text-3);margin-bottom:0.75rem">Full implementation and
+                            training notebook on GitHub.</p>
+                        <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
+                            class="btn-sidebar">
+                            <i class="fab fa-github"></i> View on GitHub
+                        </a>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Related Projects</h3>
+                        <p style="font-size:0.875rem;color:var(--text-3);margin-bottom:0.75rem">Other computer vision
+                            systems in this portfolio.</p>
+                        <a href="weapon-detection.html" class="btn-sidebar" style="margin-bottom:0.5rem">
+                            <i class="fas fa-crosshairs"></i> Weapon Detection
+                        </a>
+                        <a href="violence-detection.html" class="btn-sidebar">
+                            <i class="fas fa-exclamation-triangle"></i> Violence Detection
+                        </a>
+                    </div>
+                </aside>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Dule Abera — <a href="../index.html">Back to Portfolio</a></p>
+    </footer>
+
+</body>
+
+</html>

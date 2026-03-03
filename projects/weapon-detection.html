@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weapon Detection System | Dule Abera</title>
+    <meta name="description"
+        content="Real-time weapon detection system using YOLOv8 — identifies firearms, knives, and other weapons in video streams for public safety applications. Built by Dule Abera.">
+    <meta name="author" content="Dule Abera">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: hsl(222, 72%, 45%);
+            --primary-light: hsl(222, 90%, 95%);
+            --cat-color: hsl(0, 72%, 42%);
+            --cat-light: hsl(0, 90%, 95%);
+            --bg: hsl(220, 18%, 97%);
+            --surface: hsl(0, 0%, 100%);
+            --surface-2: hsl(220, 16%, 96%);
+            --text-1: hsl(222, 35%, 10%);
+            --text-2: hsl(222, 18%, 38%);
+            --text-3: hsl(222, 12%, 58%);
+            --border: hsl(220, 18%, 88%);
+            --shadow-2: 0 4px 12px hsl(222 30% 8% / 0.08), 0 1px 3px hsl(222 30% 8% / 0.04);
+            --shadow-3: 0 12px 32px hsl(222 30% 8% / 0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: hsl(222, 80%, 62%);
+                --primary-light: hsl(222, 40%, 16%);
+                --cat-light: hsl(0, 40%, 16%);
+                --bg: hsl(222, 22%, 10%);
+                --surface: hsl(222, 22%, 15%);
+                --surface-2: hsl(222, 20%, 19%);
+                --text-1: hsl(220, 28%, 92%);
+                --text-2: hsl(220, 16%, 64%);
+                --text-3: hsl(220, 10%, 44%);
+                --border: hsl(222, 20%, 22%);
+                --shadow-2: 0 4px 12px hsl(222 40% 4% / 0.4);
+                --shadow-3: 0 12px 32px hsl(222 40% 4% / 0.5);
+            }
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-1);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img,
+        video {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: hsl(0 0% 100% / 0.9);
+            backdrop-filter: blur(14px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .topnav {
+                background: hsl(222 22% 10% / 0.9);
+            }
+        }
+
+        .topnav-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+        }
+
+        .topnav-brand span {
+            color: var(--primary);
+        }
+
+        .topnav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-2);
+            transition: color 0.15s;
+        }
+
+        .topnav-back:hover {
+            color: var(--primary);
+        }
+
+        .project-hero {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 4rem 2rem 3rem;
+        }
+
+        .project-hero .inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-3);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb-row a {
+            color: var(--primary);
+        }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--cat-light);
+            color: var(--cat-color);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        .project-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-2);
+            max-width: 640px;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-2);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 3px 10px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .hs-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .hs-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .hs-lab {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-1);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 999px;
+        }
+
+        .sec-desc {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .sc-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .sc-lab {
+            font-size: 0.78rem;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        /* Image gallery — 3 columns for the 17 images */
+        .img-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .img-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: box-shadow 0.25s, transform 0.3s;
+        }
+
+        .img-card:hover {
+            box-shadow: var(--shadow-3);
+            transform: translateY(-4px);
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-cap {
+            padding: 0.5rem 0.75rem;
+        }
+
+        .img-cap-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .video-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-2);
+        }
+
+        .video-card video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .vid-info {
+            padding: 0.85rem 1rem;
+        }
+
+        .vid-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 2px;
+        }
+
+        .vid-desc {
+            font-size: 0.8rem;
+            color: var(--text-3);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 720px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-body p {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1rem;
+        }
+
+        .overview-body ul {
+            padding-left: 1.25rem;
+            font-size: 0.95rem;
+            color: var(--text-2);
+        }
+
+        .overview-body ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+
+        .detail-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-list li strong {
+            color: var(--text-1);
+            font-weight: 600;
+        }
+
+        .btn-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-2);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-sidebar:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        footer {
+            background: hsl(222, 22%, 8%);
+            color: hsl(220 14% 45%);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: hsl(222, 80%, 62%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="topnav">
+        <a href="../index.html" class="topnav-brand">Dule<span>.</span></a>
+        <a href="../index.html#projects" class="topnav-back">
+            <i class="fas fa-arrow-left"></i> Back to Projects
+        </a>
+    </nav>
+
+    <header class="project-hero">
+        <div class="inner">
+            <div class="breadcrumb-row">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <a href="../index.html#projects">Projects</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <span>Weapon Detection</span>
+            </div>
+
+            <div class="cat-badge" style="background:hsl(0 72% 94%);color:hsl(0 72% 35%)">
+                <i class="fas fa-shield-alt"></i> Computer Vision · Public Safety
+            </div>
+
+            <h1>Weapon Detection System</h1>
+            <p class="hero-desc">
+                A YOLOv8-powered real-time weapon detection system that identifies firearms, knives, and other
+                potentially dangerous objects in video streams — enabling automated threat detection for surveillance
+                and public safety applications.
+            </p>
+
+            <div class="tag-row">
+                <span class="tag">YOLOv8</span>
+                <span class="tag">Python</span>
+                <span class="tag">OpenCV</span>
+                <span class="tag">PyTorch</span>
+                <span class="tag">Ultralytics</span>
+                <span class="tag">Object Detection</span>
+                <span class="tag">Security Analytics</span>
+                <span class="tag">Roboflow</span>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hs-item">
+                    <span class="hs-num">17+</span>
+                    <span class="hs-lab">Output Samples</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">YOLOv8</span>
+                    <span class="hs-lab">Model Architecture</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">2</span>
+                    <span class="hs-lab">Demo Videos</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">Real-time</span>
+                    <span class="hs-lab">Inference</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Detection Images -->
+        <section>
+            <p class="sec-label">Detection Outputs</p>
+            <h2>Model Output Samples</h2>
+            <p class="sec-desc">Annotated frames showing bounding boxes and confidence scores on detected weapons across
+                diverse conditions — indoor, outdoor, low-light, and occlusion scenarios.</p>
+
+            <div class="img-grid">
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/0ab2ed919df71004226a7eeb3f76d0e898a5fe150bca1c451de646a0.jpg"
+                        alt="Weapon detection output sample 1" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 1</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/6d3e831955ac4059a1f3f363b70a821ab8682fc65d42bad5359b4d3e.jpg"
+                        alt="Weapon detection output sample 2" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 2</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/0a724dbe69c47ff98b448638cf94d9ebf51c68caa767aae9342f1160.jpg"
+                        alt="Weapon detection — multi-object frame" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Multi-object Frame</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/1e3910f33fa7658b981cfad1be128b9b20f3f87b01746965ee48eac4.jpg"
+                        alt="Weapon detection output sample 4" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 4</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/37fc9e24cf68ac8da1b430030a264f697d4ea1351a3b2d81f42ed7ea.jpg"
+                        alt="Weapon detection output sample 5" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 5</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/3de8051fe4af5f3cee95faedfd320d4e8e8250c0022103d23db4ec92.jpg"
+                        alt="Weapon detection output sample 6" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 6</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/4a2228c17b3d7d3f2248fa2063925673708fbd1ddcda09c6649b5eb1.jpg"
+                        alt="Weapon detection output sample 7" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 7</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/881eca5e9ef774ccd932716fd60706f98d8e90995a3e339f73542b2b.jpg"
+                        alt="Weapon detection output sample 8" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 8</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/a606d8357745cf327bc6fa4a3e2d3119da2278d7c822159cee8e3a41.jpg"
+                        alt="Weapon detection output sample 9" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 9</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/da3b5ff80b05b74278cd5a59e615558e30bf8c0b10e17ca434ccd2da.jpg"
+                        alt="Weapon detection output sample 10" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 10</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/194dc954c0f6fd43117c6ce050108129f1d340e333f1cec123c496f8.jpg"
+                        alt="Weapon detection output sample 11" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 11</div>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/weapon-detection/03f10078441afb10ed2f42291db50d6476ea996bb214c816865891e8.jpg"
+                        alt="Weapon detection output sample 12" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Detection Sample 12</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Videos -->
+        <section>
+            <p class="sec-label">Live Demos</p>
+            <h2>Detection Demo Videos</h2>
+            <p class="sec-desc">Full video inference runs with real-time bounding box overlay and confidence
+                annotations.</p>
+
+            <div class="video-grid">
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/weapon-detection/output_video (3).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Weapon Detection — Demo Run 1</div>
+                        <div class="vid-desc">Primary inference run demonstrating weapon localization with bounding
+                            boxes and class confidence scores.</div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/weapon-detection/output_video (5).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Weapon Detection — Demo Run 2</div>
+                        <div class="vid-desc">Extended scenario testing model robustness under varied lighting and
+                            background clutter conditions.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section>
+            <p class="sec-label">Technical Deep-Dive</p>
+            <h2>Project Overview</h2>
+            <div class="overview-grid">
+                <div class="overview-body">
+                    <p>
+                        This system trains a YOLOv8 model to detect dangerous weapons — including <strong>firearms,
+                            knives, and blunt objects</strong> — directly from video frames in real time. The goal is to
+                        provide an automated first-layer alert mechanism that can augment human monitoring in
+                        security-critical environments.
+                    </p>
+                    <p>
+                        The pipeline processes each frame through the YOLOv8 detector, generates bounding-box
+                        predictions with class labels and confidence scores, and overlays the results onto the output
+                        frame. The annotated video stream or image set is then saved for review.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem">Key Features</h3>
+                    <ul>
+                        <li>Real-time detection across multiple weapon categories</li>
+                        <li>Frame-by-frame bounding box annotations with confidence scores</li>
+                        <li>Supports video file, camera stream, and image batch inputs</li>
+                        <li>Configurable confidence and NMS IoU thresholds</li>
+                        <li>Output saved as annotated video and individual image frames</li>
+                        <li>Sliding frame buffer for temporal smoothing of detections</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Training Pipeline</h3>
+                    <ul>
+                        <li>Base architecture: YOLOv8 (Ultralytics) pretrained on COCO</li>
+                        <li>Custom weapon dataset annotated via Roboflow with class-specific bounding boxes</li>
+                        <li>Transfer learning with frozen backbone layers for initial epochs</li>
+                        <li>Augmentation: Mosaic, scale jitter, brightness/contrast, horizontal flip</li>
+                        <li>GPU-accelerated training on Google Colab / Kaggle</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Applications</h3>
+                    <ul>
+                        <li>CCTV surveillance and smart security systems</li>
+                        <li>Airport and event venue security screening</li>
+                        <li>Law enforcement situational awareness tools</li>
+                        <li>School and public building safety monitoring</li>
+                    </ul>
+                </div>
+
+                <aside>
+                    <div class="sidebar-card">
+                        <h3>Project Details</h3>
+                        <ul class="detail-list">
+                            <li><strong>Category</strong> <span>Computer Vision</span></li>
+                            <li><strong>Domain</strong> <span>Public Safety</span></li>
+                            <li><strong>Model</strong> <span>YOLOv8</span></li>
+                            <li><strong>Framework</strong> <span>PyTorch / Ultralytics</span></li>
+                            <li><strong>Annotation</strong> <span>Roboflow</span></li>
+                            <li><strong>Output</strong> <span>Video + Image frames</span></li>
+                            <li><strong>Status</strong> <span>Completed</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Source Code</h3>
+                        <p style="font-size:0.875rem;color:var(--text-3);margin-bottom:0.75rem">Full implementation and
+                            training scripts on GitHub.</p>
+                        <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
+                            class="btn-sidebar">
+                            <i class="fab fa-github"></i> View on GitHub
+                        </a>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Related Projects</h3>
+                        <a href="police-officer-detection.html" class="btn-sidebar">
+                            <i class="fas fa-user-shield"></i> Police Officer Detection
+                        </a>
+                        <a href="violence-detection.html" class="btn-sidebar">
+                            <i class="fas fa-exclamation-triangle"></i> Violence Detection
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Dule Abera — <a href="../index.html">Back to Portfolio</a></p>
+    </footer>
+
+</body>
+
+</html>

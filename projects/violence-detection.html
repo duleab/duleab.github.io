@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violence Detection System | Dule Abera</title>
+    <meta name="description"
+        content="Deep learning violence detection system that identifies fights, throwing actions and aggressive behaviour in real-time video — built by Dule Abera using CNN + LSTM architecture.">
+    <meta name="author" content="Dule Abera">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: hsl(222, 72%, 45%);
+            --primary-light: hsl(222, 90%, 95%);
+            --bg: hsl(220, 18%, 97%);
+            --surface: hsl(0, 0%, 100%);
+            --surface-2: hsl(220, 16%, 96%);
+            --text-1: hsl(222, 35%, 10%);
+            --text-2: hsl(222, 18%, 38%);
+            --text-3: hsl(222, 12%, 58%);
+            --border: hsl(220, 18%, 88%);
+            --shadow-2: 0 4px 12px hsl(222 30% 8% / 0.08), 0 1px 3px hsl(222 30% 8% / 0.04);
+            --shadow-3: 0 12px 32px hsl(222 30% 8% / 0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: hsl(222, 80%, 62%);
+                --primary-light: hsl(222, 40%, 16%);
+                --bg: hsl(222, 22%, 10%);
+                --surface: hsl(222, 22%, 15%);
+                --surface-2: hsl(222, 20%, 19%);
+                --text-1: hsl(220, 28%, 92%);
+                --text-2: hsl(220, 16%, 64%);
+                --text-3: hsl(220, 10%, 44%);
+                --border: hsl(222, 20%, 22%);
+                --shadow-2: 0 4px 12px hsl(222 40% 4% / 0.4);
+                --shadow-3: 0 12px 32px hsl(222 40% 4% / 0.5);
+            }
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-1);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img,
+        video {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: hsl(0 0% 100% / 0.9);
+            backdrop-filter: blur(14px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .topnav {
+                background: hsl(222 22% 10% / 0.9);
+            }
+        }
+
+        .topnav-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+        }
+
+        .topnav-brand span {
+            color: var(--primary);
+        }
+
+        .topnav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-2);
+            transition: color 0.15s;
+        }
+
+        .topnav-back:hover {
+            color: var(--primary);
+        }
+
+        .project-hero {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 4rem 2rem 3rem;
+        }
+
+        .project-hero .inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-3);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb-row a {
+            color: var(--primary);
+        }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: hsl(30 88% 93%);
+            color: hsl(30 88% 32%);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        .project-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-2);
+            max-width: 640px;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-2);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 3px 10px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .hs-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .hs-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .hs-lab {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-1);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-label::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 999px;
+        }
+
+        .sec-desc {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Architecture diagram blocks */
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .arch-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .arch-block .ab-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .arch-block .ab-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .arch-block .ab-sub {
+            font-size: 0.65rem;
+            color: var(--text-3);
+        }
+
+        .arch-arrow {
+            font-size: 1rem;
+            color: var(--text-3);
+            padding: 0 0.5rem;
+        }
+
+        .img-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .img-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: box-shadow 0.25s, transform 0.3s;
+        }
+
+        .img-card:hover {
+            box-shadow: var(--shadow-3);
+            transform: translateY(-4px);
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-cap {
+            padding: 0.6rem 0.85rem;
+        }
+
+        .img-cap-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .img-cap-badge {
+            display: inline-flex;
+            margin-top: 3px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .badge-violent {
+            background: hsl(0 72% 94%);
+            color: hsl(0 72% 35%);
+        }
+
+        .badge-throwing {
+            background: hsl(30 88% 93%);
+            color: hsl(30 88% 35%);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .video-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-2);
+        }
+
+        .video-card video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .vid-info {
+            padding: 0.85rem 1rem;
+        }
+
+        .vid-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 2px;
+        }
+
+        .vid-desc {
+            font-size: 0.8rem;
+            color: var(--text-3);
+        }
+
+        /* Large video for big file */
+        .video-card-large {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-2);
+        }
+
+        .video-card-large video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .vid-note {
+            font-size: 0.75rem;
+            color: var(--text-3);
+            padding: 0.4rem 1rem 0.6rem;
+            font-style: italic;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 720px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .overview-body p {
+            font-size: 0.95rem;
+            color: var(--text-2);
+            margin-bottom: 1rem;
+        }
+
+        .overview-body ul {
+            padding-left: 1.25rem;
+            font-size: 0.95rem;
+            color: var(--text-2);
+        }
+
+        .overview-body ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+
+        .detail-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-list li strong {
+            color: var(--text-1);
+            font-weight: 600;
+        }
+
+        .btn-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-2);
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-sidebar:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        footer {
+            background: hsl(222, 22%, 8%);
+            color: hsl(220 14% 45%);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: hsl(222, 80%, 62%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="topnav">
+        <a href="../index.html" class="topnav-brand">Dule<span>.</span></a>
+        <a href="../index.html#projects" class="topnav-back">
+            <i class="fas fa-arrow-left"></i> Back to Projects
+        </a>
+    </nav>
+
+    <header class="project-hero">
+        <div class="inner">
+            <div class="breadcrumb-row">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <a href="../index.html#projects">Projects</a>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+                <span>Violence Detection</span>
+            </div>
+
+            <div class="cat-badge">
+                <i class="fas fa-exclamation-triangle"></i> Computer Vision · Behavioural AI
+            </div>
+
+            <h1>Violence Detection System</h1>
+            <p class="hero-desc">
+                A deep learning system that detects violent behaviour — including <strong>physical fights</strong> and
+                <strong>object-throwing</strong> — in video streams using a CNN + LSTM architecture for spatial-temporal
+                analysis. Enables automated alerting in surveillance environments.
+            </p>
+
+            <div class="tag-row">
+                <span class="tag">CNN</span>
+                <span class="tag">LSTM</span>
+                <span class="tag">Python</span>
+                <span class="tag">OpenCV</span>
+                <span class="tag">TensorFlow / Keras</span>
+                <span class="tag">PyTorch</span>
+                <span class="tag">Action Recognition</span>
+                <span class="tag">Video Classification</span>
+                <span class="tag">Temporal Analysis</span>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hs-item">
+                    <span class="hs-num">2</span>
+                    <span class="hs-lab">Behaviour Classes</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">CNN+LSTM</span>
+                    <span class="hs-lab">Architecture</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">4</span>
+                    <span class="hs-lab">Demo Videos</span>
+                </div>
+                <div class="hs-item">
+                    <span class="hs-num">Temporal</span>
+                    <span class="hs-lab">Analysis Mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Model Architecture -->
+        <section>
+            <p class="sec-label">Architecture</p>
+            <h2>Model Pipeline</h2>
+            <p class="sec-desc">The system processes sequences of video frames through a spatial CNN encoder followed by
+                a temporal LSTM, enabling context-aware violence classification.</p>
+
+            <div class="arch-flow" role="img" aria-label="Violence detection model pipeline diagram">
+                <div class="arch-block">
+                    <i class="fas fa-video ab-icon"></i>
+                    <div class="ab-title">Video Input</div>
+                    <div class="ab-sub">Frames extracted</div>
+                </div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-block">
+                    <i class="fas fa-th-large ab-icon"></i>
+                    <div class="ab-title">Frame Sequence</div>
+                    <div class="ab-sub">N consecutive frames</div>
+                </div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-block">
+                    <i class="fas fa-brain ab-icon"></i>
+                    <div class="ab-title">CNN Encoder</div>
+                    <div class="ab-sub">Spatial features per frame</div>
+                </div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-block">
+                    <i class="fas fa-stream ab-icon"></i>
+                    <div class="ab-title">LSTM</div>
+                    <div class="ab-sub">Temporal reasoning</div>
+                </div>
+                <div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="arch-block">
+                    <i class="fas fa-tag ab-icon"></i>
+                    <div class="ab-title">Classification</div>
+                    <div class="ab-sub">Violent / Non-violent</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detection Image Samples -->
+        <section>
+            <p class="sec-label">Detection Outputs</p>
+            <h2>Detected Behaviour Samples</h2>
+            <p class="sec-desc">Sample output frames showing the system classifying both <em>physical fights</em> and
+                <em>object-throwing</em> events with overlay annotations.</p>
+
+            <div class="img-grid">
+                <!-- Throwing detection images -->
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/Picture1.png" alt="Throwing detection — frame 1"
+                        loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Throwing Detection</div>
+                        <span class="img-cap-badge badge-throwing">Object Thrown</span>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/Picture2.png" alt="Throwing detection — frame 2"
+                        loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Throwing Detection</div>
+                        <span class="img-cap-badge badge-throwing">Object Thrown</span>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/Picture3.png" alt="Throwing detection — frame 3"
+                        loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Throwing Detection</div>
+                        <span class="img-cap-badge badge-throwing">Object Thrown</span>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/7db58318c90b346cd3bee0d06e7fb7cdc580c8096fce60cfe11142ba.jpg"
+                        alt="Throwing action detection output" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Throwing Action Sample</div>
+                        <span class="img-cap-badge badge-throwing">Classified</span>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/8c490210cf04be1fd1624a58dda2aa73c8d1719764a8220d3008eefe.jpg"
+                        alt="Throwing action detection — alternate frame" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Throwing Sample 2</div>
+                        <span class="img-cap-badge badge-throwing">Classified</span>
+                    </div>
+                </div>
+                <div class="img-card">
+                    <img src="../assets/images/throwing-detection/fa068d0914548f9239abefbeda3630990508d2430b266dc4b4fdcbd5.jpg"
+                        alt="Violence / fighting detection output" loading="lazy">
+                    <div class="img-cap">
+                        <div class="img-cap-title">Fight Detection</div>
+                        <span class="img-cap-badge badge-violent">Violent</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Videos -->
+        <section>
+            <p class="sec-label">Live Demos</p>
+            <h2>Detection Demo Videos</h2>
+            <p class="sec-desc">Recorded inference demonstrations across fight detection and object-throwing scenarios.
+                Larger files may take a moment to buffer.</p>
+
+            <div class="video-grid" style="margin-bottom:1.25rem">
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/throwing-detection/0303 (1).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Throwing Detection — Demo 1</div>
+                        <div class="vid-desc">Real-time inference on an object-throwing scenario. The model flags and
+                            annotates throwing actions frame by frame.</div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="metadata">
+                        <source src="../assets/videos/throwing-detection/1110(1) Detected (1).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="vid-info">
+                        <div class="vid-title">Violence / Fight Detection — Demo 2</div>
+                        <div class="vid-desc">Fight detection on multi-person video — sliding window classification with
+                            temporal smoothing reduces false positives.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Longer videos shown separately -->
+            <div class="video-card-large" style="margin-bottom:1rem">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/throwing-detection/0303 (1)(1).mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="vid-info">
+                    <div class="vid-title">Extended Demo — Throwing Sequence (Full Run)</div>
+                    <div class="vid-desc">Longer inference run demonstrating sustained violence detection across a full
+                        scene.</div>
+                </div>
+                <div class="vid-note">⚠ Large file (~49 MB) — may require buffering.</div>
+            </div>
+
+            <div class="video-card-large">
+                <video controls preload="metadata">
+                    <source src="../assets/videos/throwing-detection/1110(2) Detected (1).mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="vid-info">
+                    <div class="vid-title">Extended Demo — Fight Detection (Full Run)</div>
+                    <div class="vid-desc">Full-length fight detection run showcasing system stability over extended
+                        video duration.</div>
+                </div>
+                <div class="vid-note">⚠ Large file (~152 MB) — recommended: allow full buffering before playback.</div>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section>
+            <p class="sec-label">Technical Deep-Dive</p>
+            <h2>Project Overview</h2>
+            <div class="overview-grid">
+                <div class="overview-body">
+                    <p>
+                        This project builds a <strong>video-based violence detection system</strong> capable of
+                        identifying two types of aggressive behaviour: <em>physical fights</em> (punching, wrestling,
+                        brawling) and <em>object-throwing</em>. Unlike single-frame object detectors, this model
+                        processes <strong>sequences of frames</strong> to capture the temporal motion patterns that
+                        uniquely characterise violent acts.
+                    </p>
+                    <p>
+                        The architecture combines a <strong>Convolutional Neural Network (CNN)</strong> to extract
+                        spatial features per frame with a <strong>Long Short-Term Memory (LSTM)</strong> network to
+                        reason over time. This lets the model understand not just what is in a frame, but the <em>motion
+                            trajectory</em> across frames — making it far more robust to false positives from static
+                        violent-looking poses.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem">Behaviour Classes Detected</h3>
+                    <ul>
+                        <li><strong>Physical Fighting</strong> — punching, kicking, brawling, wrestling</li>
+                        <li><strong>Object Throwing</strong> — any thrown projectile directed toward people or property
+                        </li>
+                        <li><strong>Non-violent</strong> — normal movement baseline (walking, standing, running)</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Technical Implementation</h3>
+                    <ul>
+                        <li>Input: fixed-length frame sequences (e.g., 16–32 frames per inference window)</li>
+                        <li>CNN backbone: pre-trained ResNet or MobileNet for spatial feature embedding</li>
+                        <li>LSTM layers: 2-layer LSTM captures temporal motion dynamics</li>
+                        <li>Sliding window inference for continuous real-time processing</li>
+                        <li>Temporal smoothing (majority vote over recent windows) reduces false alarm rate</li>
+                        <li>Output: per-window label overlaid on video frames in real time</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Training & Data</h3>
+                    <ul>
+                        <li>Dataset: custom-collected + publicly available violence / non-violence video clips</li>
+                        <li>Frame extraction at uniform intervals ensures temporal consistency</li>
+                        <li>Augmentation: random crop, horizontal flip, colour jitter, temporal jitter</li>
+                        <li>Loss: categorical cross-entropy with class-weighted sampling for imbalance</li>
+                        <li>Training: GPU-accelerated on Google Colab / Kaggle</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem">Applications</h3>
+                    <ul>
+                        <li>Automated CCTV monitoring in public spaces</li>
+                        <li>School and campus safety systems</li>
+                        <li>Stadium and event security</li>
+                        <li>Prison and detention facility surveillance</li>
+                        <li>Triggering alerts for first-responder dispatch</li>
+                    </ul>
+                </div>
+
+                <aside>
+                    <div class="sidebar-card">
+                        <h3>Project Details</h3>
+                        <ul class="detail-list">
+                            <li><strong>Category</strong> <span>Computer Vision</span></li>
+                            <li><strong>Task</strong> <span>Video Classification</span></li>
+                            <li><strong>Architecture</strong> <span>CNN + LSTM</span></li>
+                            <li><strong>Classes</strong> <span>Fighting, Throwing, Normal</span></li>
+                            <li><strong>Input</strong> <span>Video frame sequences</span></li>
+                            <li><strong>Framework</strong> <span>TensorFlow / Keras</span></li>
+                            <li><strong>Inference</strong> <span>Sliding window, real-time</span></li>
+                            <li><strong>Status</strong> <span>Completed</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Training Notebook</h3>
+                        <p style="font-size:0.875rem;color:var(--text-3);margin-bottom:0.75rem">Full training notebook
+                            (Google Colab / Kaggle compatible) available on GitHub.</p>
+                        <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
+                            class="btn-sidebar">
+                            <i class="fab fa-github"></i> View on GitHub
+                        </a>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Related Projects</h3>
+                        <a href="weapon-detection.html" class="btn-sidebar">
+                            <i class="fas fa-crosshairs"></i> Weapon Detection
+                        </a>
+                        <a href="police-officer-detection.html" class="btn-sidebar">
+                            <i class="fas fa-user-shield"></i> Police Officer Detection
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Dule Abera — <a href="../index.html">Back to Portfolio</a></p>
+    </footer>
+
+</body>
+
+</html>
