@@ -666,7 +666,8 @@
             <p class="sec-label">Detection Outputs</p>
             <h2>Detected Behaviour Samples</h2>
             <p class="sec-desc">Sample output frames showing the system classifying both <em>physical fights</em> and
-                <em>object-throwing</em> events with overlay annotations.</p>
+                <em>object-throwing</em> events with overlay annotations.
+            </p>
 
             <div class="img-grid">
                 <!-- Throwing detection images -->
@@ -728,7 +729,7 @@
             <p class="sec-desc">Recorded inference demonstrations across fight detection and object-throwing scenarios.
                 Larger files may take a moment to buffer.</p>
 
-            <div class="video-grid" style="margin-bottom:1.25rem">
+            <div class="video-grid">
                 <div class="video-card">
                     <video controls preload="metadata">
                         <source src="../assets/videos/throwing-detection/0303 (1).mp4" type="video/mp4">
@@ -743,42 +744,15 @@
 
                 <div class="video-card">
                     <video controls preload="metadata">
-                        <source src="../assets/videos/throwing-detection/1110(1) Detected (1).mp4" type="video/mp4">
+                        <source src="../assets/videos/throwing-detection/0303 (1)(2).mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     <div class="vid-info">
                         <div class="vid-title">Violence / Fight Detection — Demo 2</div>
-                        <div class="vid-desc">Fight detection on multi-person video — sliding window classification with
-                            temporal smoothing reduces false positives.</div>
+                        <div class="vid-desc">Behavioural classification sequence showing fight detection and movement
+                            analysis using the LSTM temporal layer.</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Longer videos shown separately -->
-            <div class="video-card-large" style="margin-bottom:1rem">
-                <video controls preload="metadata">
-                    <source src="../assets/videos/throwing-detection/0303 (1)(1).mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="vid-info">
-                    <div class="vid-title">Extended Demo — Throwing Sequence (Full Run)</div>
-                    <div class="vid-desc">Longer inference run demonstrating sustained violence detection across a full
-                        scene.</div>
-                </div>
-                <div class="vid-note">⚠ Large file (~49 MB) — may require buffering.</div>
-            </div>
-
-            <div class="video-card-large">
-                <video controls preload="metadata">
-                    <source src="../assets/videos/throwing-detection/1110(2) Detected (1).mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="vid-info">
-                    <div class="vid-title">Extended Demo — Fight Detection (Full Run)</div>
-                    <div class="vid-desc">Full-length fight detection run showcasing system stability over extended
-                        video duration.</div>
-                </div>
-                <div class="vid-note">⚠ Large file (~152 MB) — recommended: allow full buffering before playback.</div>
             </div>
         </section>
 
