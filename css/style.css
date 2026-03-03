@@ -871,13 +871,13 @@ section {
 
 .timeline {
   position: relative;
-  padding-left: 80px;
+  padding-left: 110px;
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  left: 52px;
+  left: 80px;
   top: 0;
   bottom: 0;
   width: 1px;
@@ -896,7 +896,7 @@ section {
 /* Year label on the left */
 .timeline-year {
   position: absolute;
-  left: -76px;
+  left: -110px;
   top: 6px;
   font-family: 'Syne', sans-serif;
   font-size: var(--text-xs);
@@ -904,13 +904,13 @@ section {
   color: var(--color-text-3);
   letter-spacing: 0.05em;
   text-align: right;
-  width: 60px;
+  width: 75px;
 }
 
 /* Dot */
 .timeline-dot {
   position: absolute;
-  left: -35px;
+  left: -37px;
   top: 8px;
   width: 14px;
   height: 14px;
@@ -1475,21 +1475,21 @@ footer {
   }
 
   .timeline {
-    padding-left: 56px;
+    padding-left: 84px;
   }
 
   .timeline::before {
-    left: 36px;
+    left: 56px;
   }
 
   .timeline-year {
-    left: -52px;
+    left: -84px;
     font-size: 0.65rem;
-    width: 42px;
+    width: 60px;
   }
 
   .timeline-dot {
-    left: -22px;
+    left: -35px;
   }
 }
 
