@@ -62,11 +62,17 @@ window.addEventListener('load', () => {
             if (entry.isIntersecting) {
                 const id = entry.target.getAttribute('id');
                 navLinks.forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                    const isActive = link.getAttribute('href') === `#${id}`;
+                    link.classList.toggle('active', isActive);
+                    if (isActive) {
+                        link.setAttribute('aria-current', 'page');
+                    } else {
+                        link.removeAttribute('aria-current');
+                    }
                 });
             }
         });
-    }, { rootMargin: '-40% 0px -55% 0px' });
+    }, { rootMargin: '-20% 0px -75% 0px', threshold: 0 });
 
     sections.forEach(s => sectionObserver.observe(s));
 })();
@@ -156,28 +162,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         allCards.forEach(card => {
             const cat = card.getAttribute('data-category') || '';
-            const visible = category === 'all' || cat === category;
-
-            // Use CSS class for hide/show — avoids display:none flash
-            card.classList.toggle('hidden-card', !visible);
+            const isVisible = category === 'all' || cat === category;
+            card.classList.toggle('hidden-card', !isVisible);
         });
-
-        // When a specific category is active, collapse the featured/grid split
-        // and show everything in one flat grid
-        if (featuredWrap && gridWrap) {
-            const showSplit = category === 'all';
-            featuredWrap.style.display = showSplit ? '' : 'none';
-            gridWrap.style.gridTemplateColumns = showSplit ? '' : 'repeat(3, 1fr)';
-
-            // Move filtered cards to the grid when split is hidden
-            if (!showSplit) {
-                allCards.forEach(card => {
-                    if (!card.classList.contains('hidden-card')) {
-                        gridWrap.appendChild(card);
-                    }
-                });
-            }
-        }
     };
 
     filterBtns.forEach(btn => {
