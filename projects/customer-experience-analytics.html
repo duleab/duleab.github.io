@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Experience Analytics for Fintech | Data Science Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .metric-card {
+            border-left: 4px solid var(--primary, #3b82f6);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+        }
+        .timeline-item {
+            border-left: 3px solid #3b82f6;
+            padding-left: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #3b82f6;
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .text-gradient-cyan {
+            background: linear-gradient(to right, #22d3ee, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bank-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .chart-img {
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .chart-img:hover {
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black/80 sticky-top border-b border-gray-800">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../index.html">Dule<span>.</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#experience">Experience</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Header -->
+    <section class="py-5 gradient-bg border-bottom border-gray-800">
+        <div class="container py-lg-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-comments-dollar fa-4x mb-3 text-gradient-cyan"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold mb-3">Customer Experience Analytics for Fintech</h1>
+                    <p class="lead mb-4 text-gray-400">Competitive benchmarking and product sentiment analysis of Ethiopia's leading mobile banking apps using RoBERTa, BERTopic, and DuckDB.</p>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+                        <span class="badge bg-glass text-cyan-400 border border-cyan-400/30 px-3 py-2">RoBERTa (NLP)</span>
+                        <span class="badge bg-glass text-blue-400 border border-blue-400/30 px-3 py-2">BERTopic</span>
+                        <span class="badge bg-glass text-indigo-400 border border-indigo-400/30 px-3 py-2">DuckDB</span>
+                        <span class="badge bg-glass text-purple-400 border border-purple-400/30 px-3 py-2">SQL Window Functions</span>
+                        <span class="badge bg-glass text-pink-400 border border-pink-400/30 px-3 py-2">Matplotlib/Seaborn</span>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="https://github.com/duleab" class="btn btn-primary px-4 py-2 rounded-pill shadow-lg" target="_blank">
+                            <i class="fab fa-github me-2"></i>GitHub Code
+                        </a>
+                        <a href="#analysis" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                            <i class="fas fa-chart-pie me-2"></i>View Analysis
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="py-4 bg-black border-bottom border-gray-800">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold text-cyan-400 mb-0">2,282</h3>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-0">Total Verified Reviews</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold text-blue-400 mb-0">3</h3>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-0">Banks Compared</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold text-indigo-400 mb-0">84%</h3>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-0">Model Alignment</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold text-pink-400 mb-0">+51pp</h3>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-0">Sentiment Gap Identified</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sticky-top" style="top: 100px;">
+                        <!-- Context -->
+                        <div class="bg-glass p-4 rounded-3 mb-4">
+                            <h5 class="fw-bold text-cyan-400 mb-3"><i class="fas fa-briefcase me-2"></i>Business Context</h5>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                                Analyzed user satisfaction for the top three Ethiopian banks (<b>CBE, BOA, Dashen</b>). 
+                                Simulated a Data Analyst role at <b>Omega Consultancy</b> to deliver actionable insights 
+                                for mobile banking app improvements.
+                            </p>
+                        </div>
+
+                        <!-- Technical Stack -->
+                        <div class="bg-glass p-4 rounded-3 mb-4">
+                            <h5 class="fw-bold text-white mb-3"><i class="fas fa-terminal me-2"></i>Tech Architecture</h5>
+                            <ul class="list-unstyled text-sm text-gray-300">
+                                <li class="mb-2"><i class="fas fa-check text-cyan-400 me-2"></i><b>Scraping:</b> google-play-scraper</li>
+                                <li class="mb-2"><i class="fas fa-check text-cyan-400 me-2"></i><b>Sentiment:</b> RoBERTa (Twitter)</li>
+                                <li class="mb-2"><i class="fas fa-check text-cyan-400 me-2"></i><b>Themes:</b> BERTopic + HDBSCAN</li>
+                                <li class="mb-2"><i class="fas fa-check text-cyan-400 me-2"></i><b>Database:</b> DuckDB (OLAP Engine)</li>
+                                <li class="mb-2"><i class="fas fa-check text-cyan-400 me-2"></i><b>Visuals:</b> Seaborn & WordCloud</li>
+                            </ul>
+                        </div>
+
+                        <!-- Findings Summary -->
+                        <div class="bg-glass p-4 rounded-3">
+                            <h5 class="fw-bold text-pink-400 mb-3"><i class="fas fa-lightbulb me-2"></i>Core Findings</h5>
+                            <div class="mb-3">
+                                <small class="text-gray-500 d-block mb-1">BOA (Bank of Abyssinia)</small>
+                                <div class="progress bg-gray-800" style="height: 6px;">
+                                    <div class="progress-bar bg-danger" style="width: 60%;"></div>
+                                </div>
+                                <small class="text-xs mt-1 d-block text-danger">59.8% Negative Sentiment</small>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-gray-500 d-block mb-1">CBE (Comm. Bank Ethiopia)</small>
+                                <div class="progress bg-gray-800" style="height: 6px;">
+                                    <div class="progress-bar bg-warning" style="width: 83%;"></div>
+                                </div>
+                                <small class="text-xs mt-1 d-block text-warning">83% Weighted Negative Gap</small>
+                            </div>
+                            <div>
+                                <small class="text-gray-500 d-block mb-1">Dashen Bank</small>
+                                <div class="progress bg-gray-800" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 63%;"></div>
+                                </div>
+                                <small class="text-xs mt-1 d-block text-success">63.5% Positive Sentiment</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Section -->
+                <div class="col-lg-8" id="analysis">
+                    <h2 class="display-6 fw-bold mb-4 text-white">Project Methodology</h2>
+                    
+                    <div class="timeline-item">
+                        <h4 class="text-cyan-400">01. Intelligent Data Collection</h4>
+                        <p class="text-gray-400">
+                            Implemented a high-performance scraping pipeline using <code>ThreadPoolExecutor</code> 
+                            and exponential backoff retry logic. This reduced collection time by 3x while ensuring 
+                            dataset integrity across 2,282 verified reviews.
+                        </p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4 class="text-blue-400">02. State-of-the-Art NLP Pipeline</h4>
+                        <p class="text-gray-400">
+                            Selected <b>RoBERTa-Twitter</b> for sentiment analysis due to its superior performance 
+                            on informal, short-form text compared to generic models like DistilBERT.
+                        </p>
+                        <div class="bg-glass p-3 rounded border-start border-blue-500 mb-3">
+                            <i class="fas fa-microchip me-2 text-blue-400"></i>
+                            <span class="text-sm">Used <b>BERTopic</b> for automated theme discovery, uncovering 14 critical business themes like "App Crashes" and "Transaction Friction".</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h4 class="text-indigo-400">03. High-Performance Data Engineering</h4>
+                        <p class="text-gray-400">
+                            Architected a 3-table normalized schema in <b>DuckDB</b>. Leveraged advanced SQL 
+                            Window Functions to compute 3-month rolling averages and weighted sentiment scores 
+                            directly from the database.
+                        </p>
+                    </div>
+
+                    <h2 class="display-6 fw-bold mt-5 mb-4 text-white">Four Headline Findings</h2>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="bg-glass p-3 rounded h-100">
+                                <h6 class="fw-bold text-danger mb-2">1. BOA's Structural Failure</h6>
+                                <p class="text-xs text-gray-500">23 months of consecutive majority-negative sentiment indicating deep technical issues.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-3 rounded h-100">
+                                <h6 class="fw-bold text-warning mb-2">2. CBE's Perception Gap</h6>
+                                <p class="text-xs text-gray-500">Negative reviews for CBE are 51pp more "helpful" than positive ones, signaling high agreement on pain points.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-3 rounded h-100">
+                                <h6 class="fw-bold text-blue-400 mb-2">3. Dashen's Honeymoon Decay</h6>
+                                <p class="text-xs text-gray-500">Post-launch sentiment dropped 44pp over 12 months, highlighting a need for rapid maintenance.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-3 rounded h-100">
+                                <h6 class="fw-bold text-success mb-2">4. Engagement Delta</h6>
+                                <p class="text-xs text-gray-500">Near-zero developer reply rates across all banks represent a massive missed opportunity for retention.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visualizations Gallery -->
+                    <h2 class="display-6 fw-bold mt-5 mb-4 text-white">Visual Insights</h2>
+                    
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="bg-glass p-2 rounded">
+                                <img src="../assets/images/customer-experience-analytics/chart1_executive_overview.png" class="img-fluid rounded chart-img" alt="Executive Overview">
+                                <p class="text-center text-xs text-gray-500 mt-2">Fig 1: Executive Sentiment Overview</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-2 rounded">
+                                <img src="../assets/images/customer-experience-analytics/chart2_sentiment_trends.png" class="img-fluid rounded chart-img" alt="Sentiment Trends">
+                                <p class="text-center text-xs text-gray-500 mt-2">Fig 2: 3-Month Rolling Trends</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-2 rounded">
+                                <img src="../assets/images/customer-experience-analytics/chart3_weighted_sentiment.png" class="img-fluid rounded chart-img" alt="Weighted Sentiment">
+                                <p class="text-center text-xs text-gray-500 mt-2">Fig 3: The helpful_count Gap</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-glass p-2 rounded">
+                                <img src="../assets/images/customer-experience-analytics/chart4_theme_distribution.png" class="img-fluid rounded chart-img" alt="Theme Distribution">
+                                <p class="text-center text-xs text-gray-500 mt-2">Fig 4: Pain Point Heatmap</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="bg-glass p-2 rounded">
+                                <img src="../assets/images/customer-experience-analytics/chart7_wordclouds_negative.png" class="img-fluid rounded chart-img" alt="Negative Wordclouds">
+                                <p class="text-center text-xs text-gray-500 mt-2">Fig 5: Comparative Root Cause Wordclouds (Negative Sentiment)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center bg-glass p-4 rounded-4 border-2 border-dashed border-gray-800">
+                        <div>
+                            <h4 class="fw-bold mb-1">Explore Full Analysis</h4>
+                            <p class="text-sm text-gray-500 mb-0">Check out the full Jupyter Notebook and SQL report on GitHub.</p>
+                        </div>
+                        <a href="https://github.com/duleab" class="btn btn-primary px-4" target="_blank">Repository <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-5 bg-black border-top border-gray-800 text-center">
+        <p class="text-gray-500 text-sm mb-0">&copy; 2026 Dule Abera. Part of the 10 Academy Challenge.</p>
+        <p class="text-xs text-gray-700 mt-2">Analysis based on verified Google Play reviews updated March 2026.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
