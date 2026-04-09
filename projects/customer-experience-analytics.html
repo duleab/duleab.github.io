@@ -166,9 +166,9 @@
                         <div class="bg-glass p-4 rounded-3 mb-4">
                             <h5 class="fw-bold text-cyan-400 mb-3"><i class="fas fa-briefcase me-2"></i>Business Context</h5>
                             <p class="text-sm text-gray-400 leading-relaxed">
-                                Analyzed user satisfaction for the top three Ethiopian banks (<b>CBE, BOA, Dashen</b>). 
-                                Simulated a Data Analyst role at <b>Omega Consultancy</b> to deliver actionable insights 
-                                for mobile banking app improvements.
+                                Compared customer feedback for three Ethiopian mobile banking apps (<b>CBE, BOA, Dashen</b>)
+                                using publicly available Google Play reviews. The goal was to turn unstructured feedback
+                                into a clear, prioritized list of product issues and opportunities.
                             </p>
                         </div>
 
@@ -228,12 +228,12 @@
                     <div class="timeline-item">
                         <h4 class="text-blue-400">02. State-of-the-Art NLP Pipeline</h4>
                         <p class="text-gray-400">
-                            Selected <b>RoBERTa-Twitter</b> for sentiment analysis due to its superior performance 
-                            on informal, short-form text compared to generic models like DistilBERT.
+                            Used <b>RoBERTa-Twitter</b> for sentiment classification because short app-store reviews tend
+                            to be informal and noisy (slang, typos, abbreviations) and the model handles that style well.
                         </p>
                         <div class="bg-glass p-3 rounded border-start border-blue-500 mb-3">
                             <i class="fas fa-microchip me-2 text-blue-400"></i>
-                            <span class="text-sm">Used <b>BERTopic</b> for automated theme discovery, uncovering 14 critical business themes like "App Crashes" and "Transaction Friction".</span>
+                            <span class="text-sm">Used <b>BERTopic</b> for theme discovery to surface recurring issues (for example: crashes, login/OTP friction, and transaction failures) without hand-labeling thousands of reviews.</span>
                         </div>
                     </div>
 
@@ -317,6 +317,12 @@
                             <p class="text-sm text-gray-500 mb-0">Check out the full Jupyter Notebook and SQL report on GitHub.</p>
                         </div>
                         <a href="https://github.com/duleab" class="btn btn-primary px-4" target="_blank">Repository <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="../assets/Publication/Customer_Experience_Analytics_Report.pdf" target="_blank" class="text-cyan-400 text-sm fw-bold text-decoration-none">
+                            <i class="fas fa-file-pdf me-2"></i> Download Full Technical Report (PDF)
+                        </a>
                     </div>
                 </div>
             </div>

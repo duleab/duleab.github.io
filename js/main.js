@@ -161,8 +161,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         activeFilter = category;
 
         allCards.forEach(card => {
-            const cat = card.getAttribute('data-category') || '';
-            const isVisible = category === 'all' || cat === category;
+            const cat = (card.getAttribute('data-category') || '').split(' ');
+            const isVisible = category === 'all' || cat.includes(category);
             card.classList.toggle('hidden-card', !isVisible);
         });
     };
