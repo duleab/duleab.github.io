@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Crisis Detection | Dule Abera — Data Scientist</title>
+    <meta name="description" content="End-to-end NLP pipeline classifying 7 crisis types from multilingual social media using a fine-tuned XLM-RoBERTa model with 96.7% accuracy.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style>
+        /* ── Base ── */
+        body { background: #0a0f1e; color: #e2e8f0; font-family: 'DM Sans', sans-serif; }
+
+        /* ── Nav ── */
+        .site-nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10,15,30,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0.85rem 0;
+        }
+        .site-nav .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
+        .site-nav .brand span { color: #f97316; }
+        .site-nav a.nav-pill {
+            color: rgba(255,255,255,0.65); font-size: 0.9rem;
+            text-decoration: none; padding: 0.35rem 0.9rem;
+            border-radius: 999px; transition: all 0.2s;
+        }
+        .site-nav a.nav-pill:hover { color: #fff; background: rgba(255,255,255,0.07); }
+
+        /* ── Hero ── */
+        .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0a0f1e 100%);
+            padding: 80px 0 60px;
+            position: relative; overflow: hidden;
+        }
+        .hero-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(139,92,246,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3);
+            color: #a78bfa; font-size: 0.78rem; font-weight: 700;
+            padding: 0.35rem 0.9rem; border-radius: 999px; text-transform: uppercase;
+            letter-spacing: 0.08em; margin-bottom: 1.25rem;
+        }
+        .hero-title { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.15; color: #fff; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.05rem; color: rgba(255,255,255,0.6); max-width: 680px; line-height: 1.7; margin-bottom: 2rem; }
+        .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+        .tech-badge {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.75); font-size: 0.78rem; font-weight: 600;
+            padding: 0.3rem 0.8rem; border-radius: 6px;
+        }
+        .tech-badge.purple { border-color: rgba(139,92,246,0.4); color: #c4b5fd; }
+        .tech-badge.green  { border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
+        .tech-badge.blue   { border-color: rgba(59,130,246,0.4); color: #93c5fd; }
+        .tech-badge.orange { border-color: rgba(249,115,22,0.4); color: #fdba74; }
+
+        /* ── KPI strip ── */
+        .kpi-strip { background: #0d1117; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 1.5rem 0; }
+        .kpi-item { text-align: center; padding: 0.5rem 1rem; }
+        .kpi-number { font-size: 2rem; font-weight: 800; line-height: 1; display: block; }
+        .kpi-label  { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-top: 0.25rem; display: block; }
+        .kpi-number.purple { color: #a78bfa; }
+        .kpi-number.green  { color: #34d399; }
+        .kpi-number.blue   { color: #60a5fa; }
+        .kpi-number.orange { color: #fb923c; }
+
+        /* ── Layout ── */
+        .content-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 1.5rem; }
+        .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; align-items: start; }
+        @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+        /* ── Section headings ── */
+        .section-label {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em;
+            color: #a78bfa; margin-bottom: 0.4rem;
+        }
+        .section-title { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 1rem; line-height: 1.2; }
+
+        /* ── Glass card ── */
+        .glass-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px; padding: 1.5rem;
+            backdrop-filter: blur(8px);
+        }
+        .glass-card + .glass-card { margin-top: 1.25rem; }
+
+        /* ── Timeline ── */
+        .timeline { position: relative; padding-left: 1.75rem; }
+        .timeline::before {
+            content: ''; position: absolute; left: 0; top: 6px; bottom: 0;
+            width: 2px; background: linear-gradient(to bottom, #7c3aed, rgba(124,58,237,0.05));
+        }
+        .tl-item { position: relative; padding-bottom: 2rem; }
+        .tl-item:last-child { padding-bottom: 0; }
+        .tl-dot {
+            position: absolute; left: -2.1rem; top: 0;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #7c3aed; border: 3px solid #0a0f1e;
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+        }
+        .tl-step { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #7c3aed; margin-bottom: 0.2rem; }
+        .tl-title { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.4rem; }
+        .tl-body { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.65; margin: 0; }
+
+        /* ── Image frames ── */
+        .img-frame {
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.07);
+            background: #0d1117;
+            margin-bottom: 1.25rem;
+        }
+        .img-frame img { width: 100%; display: block; transition: transform 0.35s; }
+        .img-frame:hover img { transform: scale(1.02); }
+        .img-caption { padding: 0.6rem 1rem 0.8rem; font-size: 0.78rem; color: rgba(255,255,255,0.4); text-align: center; }
+
+        /* ── Per-class table ── */
+        .perf-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .perf-table th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); font-weight: 700; padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .perf-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.75); vertical-align: middle; }
+        .perf-table tr:last-child td { border-bottom: none; }
+        .perf-table tr:hover td { background: rgba(255,255,255,0.025); }
+        .f1-bar { display: flex; align-items: center; gap: 0.5rem; }
+        .f1-fill { height: 5px; border-radius: 99px; background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+        .badge-perfect { display: inline-block; background: rgba(16,185,129,0.15); color: #6ee7b7; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3); margin-left: 0.4rem; }
+
+        /* ── Insight highlight ── */
+        .insight-box {
+            background: rgba(124,58,237,0.08);
+            border-left: 3px solid #7c3aed;
+            border-radius: 0 10px 10px 0;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+        .insight-box p { margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+
+        /* ── Sidebar blocks ── */
+        .sidebar-block { margin-bottom: 1.25rem; }
+        .sidebar-block .blk-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #a78bfa; margin-bottom: 0.8rem; }
+        .sidebar-block ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-block li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.86rem; color: rgba(255,255,255,0.65); padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .sidebar-block li:last-child { border-bottom: none; }
+        .sidebar-block li i { color: #7c3aed; width: 14px; margin-top: 2px; flex-shrink: 0; }
+        .sidebar-block li b { color: #e2e8f0; }
+
+        /* ── Training progress ── */
+        .epoch-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; font-size: 0.84rem; }
+        .epoch-label { color: rgba(255,255,255,0.5); width: 50px; flex-shrink: 0; }
+        .epoch-bar-wrap { flex: 1; height: 7px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+        .epoch-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+        .epoch-val { width: 52px; text-align: right; color: rgba(255,255,255,0.7); font-weight: 600; font-size: 0.8rem; }
+        .epoch-val.best { color: #a78bfa; }
+
+        /* ── Data enrichment bars ── */
+        .enrich-item { margin-bottom: 1rem; }
+        .enrich-header { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.35rem; }
+        .enrich-name { color: rgba(255,255,255,0.7); font-weight: 600; }
+        .enrich-count { color: rgba(255,255,255,0.45); }
+        .enrich-bar-wrap { height: 7px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+        .enrich-bar { height: 100%; border-radius: 99px; }
+
+        /* ── CTA strip ── */
+        .cta-strip {
+            background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(59,130,246,0.06));
+            border: 1px solid rgba(124,58,237,0.2);
+            border-radius: 16px; padding: 2rem;
+            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .cta-strip h4 { margin: 0 0 0.25rem; font-weight: 800; color: #fff; font-size: 1.1rem; }
+        .cta-strip p  { margin: 0; font-size: 0.88rem; color: rgba(255,255,255,0.5); }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: #7c3aed; color: #fff; font-weight: 700; font-size: 0.9rem;
+            padding: 0.65rem 1.4rem; border-radius: 8px; text-decoration: none;
+            transition: background 0.2s; white-space: nowrap;
+        }
+        .btn-cta:hover { background: #6d28d9; color: #fff; }
+
+        /* ── Footer ── */
+        .site-footer { background: #0d1117; border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 0; text-align: center; }
+        .site-footer p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+
+    <!-- ── NAV ── -->
+    <nav class="site-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="../index.html" class="brand">Dule<span>.</span></a>
+            <div class="d-flex gap-1">
+                <a href="../index.html#home" class="nav-pill">Home</a>
+                <a href="../index.html#experience" class="nav-pill">Experience</a>
+                <a href="../index.html#projects" class="nav-pill">Projects</a>
+                <a href="../index.html#contact" class="nav-pill">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-badge">
+                <i class="fas fa-satellite-dish"></i> NLP · Transformers · Public Safety
+            </div>
+            <h1 class="hero-title">Real-Time Crisis Detection<br>& Classification System</h1>
+            <p class="hero-subtitle">
+                An end-to-end NLP pipeline that monitors social media and news feeds, classifies crisis events 
+                into 7 categories using a fine-tuned <strong style="color:#c4b5fd;">XLM-RoBERTa</strong> model, 
+                and renders detected incidents on an interactive geospatial map for emergency coordinators.
+            </p>
+            <div class="tag-row">
+                <span class="tech-badge purple">XLM-RoBERTa</span>
+                <span class="tech-badge purple">SHAP Explainability</span>
+                <span class="tech-badge green">DBSCAN Clustering</span>
+                <span class="tech-badge green">SBERT Embeddings</span>
+                <span class="tech-badge blue">Folium Maps</span>
+                <span class="tech-badge blue">Reddit · BMKG · NASA</span>
+                <span class="tech-badge orange">PyTorch</span>
+                <span class="tech-badge orange">HuggingFace</span>
+            </div>
+            <div class="d-flex gap-3 flex-wrap">
+                <a href="https://github.com/duleab" class="btn-cta" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> View Repository
+                </a>
+                <a href="#methodology" class="btn-cta" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-flask"></i> Deep Dive
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── KPI STRIP ── -->
+    <section class="kpi-strip">
+        <div class="container">
+            <div class="row g-0 text-center">
+                <div class="col-6 col-md-3">
+                    <div class="kpi-item">
+                        <span class="kpi-number purple">96.7%</span>
+                        <span class="kpi-label">Validation Accuracy</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="kpi-item">
+                        <span class="kpi-number green">0.96</span>
+                        <span class="kpi-label">Macro F1 Score</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="kpi-item">
+                        <span class="kpi-number blue">28,415</span>
+                        <span class="kpi-label">Training Samples</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="kpi-item">
+                        <span class="kpi-number orange">7 Classes</span>
+                        <span class="kpi-label">Crisis Categories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── MAIN CONTENT ── -->
+    <div class="content-wrap">
+        <div class="two-col">
+
+            <!-- ── LEFT COLUMN ── -->
+            <div id="methodology">
+
+                <!-- Pipeline Architecture -->
+                <div class="section-label">System Architecture</div>
+                <h2 class="section-title">A 7-Stage Automated Pipeline</h2>
+                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.5rem;">
+                    Each stage feeds directly into the next, from raw social media ingestion to a live interactive 
+                    map. The system is designed for humanitarian responders who need high-confidence, explainable 
+                    alerts — not just raw predictions.
+                </p>
+
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/pipeline_architecture.png" alt="End-to-end crisis detection pipeline architecture">
+                    <div class="img-caption">Fig 1 — Full System Architecture: from raw social media to interactive crisis map</div>
+                </div>
+
+                <div class="timeline mt-4" style="margin-bottom:2.5rem;">
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 01–01B</div>
+                        <div class="tl-title">Multi-Source Data Ingestion</div>
+                        <p class="tl-body">Collected live posts from Reddit (PRAW), BMKG official RSS feeds, and Telegram channels. Separately, a bulk dataset loader assembled <strong style="color:#e2e8f0;">28,415 labeled training samples</strong> from HumAID, CrisisLex, DisasterTweets, USGS, and NASA FIRMS.</p>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 02</div>
+                        <div class="tl-title">Text Preprocessing & Geo-Resolution</div>
+                        <p class="tl-body">Cleaned multilingual text, resolved location mentions to coordinates using NER + fuzzy geo-matching, and normalized timestamps for temporal analysis across time zones.</p>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 04 — Core</div>
+                        <div class="tl-title">XLM-RoBERTa Fine-Tuning</div>
+                        <p class="tl-body">Fine-tuned <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:4px;">xlm-roberta-base</code> (278M parameters) on a 7-class crisis taxonomy. Used AdamW with linear warmup for 5 epochs on a Colab T4 GPU, achieving 96.7% validation accuracy.</p>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 05</div>
+                        <div class="tl-title">SBERT + DBSCAN Event Clustering</div>
+                        <p class="tl-body">Used <code style="background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:4px;">paraphrase-multilingual-mpnet-base-v2</code> embeddings and a composite geographic + semantic distance matrix to cluster related reports about the same real-world event, reducing duplicate alerts.</p>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 06</div>
+                        <div class="tl-title">SHAP Word-Level Explainability</div>
+                        <p class="tl-body">Every prediction is accompanied by SHAP-based token attributions. Emergency operators can see <em>which exact words</em> triggered the classification — building trust in a high-stakes domain.</p>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-step">Stage 07</div>
+                        <div class="tl-title">Interactive Folium Dashboard</div>
+                        <p class="tl-body">Crisis events are rendered on a Leaflet.js map with colour-coded markers by crisis type, clustered popups with confidence scores, and a GeoJSON export for downstream GIS tooling.</p>
+                    </div>
+                </div>
+
+                <!-- Dataset Distribution (user-specified image) -->
+                <div class="section-label" style="margin-top:2.5rem;">Data Engineering</div>
+                <h2 class="section-title">Class Imbalance Was the Key Challenge</h2>
+                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.25rem;">
+                    Initial datasets severely under-represented two life-critical categories. 
+                    <em>Earthquake</em> had only 69 samples; <em>fire</em> had 379. 
+                    The solution was aggressive data augmentation via official APIs.
+                </p>
+
+                <!-- Dataset image (user-specified: 01b_bulk_dataset_loader_cell13_img1.png) -->
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/dataset_distribution.png" alt="Dataset class distribution across 7 crisis categories">
+                    <div class="img-caption">Fig 2 — Training Dataset Distribution After Balancing (28,415 samples, max 5,000 per class)</div>
+                </div>
+
+                <div class="insight-box">
+                    <p><i class="fas fa-lightbulb" style="color:#a78bfa;margin-right:0.5rem;"></i>
+                    <strong style="color:#e2e8f0;">Key Insight:</strong> Enriching earthquake data via the USGS Earthquake API (+5,649%) and fire data via NASA FIRMS (+1,219%) was the single most impactful change — pushing Macro F1 from 0.94 → <strong style="color:#a78bfa;">0.96</strong> and both class F1 scores to a perfect <strong style="color:#6ee7b7;">1.00 🎉</strong></p>
+                </div>
+
+                <!-- Augmentation figure -->
+                <div class="img-frame" style="margin-top:1.25rem;">
+                    <img src="../assets/images/crisis-detection/data_augmentation.png" alt="Data augmentation strategy breakdown">
+                    <div class="img-caption">Fig 3 — Data Enrichment Breakdown: USGS API (earthquake) + NASA FIRMS (fire) augmentation</div>
+                </div>
+
+                <!-- Model Architecture (user-specified: 04_event_classification_cell5_img1.png) -->
+                <div class="section-label" style="margin-top:2.5rem;">Model Development</div>
+                <h2 class="section-title">Fine-Tuning XLM-RoBERTa for 7-Class Crisis Detection</h2>
+
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/model_architecture.png" alt="XLM-RoBERTa model configuration and architecture">
+                    <div class="img-caption">Fig 4 — XLM-RoBERTa-base Fine-Tuning Configuration (278M parameters, 7-class head)</div>
+                </div>
+
+                <!-- Training Curves (user-specified: 04_event_classification_cell11_img3.png) -->
+                <div class="img-frame" style="margin-top:1.25rem;">
+                    <img src="../assets/images/crisis-detection/training_curves.png" alt="Training and validation accuracy/loss curves across 5 epochs">
+                    <div class="img-caption">Fig 5 — Training Progress: Accuracy & Loss across 5 Epochs — No overfitting observed</div>
+                </div>
+
+                <!-- Model Performance Section -->
+                <div class="section-label" style="margin-top:2.5rem;">Evaluation</div>
+                <h2 class="section-title">Per-Class Performance & Explainability</h2>
+
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/confusion_matrix.png" alt="Confusion matrix for 7-class crisis classifier">
+                    <div class="img-caption">Fig 6 — Normalised Confusion Matrix: Near-diagonal predictions across all 7 classes</div>
+                </div>
+
+                <div class="img-frame" style="margin-top:1.25rem;">
+                    <img src="../assets/images/crisis-detection/roc_pr_curves.png" alt="ROC and Precision-Recall curves">
+                    <div class="img-caption">Fig 7 — ROC-AUC and Precision-Recall Curves: All classes show AUC ≥ 0.99</div>
+                </div>
+
+                <!-- SHAP Analysis -->
+                <div class="section-label" style="margin-top:2.5rem;">Explainability</div>
+                <h2 class="section-title">SHAP Token Attribution for Trust</h2>
+                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.25rem;">
+                    In humanitarian response, a black-box prediction is insufficient. Every alert generated by this 
+                    system includes word-level SHAP attributions, showing exactly which tokens drove the 
+                    classification — essential for responder trust.
+                </p>
+
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/shap_analysis.png" alt="SHAP global feature attribution for crisis classification">
+                    <div class="img-caption">Fig 8 — SHAP Global Attribution: Feature importance across all 7 crisis types</div>
+                </div>
+
+                <div class="img-frame" style="margin-top:1.25rem;">
+                    <img src="../assets/images/crisis-detection/shap_wordlevel.png" alt="SHAP word-level attribution for individual predictions">
+                    <div class="img-caption">Fig 9 — Word-Level SHAP: "flood" +0.533, "road" +0.464 → 99.9% flood confidence</div>
+                </div>
+
+                <!-- Interactive Map Preview -->
+                <div class="section-label" style="margin-top:2.5rem;">Deployment</div>
+                <h2 class="section-title">Interactive Crisis Map</h2>
+                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.25rem;">
+                    The pipeline's final output is a live Folium/Leaflet.js map rendering all classified crisis 
+                    events with colour-coded markers, clustering by proximity, confidence score popups, and 
+                    GeoJSON export for GIS systems.
+                </p>
+
+                <div class="img-frame">
+                    <img src="../assets/images/crisis-detection/crisis_map_preview.png" alt="Interactive Folium crisis detection map">
+                    <div class="img-caption">Fig 10 — Interactive Crisis Map: Colour-coded by crisis type with confidence popups</div>
+                </div>
+
+                <!-- CTA -->
+                <div class="cta-strip mt-5">
+                    <div>
+                        <h4>Explore the Full Codebase</h4>
+                        <p>8 structured Jupyter notebooks — from data collection to the live map deployment.</p>
+                    </div>
+                    <a href="https://github.com/duleab" class="btn-cta" target="_blank" rel="noopener">
+                        Repository <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+            </div><!-- /left col -->
+
+            <!-- ── RIGHT SIDEBAR ── -->
+            <aside>
+
+                <!-- Quick Info -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Project Details</div>
+                    <ul>
+                        <li><i class="fas fa-calendar-alt"></i><div><b>Completed</b><br>June 2026 · 10 Academy</div></li>
+                        <li><i class="fas fa-tags"></i><div><b>Category</b><br>NLP · Crisis Detection · Geospatial</div></li>
+                        <li><i class="fas fa-microchip"></i><div><b>Hardware</b><br>NVIDIA T4 GPU (Google Colab)</div></li>
+                        <li><i class="fas fa-globe"></i><div><b>Coverage</b><br>Indonesia (global via multilingual model)</div></li>
+                        <li><i class="fas fa-language"></i><div><b>Languages</b><br>English, Indonesian, multilingual</div></li>
+                    </ul>
+                </div>
+
+                <!-- Data Sources -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Data Sources</div>
+                    <ul>
+                        <li><i class="fab fa-reddit"></i><b>Reddit</b> via PRAW API</li>
+                        <li><i class="fas fa-broadcast-tower"></i><b>BMKG</b> Official RSS Feed</li>
+                        <li><i class="fas fa-satellite"></i><b>NASA FIRMS</b> MODIS/VIIRS</li>
+                        <li><i class="fas fa-wave-square"></i><b>USGS</b> Earthquake API</li>
+                        <li><i class="fas fa-newspaper"></i><b>HumAID + CrisisLex</b> Academic</li>
+                    </ul>
+                </div>
+
+                <!-- Training Progression -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Training Progression</div>
+                    <div class="epoch-row"><span class="epoch-label">Epoch 1</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:94.8%"></div></div><span class="epoch-val">94.8%</span></div>
+                    <div class="epoch-row"><span class="epoch-label">Epoch 2</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:96.4%"></div></div><span class="epoch-val">96.4%</span></div>
+                    <div class="epoch-row"><span class="epoch-label">Epoch 3</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:96.4%"></div></div><span class="epoch-val">96.4%</span></div>
+                    <div class="epoch-row"><span class="epoch-label">Epoch 4</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:96.5%"></div></div><span class="epoch-val">96.5%</span></div>
+                    <div class="epoch-row"><span class="epoch-label">Epoch 5 ⭐</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:96.7%;background:linear-gradient(90deg,#7c3aed,#c4b5fd)"></div></div><span class="epoch-val best">96.7%</span></div>
+                </div>
+
+                <!-- Per-class F1 -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Per-Class F1 Score</div>
+                    <table class="perf-table">
+                        <thead><tr><th>Crisis Type</th><th>F1</th></tr></thead>
+                        <tbody>
+                            <tr><td>earthquake</td><td><div class="f1-bar"><div class="f1-fill" style="width:50px;background:linear-gradient(90deg,#059669,#6ee7b7)"></div>1.00<span class="badge-perfect">PERFECT</span></div></td></tr>
+                            <tr><td>fire</td><td><div class="f1-bar"><div class="f1-fill" style="width:50px;background:linear-gradient(90deg,#059669,#6ee7b7)"></div>1.00<span class="badge-perfect">PERFECT</span></div></td></tr>
+                            <tr><td>flood</td><td><div class="f1-bar"><div class="f1-fill" style="width:48px"></div>0.96</div></td></tr>
+                            <tr><td>accident</td><td><div class="f1-bar"><div class="f1-fill" style="width:48px"></div>0.96</div></td></tr>
+                            <tr><td>violence</td><td><div class="f1-bar"><div class="f1-fill" style="width:48px"></div>0.96</div></td></tr>
+                            <tr><td>storm</td><td><div class="f1-bar"><div class="f1-fill" style="width:47px"></div>0.95</div></td></tr>
+                            <tr><td>other</td><td><div class="f1-bar"><div class="f1-fill" style="width:45px"></div>0.90</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Data Enrichment Impact -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Data Enrichment Impact</div>
+                    <div class="enrich-item">
+                        <div class="enrich-header"><span class="enrich-name">earthquake</span><span class="enrich-count">69 → 3,966</span></div>
+                        <div class="enrich-bar-wrap"><div class="enrich-bar" style="width:98%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:3px;">via USGS API · +5,649%</div>
+                    </div>
+                    <div class="enrich-item">
+                        <div class="enrich-header"><span class="enrich-name">fire</span><span class="enrich-count">379 → 5,000</span></div>
+                        <div class="enrich-bar-wrap"><div class="enrich-bar" style="width:100%;background:linear-gradient(90deg,#b45309,#fb923c)"></div></div>
+                        <div style="font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:3px;">via NASA FIRMS · +1,219%</div>
+                    </div>
+                    <div class="enrich-item">
+                        <div class="enrich-header"><span class="enrich-name">accuracy gain</span><span class="enrich-count">95.4% → 96.7%</span></div>
+                        <div class="enrich-bar-wrap"><div class="enrich-bar" style="width:97%;background:linear-gradient(90deg,#065f46,#34d399)"></div></div>
+                    </div>
+                </div>
+
+                <!-- Related Projects -->
+                <div class="glass-card sidebar-block">
+                    <div class="blk-title">Related Projects</div>
+                    <ul>
+                        <li><i class="fas fa-link"></i><a href="conflict-food-crisis-prediction.html" style="color:#a78bfa;text-decoration:none;">Food Crisis Prediction (XGBoost)</a></li>
+                        <li><i class="fas fa-link"></i><a href="fake-image-detection.html" style="color:#a78bfa;text-decoration:none;">Fake Image Detection (EfficientNet)</a></li>
+                        <li><i class="fas fa-link"></i><a href="violence-detection.html" style="color:#a78bfa;text-decoration:none;">Violence Detection (CV)</a></li>
+                    </ul>
+                </div>
+
+            </aside>
+
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+        <p>&copy; 2026 Dule Abera &mdash; Real-Time Crisis Detection System &middot; 10 Academy AI Mastery Program</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
