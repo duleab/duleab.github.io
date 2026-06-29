@@ -3,349 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alfamart HR Management Dashboard - BI Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Alfamart HR Dashboard | Dule Abera</title>
+    <meta name="description" content="Comprehensive HR analytics dashboard analyzing workforce dynamics, training effectiveness, and employee growth patterns using Power BI.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
     <style>
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-        }
-        .tech-badge {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin: 5px;
-            display: inline-block;
-            font-size: 0.9em;
-        }
-        .metric-card {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-left: 4px solid #007bff;
-            transition: transform 0.3s ease;
-        }
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-        .dashboard-image {
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin: 20px 0;
-        }
-        .kpi-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin: 10px 0;
-        }
-        .insight-box {
-            background: #f8f9fa;
-            border-left: 4px solid #28a745;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 10px 10px 0;
-        }
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
+        
+        .dashboard-img { width:100%; border-radius:8px; border:1px solid var(--border-color); display:block; margin:2rem 0; box-shadow:0 12px 32px rgba(0,0,0,0.08); }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">
-                <i class="fas fa-arrow-left me-2"></i>Back to Portfolio
-            </a>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">
-                        <i class="fas fa-users me-3"></i>
-                        Alfamart Human Resource Management Dashboard
-                    </h1>
-                    <p class="lead mb-4">
-                        Comprehensive HR analytics dashboard analyzing workforce dynamics, training effectiveness, and employee growth patterns across Alfamart operations from 2021-2024.
-                    </p>
-                    <div class="mb-4">
-                        <span class="tech-badge"><i class="fas fa-chart-bar"></i> Power BI</span>
-                        <span class="tech-badge"><i class="fas fa-database"></i> SQL Server</span>
-                        <span class="tech-badge"><i class="fas fa-users"></i> HR Analytics</span>
-                        <span class="tech-badge"><i class="fas fa-graduation-cap"></i> Training ROI</span>
-                        <span class="tech-badge"><i class="fas fa-chart-line"></i> Workforce Planning</span>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <i class="fas fa-chart-pie" style="font-size: 8rem; opacity: 0.3;"></i>
-                    </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Alfamart HR Dashboard</span>
+                </nav>
+                <h1>Alfamart HR Management</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    A comprehensive Power BI dashboard tracking workforce dynamics, talent acquisition, training ROI, and employee retention strategies.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">Power BI</span><span class="tag">SQL Server</span><span class="tag">HR Analytics</span>
+                    <span class="tag">Workforce Planning</span><span class="tag">Data Analytics</span>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Dashboard Overview -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Alfamart Human Resource Management Dashboard</h2>
-            <div class="row">
-                <div class="col-lg-12">
-                    <img src="../assets/images/alfamart HRM.png" alt="Alfamart HR Dashboard" class="img-fluid dashboard-image w-100">
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">594K</span><span class="kpi-label">Total Employees</span></div>
+                    <div><span class="kpi-number">8.7%</span><span class="kpi-label">Growth Rate</span></div>
+                    <div><span class="kpi-number">190K</span><span class="kpi-label">New Hires</span></div>
+                    <div><span class="kpi-number">241M</span><span class="kpi-label">Training Budget</span></div>
                 </div>
             </div>
-            
-            <!-- Dashboard Explanation -->
-            <div class="row mt-4">
-                <div class="col-lg-12">
-                    <div class="insight-box">
-                        <h4><i class="fas fa-users text-primary me-2"></i>HR Management Dashboard Analysis</h4>
-                        <p class="lead">This comprehensive HR dashboard provides strategic insights into workforce management, talent acquisition, and employee development across Alfamart's operations:</p>
+        </div>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <img src="../assets/images/alfamart HRM.png" alt="Alfamart HR Dashboard" class="dashboard-img">
+
+                        <p class="case-heading">Dashboard Analytics</p>
+                        <h2 class="case-title">Workforce & Talent Strategy</h2>
+                        <p class="case-body">This HR dashboard provides strategic insights into workforce management, measuring the effectiveness of talent acquisition pipelines against attrition rates, and evaluating human capital investments.</p>
                         
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-chart-line text-success me-2"></i>Workforce Analytics</h6>
-                                <ul>
-                                    <li><strong>Employee Headcount Tracking:</strong> Real-time monitoring of total workforce across all departments and locations</li>
-                                    <li><strong>Growth Rate Analysis:</strong> Year-over-year workforce expansion metrics showing 8.70% growth trajectory</li>
-                                    <li><strong>Department Distribution:</strong> Visual breakdown of employee allocation across different business units</li>
-                                    <li><strong>Regional Workforce Mapping:</strong> Geographic distribution of employees across Alfamart's network</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-graduation-cap text-warning me-2"></i>Training & Development</h6>
-                                <ul>
-                                    <li><strong>Training Budget Allocation:</strong> Strategic distribution of 241.60M training budget across programs</li>
-                                    <li><strong>Skill Development Programs:</strong> Tracking of technical and soft skills training initiatives</li>
-                                    <li><strong>Leadership Development:</strong> Management training programs and succession planning metrics</li>
-                                    <li><strong>Training ROI Analysis:</strong> Effectiveness measurement of training investments</li>
-                                </ul>
-                            </div>
+                        <div class="insight-callout">
+                            <strong>Key Finding:</strong> Maintained a positive net workforce growth (34.39K net additions) while achieving optimal training budget utilization, highlighting strong talent retention in a high-turnover industry.
                         </div>
-                        
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-user-plus text-info me-2"></i>Talent Acquisition</h6>
-                                <ul>
-                                    <li><strong>Recruitment Pipeline:</strong> End-to-end hiring process tracking with 190.39K new hires</li>
-                                    <li><strong>Time-to-Fill Metrics:</strong> Efficiency measurement of recruitment processes</li>
-                                    <li><strong>Source Effectiveness:</strong> Analysis of recruitment channel performance</li>
-                                    <li><strong>Onboarding Success:</strong> New employee integration and retention tracking</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-chart-pie text-danger me-2"></i>Retention & Turnover</h6>
-                                <ul>
-                                    <li><strong>Turnover Analysis:</strong> Comprehensive tracking of 156.00K departures with trend analysis</li>
-                                    <li><strong>Retention Strategies:</strong> Effectiveness of employee retention programs</li>
-                                    <li><strong>Exit Interview Insights:</strong> Analysis of departure reasons and improvement opportunities</li>
-                                    <li><strong>Employee Satisfaction:</strong> Engagement scores and satisfaction survey results</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-success mt-4">
-                            <h6><i class="fas fa-trophy me-2"></i>Key HR Achievements</h6>
-                            <p class="mb-2">The dashboard highlights significant HR accomplishments:</p>
-                            <ul class="mb-0">
-                                <li>Maintained positive net workforce growth with 34.39K net additions in 2024</li>
-                                <li>Achieved optimal training budget utilization with measurable skill development outcomes</li>
-                                <li>Implemented data-driven recruitment strategies resulting in improved hiring efficiency</li>
-                                <li>Established comprehensive retention programs reducing voluntary turnover rates</li>
+
+                        <p class="case-heading">Metrics Breakdown</p>
+                        <h2 class="case-title">What We Tracked</h2>
+                        <ul class="case-body" style="padding-left:1.5rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Workforce Analytics:</strong> Real-time headcount tracking, year-over-year expansion, department distribution, and regional density mapping.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Talent Acquisition:</strong> Hiring pipelines, time-to-fill efficiency metrics, sourcing channel effectiveness, and onboarding success tracking.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Retention & Turnover:</strong> Tracking of 156K departures against 190K hires, exit interview analysis, and employee satisfaction scorings.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Training ROI:</strong> Budget distribution mapping, skill program completions, and leadership succession planning.</li>
+                        </ul>
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Client Scope</strong><br>Alfamart Retail</li>
+                                <li><strong>Data Period</strong><br>2021 - 2024</li>
+                                <li><strong>Task</strong><br>BI Development</li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Key Metrics -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Key Performance Indicators</h2>
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="kpi-card">
-                        <i class="fas fa-users text-primary" style="font-size: 2rem;"></i>
-                        <h3 class="mt-3">594.05K</h3>
-                        <p class="text-muted">Total Employees (2024)</p>
-                        <small class="text-success"><i class="fas fa-arrow-up"></i> 8.70% Growth Rate</small>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="kpi-card">
-                        <i class="fas fa-graduation-cap text-success" style="font-size: 2rem;"></i>
-                        <h3 class="mt-3">241.60</h3>
-                        <p class="text-muted">Training Budget (Millions)</p>
-                        <small class="text-info">Optimized allocation across departments</small>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="kpi-card">
-                        <i class="fas fa-user-plus text-warning" style="font-size: 2rem;"></i>
-                        <h3 class="mt-3">190.39K</h3>
-                        <p class="text-muted">New Hires (2024)</p>
-                        <small class="text-primary">Steady recruitment growth</small>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="kpi-card">
-                        <i class="fas fa-user-minus text-danger" style="font-size: 2rem;"></i>
-                        <h3 class="mt-3">156.00K</h3>
-                        <p class="text-muted">Departures (2024)</p>
-                        <small class="text-warning">Managed turnover rate</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Analysis Insights -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Key Insights & Analysis</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="insight-box">
-                        <h5><i class="fas fa-chart-line text-success me-2"></i>Employee Growth Trends</h5>
-                        <p>Consistent year-over-year growth with 8.70% increase in 2024, demonstrating strong business expansion and workforce scaling strategies.</p>
-                        <ul>
-                            <li>Steady growth from 2021-2024</li>
-                            <li>Peak hiring in Q4 periods</li>
-                            <li>Balanced regional distribution</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="insight-box">
-                        <h5><i class="fas fa-graduation-cap text-primary me-2"></i>Training Investment ROI</h5>
-                        <p>Strategic training budget allocation of 241.60M showing commitment to employee development and skill enhancement programs.</p>
-                        <ul>
-                            <li>Targeted skill development programs</li>
-                            <li>Leadership training initiatives</li>
-                            <li>Digital transformation training</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="insight-box">
-                        <h5><i class="fas fa-balance-scale text-warning me-2"></i>Turnover Analysis</h5>
-                        <p>Healthy turnover rate with 190.39K new hires vs 156.00K departures, indicating positive net growth and effective retention strategies.</p>
-                        <ul>
-                            <li>Competitive retention rates</li>
-                            <li>Exit interview insights</li>
-                            <li>Career progression opportunities</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="insight-box">
-                        <h5><i class="fas fa-chart-pie text-info me-2"></i>Workforce Demographics</h5>
-                        <p>Diverse workforce composition with balanced gender distribution and comprehensive age group representation across all departments.</p>
-                        <ul>
-                            <li>Gender diversity initiatives</li>
-                            <li>Multi-generational workforce</li>
-                            <li>Inclusive hiring practices</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Implementation -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Technical Implementation</h2>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Dashboard Architecture</h5>
+                        <div class="sidebar-card">
+                            <h3>Alfamart Series</h3>
+                            <ul>
+                                <li><a href="alfamart-customer-dashboard.html">Customer Engagement</a></li>
+                                <li><a href="alfamart-financial-dashboard.html">Financial Performance</a></li>
+                                <li><strong>HR Management</strong></li>
+                                <li><a href="alfamart-operations-dashboard.html">Internal Operations</a></li>
+                            </ul>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-database text-primary me-2"></i>Data Sources</h6>
-                                    <ul>
-                                        <li>HRIS Database</li>
-                                        <li>Payroll Systems</li>
-                                        <li>Training Management System</li>
-                                        <li>Performance Management Data</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-chart-bar text-success me-2"></i>Visualizations</h6>
-                                    <ul>
-                                        <li>Employee growth trends</li>
-                                        <li>Training budget allocation</li>
-                                        <li>Turnover rate analysis</li>
-                                        <li>Demographic distributions</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-sync text-warning me-2"></i>Update Frequency</h6>
-                                    <p>Real-time data refresh with automated ETL processes ensuring up-to-date HR metrics and KPIs.</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-users text-info me-2"></i>Target Users</h6>
-                                    <p>HR Directors, C-Suite Executives, Department Managers, and Workforce Planning Teams.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Business Impact -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Business Impact & Outcomes</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <i class="fas fa-chart-line text-success" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">Improved Planning</h4>
-                        <p>Enhanced workforce planning capabilities with predictive analytics for future hiring needs and budget allocation.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <i class="fas fa-dollar-sign text-primary" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">Cost Optimization</h4>
-                        <p>Optimized training budget allocation resulting in 15% improvement in training ROI and reduced recruitment costs.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <i class="fas fa-users text-info" style="font-size: 3rem;"></i>
-                        <h4 class="mt-3">Employee Satisfaction</h4>
-                        <p>Improved employee retention rates through data-driven insights into workforce satisfaction and career development.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

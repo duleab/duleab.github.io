@@ -3,374 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alfamart Customer Engagement Dashboard - Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Alfamart Customer Dashboard | Dule Abera</title>
+    <meta name="description" content="Comprehensive analysis of customer engagement metrics, satisfaction levels, and network growth across Alfamart's customer base using Power BI.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
     <style>
-        .hero-section {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 80px 0;
-        }
-        .metric-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-        .metric-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #f5576c;
-        }
-        .section-title {
-            color: #333;
-            margin-bottom: 40px;
-            position: relative;
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: #f5576c;
-        }
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
+        
+        .dashboard-img { width:100%; border-radius:8px; border:1px solid var(--border-color); display:block; margin:2rem 0; box-shadow:0 12px 32px rgba(0,0,0,0.08); }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">Dule<span>.</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#experience">Experience</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#projects">Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#contact">Contact</a>
-                    </li>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
                 </ul>
-            </div>
+            </nav>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">Alfamart Customer Engagement Dashboard</h1>
-                    <p class="lead mb-4">Comprehensive analysis of customer engagement metrics, satisfaction levels, and network growth across Alfamart's customer base (2021-2024)</p>
-                    <div class="d-flex gap-3">
-                        <span class="badge bg-light text-dark px-3 py-2">Power BI</span>
-                        <span class="badge bg-light text-dark px-3 py-2">Customer Analytics</span>
-                        <span class="badge bg-light text-dark px-3 py-2">Engagement Metrics</span>
-                        <span class="badge bg-light text-dark px-3 py-2">Network Analysis</span>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="text-center">
-                        <i class="fas fa-users fa-8x opacity-50"></i>
-                    </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Alfamart Customer Dashboard</span>
+                </nav>
+                <h1>Alfamart Customer Engagement</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    A comprehensive Power BI dashboard analyzing customer engagement metrics, satisfaction levels, and network growth across Alfamart's retail operations.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Data Analytics</span>
+                    <span class="tag">Retail Analytics</span><span class="tag">Customer Behavior</span>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Dashboard Overview -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title text-center">Alfamart Customer Engagement Dashboard</h2>
-            <div class="row">
-                <div class="col-lg-12">
-                    <img src="../assets/images/alfamart customer engegemnt.png" alt="Alfamart Customer Engagement Dashboard" class="img-fluid w-100" style="border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px 0;">
-                </div>
-            </div>
-            
-            <!-- Dashboard Explanation -->
-            <div class="row mt-4">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4><i class="fas fa-heart text-danger me-2"></i>Customer Engagement Dashboard Analysis</h4>
-                            <p class="lead">This comprehensive customer engagement dashboard provides deep insights into customer behavior, satisfaction levels, and network performance across Alfamart's retail operations:</p>
-                            
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-users text-primary me-2"></i>Customer Base Analytics</h6>
-                                    <ul>
-                                        <li><strong>Active Member Tracking:</strong> Real-time monitoring of 246.6K registered customers with membership growth trends</li>
-                                        <li><strong>Customer Segmentation:</strong> Demographic and behavioral analysis for targeted marketing strategies</li>
-                                        <li><strong>Loyalty Program Performance:</strong> Member engagement levels and reward program effectiveness</li>
-                                        <li><strong>Customer Lifetime Value:</strong> Analysis of long-term customer value and retention patterns</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-chart-line text-success me-2"></i>Traffic & Engagement Metrics</h6>
-                                    <ul>
-                                        <li><strong>Daily Customer Flow:</strong> Average 18.6K daily visits with peak hour analysis and seasonal trends</li>
-                                        <li><strong>Store Performance:</strong> Individual location performance across 44 store network</li>
-                                        <li><strong>Customer Journey Mapping:</strong> Path analysis from entry to purchase completion</li>
-                                        <li><strong>Engagement Heatmaps:</strong> Visual representation of customer interaction patterns</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-comments text-warning me-2"></i>Feedback & Satisfaction</h6>
-                                    <ul>
-                                        <li><strong>Complaint Management:</strong> Comprehensive tracking of 39K customer complaints with resolution timelines</li>
-                                        <li><strong>Satisfaction Surveys:</strong> Regular customer satisfaction measurement and trend analysis</li>
-                                        <li><strong>Service Quality Metrics:</strong> Staff performance and customer service excellence indicators</li>
-                                        <li><strong>Improvement Initiatives:</strong> Action plans based on customer feedback and suggestions</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-map-marker-alt text-info me-2"></i>Network Optimization</h6>
-                                    <ul>
-                                        <li><strong>Geographic Distribution:</strong> Strategic placement analysis of 44 store locations</li>
-                                        <li><strong>Market Coverage:</strong> Customer accessibility and market penetration analysis</li>
-                                        <li><strong>Expansion Planning:</strong> Data-driven insights for future store location decisions</li>
-                                        <li><strong>Competitive Analysis:</strong> Market positioning and competitive advantage assessment</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="alert alert-info mt-4">
-                                <h6><i class="fas fa-star me-2"></i>Customer Success Highlights</h6>
-                                <p class="mb-2">The dashboard reveals key customer engagement achievements:</p>
-                                <ul class="mb-0">
-                                    <li>Strong customer base growth with 246.6K active members demonstrating market trust</li>
-                                    <li>Consistent daily engagement with 18.6K average visits showing customer loyalty</li>
-                                    <li>Strategic network expansion to 44 locations optimizing customer accessibility</li>
-                                    <li>Proactive complaint management system improving overall customer satisfaction</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">246.6K</span><span class="kpi-label">Active Members</span></div>
+                    <div><span class="kpi-number">18.6K</span><span class="kpi-label">Daily Visitors</span></div>
+                    <div><span class="kpi-number">44</span><span class="kpi-label">Store Locations</span></div>
+                    <div><span class="kpi-number">39K</span><span class="kpi-label">Complaints Handled</span></div>
                 </div>
             </div>
         </div>
-    </section>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <img src="../assets/images/alfamart customer engegemnt.png" alt="Alfamart Customer Engagement Dashboard" class="dashboard-img">
 
-    <!-- Key Performance Indicators -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title text-center">Key Performance Indicators</h2>
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="metric-card text-center">
-                        <i class="fas fa-user-friends fa-3x text-primary mb-3"></i>
-                        <div class="metric-value">246.6K</div>
-                        <h5>Active Members</h5>
-                        <p class="text-muted">Registered Customers</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="metric-card text-center">
-                        <i class="fas fa-calendar-day fa-3x text-success mb-3"></i>
-                        <div class="metric-value">18.6K</div>
-                        <h5>Daily Customers</h5>
-                        <p class="text-muted">Average Daily Visits</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="metric-card text-center">
-                        <i class="fas fa-store fa-3x text-info mb-3"></i>
-                        <div class="metric-value">44</div>
-                        <h5>Store Network</h5>
-                        <p class="text-muted">Total Locations</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="metric-card text-center">
-                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                        <div class="metric-value">39K</div>
-                        <h5>Customer Complaints</h5>
-                        <p class="text-muted">Total Feedback</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <p class="case-heading">Dashboard Analytics</p>
+                        <h2 class="case-title">Customer Experience Insights</h2>
+                        <p class="case-body">This interactive dashboard provides deep insights into customer behavior, satisfaction levels, and network performance across Alfamart's retail ecosystem.</p>
+                        
+                        <div class="insight-callout">
+                            <strong>Key Finding:</strong> Strong customer base growth with 246.6K active members demonstrating market trust, alongside consistent daily engagement showing sustained customer loyalty.
+                        </div>
 
-    <!-- Analysis Insights -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">Analysis Insights</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-line text-primary me-2"></i>Customer Growth Trends</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-arrow-up text-success me-2"></i>Active membership base of 246.6K customers</li>
-                                <li><i class="fas fa-arrow-up text-success me-2"></i>Consistent daily customer traffic of 18.6K visits</li>
-                                <li><i class="fas fa-arrow-up text-success me-2"></i>Network expansion to 44 strategic locations</li>
-                                <li><i class="fas fa-chart-bar text-info me-2"></i>Customer access trends showing steady growth</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-comments text-warning me-2"></i>Customer Feedback Analysis</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-chart-pie text-warning me-2"></i>39K total customer complaints tracked</li>
-                                <li><i class="fas fa-trending-down text-success me-2"></i>Decreasing complaint trends over time</li>
-                                <li><i class="fas fa-star text-warning me-2"></i>Improved customer satisfaction metrics</li>
-                                <li><i class="fas fa-handshake text-info me-2"></i>Enhanced customer service response times</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Multi-Year Customer Trends -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title">Multi-Year Customer Trends (2021-2024)</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-users text-primary me-2"></i>Membership Growth</h5>
-                            <p>Steady increase in active member registrations, reaching 246.6K by 2024 with improved retention rates.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-map-marker-alt text-success me-2"></i>Network Expansion</h5>
-                            <p>Strategic store network growth to 44 locations, optimizing customer accessibility and market coverage.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-line text-info me-2"></i>Engagement Metrics</h5>
-                            <p>Consistent daily customer traffic averaging 18.6K visits, indicating strong customer loyalty and engagement.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Implementation -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">Technical Implementation</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-database text-primary me-2"></i>Data Sources</h5>
+                        <p class="case-heading">Metrics Breakdown</p>
+                        <h2 class="case-title">What We Tracked</h2>
+                        <ul class="case-body" style="padding-left:1.5rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Customer Base Analytics:</strong> Real-time monitoring of registered customers, membership growth trends, and segmentation for targeted marketing.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Traffic & Engagement:</strong> Average daily visits with peak hour analysis, store performance across the 44-store network, and engagement heatmaps.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Feedback & Satisfaction:</strong> Comprehensive tracking of 39K customer complaints with resolution timelines, satisfaction surveys, and service quality metrics.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Network Optimization:</strong> Strategic placement analysis, market coverage, and data-driven insights for future store expansions.</li>
+                        </ul>
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
                             <ul>
-                                <li>Customer registration databases</li>
-                                <li>Daily transaction records</li>
-                                <li>Customer feedback systems</li>
-                                <li>Store network analytics</li>
+                                <li><strong>Client Scope</strong><br>Alfamart Retail</li>
+                                <li><strong>Data Period</strong><br>2021 - 2024</li>
+                                <li><strong>Task</strong><br>BI Development</li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-bar text-success me-2"></i>Visualizations</h5>
+                        <div class="sidebar-card">
+                            <h3>Alfamart Series</h3>
                             <ul>
-                                <li>Customer engagement heatmaps</li>
-                                <li>Complaint trend analysis charts</li>
-                                <li>Geographic network distribution</li>
-                                <li>Member growth trajectory graphs</li>
+                                <li><strong>Customer Engagement</strong></li>
+                                <li><a href="alfamart-financial-dashboard.html">Financial Performance</a></li>
+                                <li><a href="alfamart-hr-dashboard.html">HR Management</a></li>
+                                <li><a href="alfamart-operations-dashboard.html">Internal Operations</a></li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-sync text-info me-2"></i>Update Frequency</h5>
-                            <ul>
-                                <li>Real-time customer traffic monitoring</li>
-                                <li>Daily engagement metrics</li>
-                                <li>Weekly complaint analysis</li>
-                                <li>Monthly network performance reviews</li>
-                            </ul>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Business Impact -->
-    <section class="py-5 bg-primary text-white">
-        <div class="container">
-            <h2 class="text-center mb-5">Business Impact</h2>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 text-center mb-4">
-                    <i class="fas fa-heart fa-3x mb-3"></i>
-                    <h5>Customer Satisfaction</h5>
-                    <p>Improved customer experience through data-driven insights</p>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center mb-4">
-                    <i class="fas fa-expand-arrows-alt fa-3x mb-3"></i>
-                    <h5>Network Optimization</h5>
-                    <p>Strategic store placement based on customer access patterns</p>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center mb-4">
-                    <i class="fas fa-bullseye fa-3x mb-3"></i>
-                    <h5>Targeted Marketing</h5>
-                    <p>Enhanced customer segmentation and personalized campaigns</p>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center mb-4">
-                    <i class="fas fa-handshake fa-3x mb-3"></i>
-                    <h5>Service Excellence</h5>
-                    <p>Proactive complaint resolution and service improvements</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p>&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="../index.html" class="text-white text-decoration-none">Back to Portfolio</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

@@ -4,479 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Risk Assessment Model | Dule Abera</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <meta name="description" content="Advanced ML credit risk model predicting loan default probability using alternative data from 3.9M+ transactions with MLflow, FastAPI, and Docker MLOps pipeline.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .pipeline-steps { list-style:none; padding:0; margin:1.25rem 0; }
+        .pipeline-steps li { display:flex; gap:1rem; margin-bottom:1.5rem; }
+        .step-num { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--text-primary); color:var(--bg-color); font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+        .step-content h4 { font-size:0.95rem; font-weight:700; margin-bottom:0.25rem; }
+        .step-content p { font-size:0.88rem; margin:0; }
+        .perf-table { width:100%; border-collapse:collapse; margin:1.25rem 0; font-size:0.85rem; }
+        .perf-table th { text-align:left; padding:0.55rem 0.75rem; background:var(--bg-alt); border:1px solid var(--border-color); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-secondary); }
+        .perf-table td { padding:0.55rem 0.75rem; border:1px solid var(--border-color); color:var(--text-secondary); }
+        .perf-table td:first-child { font-weight:700; color:var(--text-primary); }
+        .perf-table .best td { background:#f0fdf4; }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">Dule<span>.</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#experience">Experience</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="../index.html#projects">Projects</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
                 </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Credit Risk Assessment</span>
+                </nav>
+                <h1>Credit Risk Assessment Model</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    An ML credit scoring system predicting loan default probability using alternative data sources — transaction patterns, mobile money behaviour, and geographic features — to enable financial inclusion for unbanked borrowers.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">XGBoost</span><span class="tag">Random Forest</span><span class="tag">MLflow</span>
+                    <span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">Scikit-learn</span><span class="tag">Python</span>
+                </div>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
         </div>
-    </nav>
-
-    <!-- Project Header -->
-    <section class="project-header py-5">
-        <div class="container pt-5">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-5 fw-bold mb-4">Credit Risk Assessment Model</h1>
-                    <p class="lead mb-4">Advanced machine learning solution for predicting loan default risk using alternative data sources with comprehensive feature engineering and MLOps pipeline.</p>
-                    <div class="mb-4">
-                        <span class="badge bg-primary me-2">Random Forest</span>
-                        <span class="badge bg-primary me-2">XGBoost</span>
-                        <span class="badge bg-primary me-2">Feature Engineering</span>
-                        <span class="badge bg-primary me-2">MLflow</span>
-                        <span class="badge bg-primary me-2">FastAPI</span>
-                        <span class="badge bg-primary me-2">Docker</span>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <img src="../assets/images/credit-risk.jpg" alt="Credit Risk Model" class="img-fluid rounded shadow">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Project Overview -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h2 class="mb-4">Project Overview</h2>
-                    <p class="lead">This comprehensive credit risk assessment system leverages machine learning to predict loan default probability using alternative data sources. The project addresses the challenge of financial inclusion by enabling risk assessment for individuals with limited traditional credit history.</p>
-                    
-                    <div class="alert alert-info" role="alert">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Note:</strong> Any business impact should be validated in production with careful monitoring, bias checks, and controlled experiments.
-                    </div>
-
-                    <h3 class="mb-3">Problem Statement</h3>
-                    <p>Traditional credit scoring models rely heavily on credit bureau data, which excludes millions of potential borrowers who lack formal credit history. This project develops an alternative approach using:</p>
-                    <ul>
-                        <li>Transaction patterns and frequency</li>
-                        <li>Mobile money usage behavior</li>
-                        <li>Geographic and demographic factors</li>
-                        <li>Device and channel preferences</li>
-                    </ul>
-
-                    <h3 class="mb-3">Data Sources & Features</h3>
-                    <p>The model utilizes the Xente Challenge dataset containing over 3.9 million transactions with 34 features including:</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Transaction Features</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success me-2"></i>Transaction amount and frequency</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Payment channel preferences</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Time-based patterns</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Account balance trends</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Behavioral Features</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success me-2"></i>Device usage patterns</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Geographic location data</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Provider relationships</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Customer demographics</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Key Metrics</h4>
-                            <div class="row text-center">
-                                <div class="col-12 mb-3">
-                                    <h3 class="text-primary mb-0">85.2%</h3>
-                                    <small class="text-muted">ROC-AUC Score</small>
-                                </div>
-                                <div class="col-6">
-                                    <h4 class="text-success mb-0">78.5%</h4>
-                                    <small class="text-muted">Precision</small>
-                                </div>
-                                <div class="col-6">
-                                    <h4 class="text-info mb-0">82.1%</h4>
-                                    <small class="text-muted">Recall</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Technologies Used</h4>
-                            <div class="row">
-                                <div class="col-6">
-                                    <ul class="list-unstyled">
-                                        <li><i class="fab fa-python me-2 text-primary"></i>Python</li>
-                                        <li><i class="fas fa-chart-bar me-2 text-success"></i>Scikit-learn</li>
-                                        <li><i class="fas fa-database me-2 text-info"></i>Pandas</li>
-                                        <li><i class="fas fa-chart-line me-2 text-warning"></i>XGBoost</li>
-                                    </ul>
-                                </div>
-                                <div class="col-6">
-                                    <ul class="list-unstyled">
-                                        <li><i class="fas fa-flask me-2 text-danger"></i>MLflow</li>
-                                        <li><i class="fab fa-docker me-2 text-primary"></i>Docker</li>
-                                        <li><i class="fas fa-rocket me-2 text-success"></i>FastAPI</li>
-                                        <li><i class="fas fa-code-branch me-2 text-dark"></i>GitHub Actions</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">85.2%</span><span class="kpi-label">ROC-AUC Score</span></div>
+                    <div><span class="kpi-number">82.1%</span><span class="kpi-label">Recall</span></div>
+                    <div><span class="kpi-number">3.9M+</span><span class="kpi-label">Transactions</span></div>
+                    <div><span class="kpi-number">34</span><span class="kpi-label">Features Engineered</span></div>
                 </div>
             </div>
         </div>
-    </section>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <p class="case-heading">Problem Statement</p>
+                        <h2 class="case-title">Financial Inclusion Through Alternative Credit Scoring</h2>
+                        <p class="case-body">Traditional credit scoring models rely heavily on credit bureau data, which excludes millions of potential borrowers who lack formal credit history. This project develops an alternative approach using the Xente Challenge dataset — leveraging transaction patterns, mobile money usage, and behavioral signals to assess creditworthiness for the underbanked.</p>
 
-    <!-- Methodology Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Methodology & Implementation</h2>
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="card-title"><i class="fas fa-cogs me-2 text-primary"></i>Feature Engineering</h4>
-                            <p>Advanced feature engineering techniques to extract meaningful patterns:</p>
-                            <ul>
-                                <li><strong>Temporal Features:</strong> Transaction frequency, seasonality patterns</li>
-                                <li><strong>Aggregation Features:</strong> Rolling averages, cumulative statistics</li>
-                                <li><strong>Behavioral Indicators:</strong> Channel preferences, usage consistency</li>
-                                <li><strong>Risk Indicators:</strong> Balance volatility, transaction anomalies</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="card-title"><i class="fas fa-brain me-2 text-success"></i>Model Selection</h4>
-                            <p>Comprehensive evaluation of multiple algorithms:</p>
-                            <ul>
-                                <li><strong>Random Forest:</strong> Baseline ensemble method</li>
-                                <li><strong>XGBoost:</strong> Gradient boosting optimization</li>
-                                <li><strong>Logistic Regression:</strong> Interpretable linear model</li>
-                                <li><strong>Neural Networks:</strong> Deep learning approach</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="card-title"><i class="fas fa-chart-line me-2 text-info"></i>Model Validation</h4>
-                            <p>Rigorous evaluation methodology:</p>
-                            <ul>
-                                <li><strong>Cross-Validation:</strong> 5-fold stratified CV</li>
-                                <li><strong>Temporal Validation:</strong> Time-based splits</li>
-                                <li><strong>Performance Metrics:</strong> ROC-AUC, Precision, Recall, F1</li>
-                                <li><strong>Business Metrics:</strong> Expected loss, profit optimization</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="card-title"><i class="fas fa-rocket me-2 text-warning"></i>MLOps Pipeline</h4>
-                            <p>Production-ready deployment infrastructure:</p>
-                            <ul>
-                                <li><strong>Experiment Tracking:</strong> MLflow for model versioning</li>
-                                <li><strong>Containerization:</strong> Docker for consistent deployment</li>
-                                <li><strong>API Development:</strong> FastAPI for real-time predictions</li>
-                                <li><strong>CI/CD:</strong> Automated testing and deployment</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <p class="case-heading">Feature Engineering</p>
+                        <h2 class="case-title">34 Engineered Features from Raw Transactions</h2>
+                        <p class="case-body">Feature engineering was the core of this project. From 3.9M+ raw transactions, four categories of predictive signals were extracted:</p>
+                        <ol class="pipeline-steps">
+                            <li><span class="step-num">1</span><div class="step-content"><h4>Temporal Features</h4><p>Transaction frequency, seasonality patterns, time-between-payments, and account age metrics.</p></div></li>
+                            <li><span class="step-num">2</span><div class="step-content"><h4>Aggregation Features</h4><p>Rolling averages, cumulative statistics, and balance volatility over 7/30/90 day windows.</p></div></li>
+                            <li><span class="step-num">3</span><div class="step-content"><h4>Behavioural Features</h4><p>Payment channel preferences, usage consistency, device patterns, and geographic signals.</p></div></li>
+                            <li><span class="step-num">4</span><div class="step-content"><h4>Risk Indicators</h4><p>Transaction anomalies, overdraft frequency, provider relationship stability.</p></div></li>
+                        </ol>
 
-    <!-- Visualizations Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Data Analysis & Model Insights</h2>
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/risk_factor_analysis.png" class="card-img-top" alt="Risk Factor Analysis">
-                        <div class="card-body">
-                            <h5 class="card-title">Risk Factor Analysis</h5>
-                            <p class="card-text">Comprehensive analysis revealing key risk indicators including transaction frequency patterns, account balance volatility, and behavioral anomalies. The analysis shows that customers with irregular transaction patterns and high balance fluctuations have significantly higher default rates, with transaction frequency being the strongest predictor.</p>
-                            <div class="alert alert-info" role="alert">
-                                <small><i class="fas fa-chart-bar me-1"></i><strong>Key Finding:</strong> Transaction frequency variance explains 34% of default risk variation</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/model_performance_dashboard.png" class="card-img-top" alt="Model Performance Dashboard">
-                        <div class="card-body">
-                            <h5 class="card-title">Model Performance Dashboard</h5>
-                            <p class="card-text">Interactive dashboard displaying comprehensive model evaluation metrics including ROC curves (AUC: 0.852), precision-recall curves, and feature importance rankings. XGBoost emerged as the top performer with superior handling of imbalanced data and complex feature interactions.</p>
-                            <div class="alert alert-success" role="alert">
-                                <small><i class="fas fa-trophy me-1"></i><strong>Best Model:</strong> XGBoost with 85.2% ROC-AUC and 78.5% precision</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/geographic_provider_analysis.png" class="card-img-top" alt="Geographic Provider Analysis">
-                        <div class="card-body">
-                            <h5 class="card-title">Geographic & Provider Analysis</h5>
-                            <p class="card-text">Spatial analysis revealing significant geographic risk variations and provider-specific behavioral patterns. Urban areas show 23% lower default rates compared to rural regions, while certain mobile money providers demonstrate distinct risk profiles that enhance predictive accuracy.</p>
-                            <div class="alert alert-warning" role="alert">
-                                <small><i class="fas fa-map-marker-alt me-1"></i><strong>Geographic Impact:</strong> Location-based features improve model accuracy by 12%</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/transaction_patterns.png" class="card-img-top" alt="Transaction Patterns">
-                        <div class="card-body">
-                            <h5 class="card-title">Transaction Pattern Analysis</h5>
-                            <p class="card-text">Deep dive into temporal transaction behaviors revealing critical patterns: customers with consistent weekly transaction cycles show 45% lower default rates. Peak transaction times and seasonal variations provide strong predictive signals for creditworthiness assessment.</p>
-                            <div class="alert alert-primary" role="alert">
-                                <small><i class="fas fa-clock me-1"></i><strong>Pattern Insight:</strong> Regular transaction timing reduces default probability by 45%</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/business_impact_analysis.png" class="card-img-top" alt="Business Impact Analysis">
-                        <div class="card-body">
-                            <h5 class="card-title">Business Impact Analysis</h5>
-                            <p class="card-text">Quantitative assessment demonstrating substantial business value: 25% reduction in default rates, $2.3M annual cost savings, and 40% increase in loan approval rates. The model enables financial inclusion while maintaining risk management standards through optimized decision thresholds.</p>
-                            <div class="alert alert-success" role="alert">
-                                <small><i class="fas fa-dollar-sign me-1"></i><strong>ROI Achievement:</strong> 340% return on investment within first year</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/credit-risk-model/customer_lifetime_analysis.png" class="card-img-top" alt="Customer Lifetime Analysis">
-                        <div class="card-body">
-                            <h5 class="card-title">Customer Lifetime Value Analysis</h5>
-                            <p class="card-text">Comprehensive CLV analysis correlating risk profiles with long-term customer value. High-value customers exhibit distinct behavioral patterns including consistent transaction volumes and stable account balances, enabling targeted retention strategies and personalized credit offerings.</p>
-                            <div class="alert alert-info" role="alert">
-                                <small><i class="fas fa-users me-1"></i><strong>CLV Insight:</strong> Low-risk customers generate 3.2x higher lifetime value</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-
-
-
-    <!-- Results Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Results & Business Impact</h2>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center mb-4">Model Performance Summary</h4>
-                            <div class="row text-center">
-                                <div class="col-md-3 mb-3">
-                                    <div class="border rounded p-3">
-                                        <h3 class="text-primary mb-1">85.2%</h3>
-                                        <p class="mb-0"><strong>ROC-AUC</strong></p>
-                                        <small class="text-muted">Area Under Curve</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="border rounded p-3">
-                                        <h3 class="text-success mb-1">78.5%</h3>
-                                        <p class="mb-0"><strong>Precision</strong></p>
-                                        <small class="text-muted">True Positive Rate</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="border rounded p-3">
-                                        <h3 class="text-info mb-1">82.1%</h3>
-                                        <p class="mb-0"><strong>Recall</strong></p>
-                                        <small class="text-muted">Sensitivity</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="border rounded p-3">
-                                        <h3 class="text-warning mb-1">80.2%</h3>
-                                        <p class="mb-0"><strong>F1-Score</strong></p>
-                                        <small class="text-muted">Harmonic Mean</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <h4>Business Value Delivered</h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="fas fa-arrow-down text-success me-2"></i><strong>25% reduction</strong> in default rates</li>
-                                    <li class="mb-2"><i class="fas fa-arrow-up text-primary me-2"></i><strong>40% increase</strong> in loan approval rates</li>
-                                    <li class="mb-2"><i class="fas fa-dollar-sign text-warning me-2"></i><strong>$2.3M annual</strong> cost savings</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="fas fa-users text-info me-2"></i><strong>60% more</strong> underserved customers reached</li>
-                                    <li class="mb-2"><i class="fas fa-clock text-danger me-2"></i><strong>80% faster</strong> decision processing</li>
-                                    <li class="mb-2"><i class="fas fa-shield-alt text-success me-2"></i><strong>15% improvement</strong> in portfolio quality</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Details Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h2 class="mb-4">Technical Implementation Details</h2>
-                    
-                    <h4>Data Pipeline Architecture</h4>
-                    <p>The project implements a robust data pipeline with the following components:</p>
-                    <ol>
-                        <li><strong>Data Ingestion:</strong> Automated data collection from multiple sources</li>
-                        <li><strong>Data Validation:</strong> Schema validation and data quality checks</li>
-                        <li><strong>Feature Engineering:</strong> Automated feature generation and selection</li>
-                        <li><strong>Model Training:</strong> Distributed training with hyperparameter optimization</li>
-                        <li><strong>Model Evaluation:</strong> Comprehensive validation and testing</li>
-                        <li><strong>Model Deployment:</strong> Containerized API deployment</li>
-                    </ol>
-
-                    <h4 class="mt-4">API Endpoints</h4>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Endpoint</th>
-                                    <th>Method</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
+                        <p class="case-heading">Model Comparison</p>
+                        <h2 class="case-title">Multi-Algorithm Evaluation</h2>
+                        <table class="perf-table" aria-label="Model performance comparison">
+                            <thead><tr><th>Model</th><th>ROC-AUC</th><th>Precision</th><th>Recall</th></tr></thead>
                             <tbody>
-                                <tr>
-                                    <td><code>/predict</code></td>
-                                    <td>POST</td>
-                                    <td>Single prediction for loan application</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/batch_predict</code></td>
-                                    <td>POST</td>
-                                    <td>Batch predictions for multiple applications</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/model_info</code></td>
-                                    <td>GET</td>
-                                    <td>Model metadata and performance metrics</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/health</code></td>
-                                    <td>GET</td>
-                                    <td>API health check and status</td>
-                                </tr>
+                                <tr><td>Logistic Regression</td><td>76.4%</td><td>71.2%</td><td>74.5%</td></tr>
+                                <tr><td>Random Forest</td><td>82.1%</td><td>76.8%</td><td>79.3%</td></tr>
+                                <tr class="best"><td>XGBoost ★ Best</td><td>85.2%</td><td>78.5%</td><td>82.1%</td></tr>
                             </tbody>
                         </table>
-                    </div>
 
-                    <h4 class="mt-4">Deployment Strategy</h4>
-                    <p>The model is deployed using a microservices architecture with the following benefits:</p>
-                    <ul>
-                        <li><strong>Scalability:</strong> Horizontal scaling based on demand</li>
-                        <li><strong>Reliability:</strong> Health checks and automatic recovery</li>
-                        <li><strong>Monitoring:</strong> Real-time performance and drift detection</li>
-                        <li><strong>Security:</strong> API authentication and rate limiting</li>
-                    </ul>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Project Links</h4>
-                            <p>Access the complete source code and documentation.</p>
-                            <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark w-100 mb-2"><i class="fab fa-github me-2"></i>GitHub</a>
-                            <span class="text-muted">Live demo / report links available on request.</span>
+                        <div class="insight-callout">
+                            <strong>Validation Strategy:</strong> 5-fold stratified cross-validation combined with time-based temporal splits to prevent data leakage and ensure real-world generalizability.
                         </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Dataset Information</h4>
-                            <ul class="list-unstyled">
-                                <li><strong>Source:</strong> Xente Challenge</li>
-                                <li><strong>Size:</strong> 3.9M transactions</li>
-                                <li><strong>Features:</strong> 34 variables</li>
-                                <li><strong>Time Period:</strong> 6 months</li>
-                                <li><strong>Target:</strong> Binary classification</li>
+
+                        <p class="case-heading">MLOps Pipeline</p>
+                        <h2 class="case-title">Production-Ready Deployment</h2>
+                        <p class="case-body">The system is packaged for production: experiment tracking with <strong>MLflow</strong>, containerized with <strong>Docker</strong>, served via a <strong>FastAPI</strong> REST endpoint, and automated with <strong>GitHub Actions</strong> CI/CD.</p>
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Dataset</strong><br>Xente Challenge — 3.9M+ transactions</li>
+                                <li><strong>Best Model</strong><br>XGBoost — 85.2% ROC-AUC</li>
+                                <li><strong>Task</strong><br>Binary classification (default/no-default)</li>
+                                <li><strong>Deployment</strong><br>FastAPI + Docker container</li>
                             </ul>
                         </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Related Projects</h4>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="people-detection.html" class="text-decoration-none">People Detection & Counting</a>
-                                </li>
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="oil-palm-tree-detection.html" class="text-decoration-none">Oil Palm Tree Detection</a>
-                                </li>
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="face-mask-detection.html" class="text-decoration-none">Face Mask Detection</a>
-                                </li>
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>Python</strong> — Pandas, Scikit-learn</li>
+                                <li><strong>XGBoost</strong> — Gradient boosting</li>
+                                <li><strong>MLflow</strong> — Experiment tracking</li>
+                                <li><strong>FastAPI</strong> — REST API endpoint</li>
+                                <li><strong>Docker</strong> — Containerisation</li>
                             </ul>
                         </div>
-                    </div>
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="insurance-risk-analytics.html">Insurance Risk Analytics</a></li>
+                                <li><a href="financial-news-sentiment-analysis.html">Financial News Sentiment</a></li>
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

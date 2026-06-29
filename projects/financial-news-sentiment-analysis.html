@@ -4,1158 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial News Sentiment Analysis | Dule Abera</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <meta name="description" content="Advanced NLP system analyzing financial news sentiment and its correlation with stock market movements using state-of-the-art machine learning models like DistilBERT.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        .metric-card {
-            border-left: 4px solid #007bff;
-            background: linear-gradient(45deg, #f8f9fa, #ffffff);
-        }
-        .code-block {
-            background: #2d3748;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-        .timeline-item {
-            border-left: 3px solid #007bff;
-            padding-left: 20px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 0;
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            background: #007bff;
-        }
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-        }
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .pipeline-steps { list-style:none; padding:0; margin:1.25rem 0; }
+        .pipeline-steps li { display:flex; gap:1rem; margin-bottom:1.5rem; }
+        .step-num { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--text-primary); color:var(--bg-color); font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+        .step-content h4 { font-size:0.95rem; font-weight:700; margin-bottom:0.25rem; }
+        .step-content p { font-size:0.88rem; margin:0; }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">
-                <i class="fas fa-chart-line me-2"></i>Dule<span>.</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#experience">Experience</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#projects">Projects</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
                 </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Financial News Sentiment</span>
+                </nav>
+                <h1>Financial News Sentiment Analysis</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    An advanced NLP system that analyzes financial news headlines to determine market sentiment and extracts correlations with actual stock price movements using state-of-the-art transformer models.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">DistilBERT</span><span class="tag">TensorFlow</span><span class="tag">NLTK</span>
+                    <span class="tag">Scikit-learn</span><span class="tag">Python</span><span class="tag">Pandas</span>
+                </div>
+                <a href="https://github.com/duleab/financial-news-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
         </div>
-    </nav>
-
-    <!-- Project Header -->
-    <section class="py-5 mt-5 gradient-bg text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center">
-                    <div class="mb-4">
-                        <i class="fas fa-newspaper fa-4x mb-3 text-warning"></i>
-                    </div>
-                    <h1 class="display-3 fw-bold mb-4">Financial News Sentiment Analysis</h1>
-                    <p class="lead fs-4 mb-4">Advanced NLP system analyzing financial news sentiment and its correlation with stock market movements using state-of-the-art machine learning models</p>
-                    <div class="mb-4">
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fab fa-python me-1"></i>Python</span>
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fas fa-brain me-1"></i>TensorFlow</span>
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fas fa-language me-1"></i>NLTK</span>
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fas fa-robot me-1"></i>DistilBERT</span>
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fas fa-chart-bar me-1"></i>Pandas</span>
-                        <span class="badge bg-light text-dark me-2 py-2 px-3"><i class="fas fa-cogs me-1"></i>Scikit-learn</span>
-                    </div>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="https://github.com/duleab/financial-news-sentiment-analysis" class="btn btn-warning btn-lg" target="_blank">
-                            <i class="fab fa-github me-2"></i>View on GitHub
-                        </a>
-                        <a href="#demo" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-play me-2"></i>Live Demo
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Quick Stats -->
-    <section class="py-4 bg-dark text-white">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <h3 class="text-warning">94.2%</h3>
-                    <p class="mb-0">Best Model Accuracy</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-warning">3</h3>
-                    <p class="mb-0">ML Models Compared</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-warning">0.73</h3>
-                    <p class="mb-0">Correlation Coefficient</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-warning">50K+</h3>
-                    <p class="mb-0">News Articles Analyzed</p>
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">94.2%</span><span class="kpi-label">DistilBERT Accuracy</span></div>
+                    <div><span class="kpi-number">0.73</span><span class="kpi-label">Correlation Coefficient</span></div>
+                    <div><span class="kpi-number">50K+</span><span class="kpi-label">Articles Analyzed</span></div>
+                    <div><span class="kpi-number">3</span><span class="kpi-label">Models Compared</span></div>
                 </div>
             </div>
         </div>
-    </section>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <p class="case-heading">Objective</p>
+                        <h2 class="case-title">Predicting Market Movement Through NLP</h2>
+                        <p class="case-body">Financial markets are highly reactive to news. This project develops an intelligent system that predicts stock market movements by analyzing the sentiment of financial news headlines. By quantifying sentiment, the model provides an objective, data-driven market signal.</p>
 
-    <!-- Project Overview -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <div class="text-center mb-5">
-                        <h2 class="display-5 fw-bold mb-4">Project Overview</h2>
-                        <p class="lead">This comprehensive financial sentiment analysis system processes financial news headlines to determine market sentiment and analyzes correlations with actual stock price movements. The project implements multiple machine learning approaches including traditional NLP techniques and modern transformer models.</p>
-                    </div>
-                    
-                    <div class="row mb-5">
-                        <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body">
-                                    <div class="feature-icon bg-primary text-white">
-                                        <i class="fas fa-bullseye"></i>
-                                    </div>
-                                    <h4 class="text-center mb-3">Objective</h4>
-                                    <p>Develop an intelligent system that can accurately predict stock market movements by analyzing the sentiment of financial news headlines using advanced NLP techniques.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body">
-                                    <div class="feature-icon bg-success text-white">
-                                        <i class="fas fa-trophy"></i>
-                                    </div>
-                                    <h4 class="text-center mb-3">Achievement</h4>
-                                    <p>Successfully achieved 94.2% accuracy with DistilBERT model and established strong correlation (0.73) between news sentiment and stock price movements.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <p class="case-heading">Multi-Model Approach</p>
+                        <h2 class="case-title">Comparing NLP Architectures</h2>
+                        <p class="case-body">To find the optimal balance between inference speed and contextual understanding, three distinct neural network architectures were implemented and compared:</p>
+                        <ol class="pipeline-steps">
+                            <li><span class="step-num">1</span><div class="step-content"><h4>CNN (Convolutional Neural Network)</h4><p>Treated text as a 1D spatial sequence, capturing local n-gram patterns and short-term semantic relationships.</p></div></li>
+                            <li><span class="step-num">2</span><div class="step-content"><h4>LSTM (Long Short-Term Memory)</h4><p>Modeled the sequential nature of language, successfully capturing long-range dependencies within longer headlines.</p></div></li>
+                            <li><span class="step-num">3</span><div class="step-content"><h4>DistilBERT (Transformer)</h4><p>Leveraged pre-trained attention mechanisms to deeply understand financial context, achieving the highest performance at 94.2% accuracy.</p></div></li>
+                        </ol>
 
-                    <h3 class="mb-4">Key Features & Capabilities</h3>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-brain"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Multi-Model Sentiment Analysis</h6>
-                                    <small class="text-muted">CNN, LSTM, and DistilBERT implementations</small>
-                                </div>
-                            </div>
+                        <div class="insight-callout">
+                            <strong>Key Result:</strong> The system successfully established a statistically significant correlation (0.73) between extracted news sentiment and actual historical stock price movements.
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-success text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Real-time Processing</h6>
-                                    <small class="text-muted">Live financial news sentiment analysis</small>
-                                </div>
-                            </div>
+
+                        <p class="case-heading">Technical Integration</p>
+                        <h2 class="case-title">Correlating Sentiment with Technical Indicators</h2>
+                        <p class="case-body">Sentiment alone is not a trading strategy. The pipeline integrates the NLP sentiment scores with traditional quantitative technical indicators—including RSI (Relative Strength Index), MACD, and Bollinger Bands—to create a holistic, multi-factor market analysis dashboard.</p>
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Dataset</strong><br>50,000+ Financial News Headlines</li>
+                                <li><strong>Best Model</strong><br>DistilBERT (94.2% Accuracy)</li>
+                                <li><strong>Task</strong><br>Sentiment Classification & Correlation</li>
+                            </ul>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-info text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Correlation Analysis</h6>
-                                    <small class="text-muted">Statistical significance testing</small>
-                                </div>
-                            </div>
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>DistilBERT</strong> — Language Model</li>
+                                <li><strong>TensorFlow/Keras</strong> — Deep Learning</li>
+                                <li><strong>NLTK</strong> — Text Preprocessing</li>
+                                <li><strong>Pandas</strong> — Financial Time-Series Data</li>
+                            </ul>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-warning text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-cogs"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Technical Indicators</h6>
-                                    <small class="text-muted">RSI, MACD, Bollinger Bands integration</small>
-                                </div>
-                            </div>
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="credit-risk-model.html">Credit Risk Assessment</a></li>
+                                <li><a href="insurance-risk-analytics.html">Insurance Risk Analytics</a></li>
+                            </ul>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-danger text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Data Pipeline</h6>
-                                    <small class="text-muted">Comprehensive preprocessing and cleaning</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-secondary text-white rounded-circle p-2 me-3">
-                                    <i class="fas fa-chart-bar"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">Interactive Visualizations</h6>
-                                    <small class="text-muted">Performance dashboards and analytics</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Methodology -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="display-5 fw-bold text-center mb-5">Methodology & Workflow</h2>
-                    
-                    <div class="timeline-item">
-                        <h4><i class="fas fa-download text-primary me-2"></i>Data Collection</h4>
-                        <p>Gathered financial news headlines from multiple sources including Reuters, Bloomberg, and Yahoo Finance. Collected corresponding stock price data using yfinance API for correlation analysis.</p>
-                        <ul>
-                            <li>50,000+ financial news headlines</li>
-                            <li>Stock data for 100+ companies</li>
-                            <li>Time period: 2020-2024</li>
-                        </ul>
-                    </div>
-
-                    <div class="timeline-item">
-                        <h4><i class="fas fa-broom text-primary me-2"></i>Data Preprocessing</h4>
-                        <p>Comprehensive text cleaning and preprocessing pipeline to prepare data for machine learning models.</p>
-                        <ul>
-                            <li>Text normalization and cleaning</li>
-                            <li>Tokenization and lemmatization</li>
-                            <li>Stop word removal</li>
-                            <li>Feature engineering</li>
-                        </ul>
-                    </div>
-
-                    <div class="timeline-item">
-                        <h4><i class="fas fa-robot text-primary me-2"></i>Model Development</h4>
-                        <p>Implemented and compared three different approaches for sentiment analysis, each with unique strengths.</p>
-                        <ul>
-                            <li>CNN: Fast processing with good accuracy</li>
-                            <li>LSTM: Sequential pattern recognition</li>
-                            <li>DistilBERT: State-of-the-art transformer model</li>
-                        </ul>
-                    </div>
-
-                    <div class="timeline-item">
-                        <h4><i class="fas fa-chart-line text-primary me-2"></i>Correlation Analysis</h4>
-                        <p>Statistical analysis to determine the relationship between news sentiment and stock price movements.</p>
-                        <ul>
-                            <li>Pearson correlation coefficient calculation</li>
-                            <li>Statistical significance testing</li>
-                            <li>Lag analysis for timing effects</li>
-                        </ul>
-                    </div>
-
-                    <div class="timeline-item">
-                        <h4><i class="fas fa-eye text-primary me-2"></i>Visualization & Reporting</h4>
-                        <p>Created comprehensive dashboards and reports to present findings and model performance.</p>
-                        <ul>
-                            <li>Model performance comparison charts</li>
-                            <li>Correlation heatmaps</li>
-                            <li>Time series analysis plots</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Implementation -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="display-5 fw-bold text-center mb-5">Technical Implementation</h2>
-                    
-                    <div class="row mb-5">
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 card-hover border-0 shadow">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon bg-primary text-white">
-                                        <i class="fas fa-brain"></i>
-                                    </div>
-                                    <h5 class="card-title">Deep Learning Models</h5>
-                                    <p class="card-text">CNN and LSTM networks for sequence-based sentiment analysis with hyperparameter tuning and cross-validation</p>
-                                    <div class="mt-3">
-                                        <span class="badge bg-primary me-1">TensorFlow</span>
-                                        <span class="badge bg-primary me-1">Keras</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 card-hover border-0 shadow">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon bg-success text-white">
-                                        <i class="fas fa-robot"></i>
-                                    </div>
-                                    <h5 class="card-title">Transformer Models</h5>
-                                    <p class="card-text">DistilBERT implementation for state-of-the-art sentiment classification with fine-tuning capabilities</p>
-                                    <div class="mt-3">
-                                        <span class="badge bg-success me-1">Transformers</span>
-                                        <span class="badge bg-success me-1">BERT</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 card-hover border-0 shadow">
-                                <div class="card-body text-center">
-                                    <div class="feature-icon bg-info text-white">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <h5 class="card-title">Statistical Analysis</h5>
-                                    <p class="card-text">Comprehensive correlation analysis with significance testing and time-series analysis</p>
-                                    <div class="mt-3">
-                                        <span class="badge bg-info me-1">SciPy</span>
-                                        <span class="badge bg-info me-1">NumPy</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0"><i class="fas fa-sitemap me-2"></i>System Architecture</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5>Data Layer</h5>
-                                    <ul>
-                                        <li>Financial news APIs integration</li>
-                                        <li>Stock price data collection</li>
-                                        <li>Data validation and cleaning</li>
-                                        <li>Feature engineering pipeline</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5>Model Layer</h5>
-                                    <ul>
-                                        <li>Multi-model ensemble approach</li>
-                                        <li>Hyperparameter optimization</li>
-                                        <li>Cross-validation framework</li>
-                                        <li>Model performance monitoring</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Results & Performance -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="display-5 fw-bold text-center mb-5">Results & Performance Analysis</h2>
-                    
-                    <!-- Performance Metrics -->
-                    <div class="row mb-5">
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card h-100">
-                                <div class="card-body text-center">
-                                    <h2 class="text-primary fw-bold">94.2%</h2>
-                                    <p class="mb-0">DistilBERT Accuracy</p>
-                                    <small class="text-muted">Best performing model</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card h-100">
-                                <div class="card-body text-center">
-                                    <h2 class="text-success fw-bold">0.73</h2>
-                                    <p class="mb-0">Correlation Coefficient</p>
-                                    <small class="text-muted">Sentiment vs Stock Price</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card h-100">
-                                <div class="card-body text-center">
-                                    <h2 class="text-info fw-bold">0.987</h2>
-                                    <p class="mb-0">AUC-ROC Score</p>
-                                    <small class="text-muted">DistilBERT Performance</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card metric-card h-100">
-                                <div class="card-body text-center">
-                                    <h2 class="text-warning fw-bold">1-2</h2>
-                                    <p class="mb-0">Days Lead Time</p>
-                                    <small class="text-muted">Sentiment prediction</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Model Comparison Table -->
-                    <div class="card border-0 shadow-sm mb-5">
-                        <div class="card-header bg-dark text-white">
-                            <h4 class="mb-0"><i class="fas fa-trophy me-2"></i>Model Performance Comparison</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Model</th>
-                                            <th>Accuracy</th>
-                                            <th>Precision</th>
-                                            <th>Recall</th>
-                                            <th>F1-Score</th>
-                                            <th>AUC-ROC</th>
-                                            <th>Training Time</th>
-                                            <th>Inference Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="table-success">
-                                            <td><strong><i class="fas fa-crown text-warning me-1"></i>DistilBERT</strong></td>
-                                            <td><span class="badge bg-success">94.2%</span></td>
-                                            <td>0.943</td>
-                                            <td>0.940</td>
-                                            <td>0.941</td>
-                                            <td>0.987</td>
-                                            <td>45 min</td>
-                                            <td>2.3s</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>LSTM</strong></td>
-                                            <td><span class="badge bg-primary">89.7%</span></td>
-                                            <td>0.898</td>
-                                            <td>0.894</td>
-                                            <td>0.896</td>
-                                            <td>0.952</td>
-                                            <td>12 min</td>
-                                            <td>0.8s</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>CNN</strong></td>
-                                            <td><span class="badge bg-info">87.3%</span></td>
-                                            <td>0.875</td>
-                                            <td>0.868</td>
-                                            <td>0.871</td>
-                                            <td>0.934</td>
-                                            <td>8 min</td>
-                                            <td>0.5s</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Key Findings -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-info text-white">
-                            <h4 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Key Research Findings</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-chart-line text-success me-2"></i>Sentiment-Stock Correlations</h5>
-                                    <ul>
-                                        <li>Strong positive correlation (0.73) between positive news sentiment and stock price increases</li>
-                                        <li>Technology sector shows highest correlation (0.82)</li>
-                                        <li>Healthcare sector demonstrates strong correlation (0.78)</li>
-                                        <li>Financial sector shows moderate correlation (0.65)</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-clock text-primary me-2"></i>Temporal Analysis</h5>
-                                    <ul>
-                                        <li>News sentiment leads stock price movements by 1-2 trading days</li>
-                                        <li>Weekend news has stronger impact on Monday opening prices</li>
-                                        <li>After-hours news shows delayed correlation effects</li>
-                                        <li>Earnings-related news has immediate impact (same day)</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-brain text-warning me-2"></i>Model Insights</h5>
-                                    <ul>
-                                        <li>DistilBERT excels at understanding financial context</li>
-                                        <li>LSTM performs well on sequential patterns</li>
-                                        <li>CNN offers best speed-accuracy trade-off</li>
-                                        <li>Ensemble methods improve overall performance</li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-industry text-danger me-2"></i>Sector Analysis</h5>
-                                    <ul>
-                                        <li>Tech stocks most sensitive to sentiment changes</li>
-                                        <li>Utility stocks show lowest sentiment correlation</li>
-                                        <li>Small-cap stocks more volatile to news sentiment</li>
-                                        <li>Blue-chip stocks show stable correlation patterns</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technologies & Tools -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="display-5 fw-bold text-center mb-5">Technologies & Tools</h2>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0"><i class="fas fa-brain me-2"></i>Machine Learning & NLP</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fab fa-python text-primary me-2"></i>TensorFlow 2.x</li>
-                                                <li><i class="fas fa-layer-group text-primary me-2"></i>Keras</li>
-                                                <li><i class="fas fa-robot text-primary me-2"></i>Transformers</li>
-                                                <li><i class="fas fa-language text-primary me-2"></i>NLTK</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-comment text-primary me-2"></i>TextBlob</li>
-                                                <li><i class="fas fa-cogs text-primary me-2"></i>Scikit-learn</li>
-                                                <li><i class="fas fa-chart-bar text-primary me-2"></i>XGBoost</li>
-                                                <li><i class="fas fa-search text-primary me-2"></i>Optuna</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0"><i class="fas fa-database me-2"></i>Data Processing & Analysis</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-table text-success me-2"></i>Pandas</li>
-                                                <li><i class="fas fa-calculator text-success me-2"></i>NumPy</li>
-                                                <li><i class="fas fa-chart-line text-success me-2"></i>yfinance</li>
-                                                <li><i class="fas fa-chart-area text-success me-2"></i>Matplotlib</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-palette text-success me-2"></i>Seaborn</li>
-                                                <li><i class="fas fa-chart-pie text-success me-2"></i>Plotly</li>
-                                                <li><i class="fas fa-square-root-alt text-success me-2"></i>SciPy</li>
-                                                <li><i class="fas fa-server text-success me-2"></i>SQLite</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-info text-white">
-                                    <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Development & Deployment</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fab fa-python text-info me-2"></i>Python 3.8+</li>
-                                                <li><i class="fab fa-git-alt text-info me-2"></i>Git</li>
-                                                <li><i class="fas fa-book text-info me-2"></i>Jupyter</li>
-                                                <li><i class="fab fa-docker text-info me-2"></i>Docker</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-play text-info me-2"></i>Streamlit</li>
-                                                <li><i class="fas fa-vial text-info me-2"></i>Pytest</li>
-                                                <li><i class="fas fa-cloud text-info me-2"></i>Google Colab</li>
-                                                <li><i class="fab fa-github text-info me-2"></i>GitHub Actions</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-warning text-dark">
-                                    <h5 class="mb-0"><i class="fas fa-globe me-2"></i>APIs & Data Sources</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-newspaper text-warning me-2"></i>News APIs</li>
-                                                <li><i class="fas fa-chart-line text-warning me-2"></i>Yahoo Finance</li>
-                                                <li><i class="fas fa-building text-warning me-2"></i>Alpha Vantage</li>
-                                                <li><i class="fas fa-rss text-warning me-2"></i>RSS Feeds</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-6">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fas fa-globe-americas text-warning me-2"></i>Reuters API</li>
-                                                <li><i class="fas fa-money-bill text-warning me-2"></i>Bloomberg</li>
-                                                <li><i class="fas fa-twitter text-warning me-2"></i>Twitter API</li>
-                                                <li><i class="fas fa-reddit text-warning me-2"></i>Reddit API</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-        
-        <!-- Analysis Results & Visualizations -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <div class="text-center mb-5">
-                        <h2 class="display-5 fw-bold mb-4">Analysis Results & Visualizations</h2>
-                        <p class="lead">Comprehensive analysis results demonstrating the effectiveness of our sentiment analysis models and their correlation with stock market movements.</p>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Model Performance Comparison -->
-                        <div class="col-lg-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm card-hover">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Model Performance Comparison</h5>
-                                </div>
-                                <div class="card-body">
-                                    <img src="../assets/images/financial-news-sentiment-analysis/newplot.png" 
-                                         class="img-fluid rounded mb-3" 
-                                         alt="Model Performance Comparison Chart"
-                                         loading="lazy">
-                                    <h6 class="fw-bold mb-3">Key Performance Metrics</h6>
-                                    <div class="row text-center mb-3">
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-primary mb-1">94.2%</h5>
-                                                <small class="text-muted">DistilBERT Accuracy</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-success mb-1">91.8%</h5>
-                                                <small class="text-muted">LSTM Accuracy</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-info mb-1">89.3%</h5>
-                                                <small class="text-muted">CNN Accuracy</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="text-muted mb-3">
-                                        <strong>Analysis:</strong> The DistilBERT transformer model achieved the highest accuracy at 94.2%, 
-                                        demonstrating superior performance in understanding contextual nuances in financial news. 
-                                        The LSTM model showed strong sequential pattern recognition with 91.8% accuracy, while the CNN model 
-                                        provided efficient processing with 89.3% accuracy.
-                                    </p>
-                                    <div class="alert alert-info">
-                                        <small><i class="fas fa-info-circle me-1"></i>
-                                        <strong>Technical Insight:</strong> DistilBERT's pre-trained financial domain knowledge 
-                                        and attention mechanisms enabled better capture of sentiment nuances in complex financial terminology.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Sentiment-Stock Correlation Analysis -->
-                        <div class="col-lg-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm card-hover">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Sentiment-Stock Correlation Analysis</h5>
-                                </div>
-                                <div class="card-body">
-                                    <img src="../assets/images/financial-news-sentiment-analysis/newplot (1).png" 
-                                         class="img-fluid rounded mb-3" 
-                                         alt="Sentiment Stock Correlation Analysis"
-                                         loading="lazy">
-                                    <h6 class="fw-bold mb-3">Correlation Insights</h6>
-                                    <div class="row text-center mb-3">
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-success mb-1">0.73</h5>
-                                                <small class="text-muted">Pearson Correlation</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-warning mb-1">0.68</h5>
-                                                <small class="text-muted">Spearman Correlation</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="metric-card p-3 rounded">
-                                                <h5 class="text-danger mb-1">< 0.001</h5>
-                                                <small class="text-muted">P-value</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="text-muted mb-3">
-                                        <strong>Analysis:</strong> Strong positive correlation (r=0.73) between news sentiment and stock price movements 
-                                        with high statistical significance (p < 0.001). The analysis reveals that positive financial news sentiment 
-                                        is strongly associated with upward stock price movements, validating the predictive power of our sentiment analysis model.
-                                    </p>
-                                    <div class="alert alert-success">
-                                        <small><i class="fas fa-chart-line me-1"></i>
-                                        <strong>Business Impact:</strong> This correlation enables development of sentiment-based trading strategies 
-                                        and risk management systems with quantifiable confidence levels.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Key Findings Summary -->
-                    <div class="card border-0 shadow-sm mt-4">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Key Research Findings</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="fw-bold mb-3">Model Performance Insights</h6>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>
-                                            DistilBERT achieved 94.2% accuracy, outperforming traditional models by 5-8%
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>
-                                            LSTM showed excellent sequential pattern recognition for time-series sentiment
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>
-                                            CNN provided fastest inference time while maintaining 89%+ accuracy
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>
-                                            Ensemble approach improved overall robustness and reduced overfitting
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="fw-bold mb-3">Market Correlation Discoveries</h6>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-chart-line text-primary me-2"></i>
-                                            Strong correlation (0.73) validates sentiment as a market predictor
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-clock text-info me-2"></i>
-                                            Optimal prediction window: 2-4 hours after news publication
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-industry text-warning me-2"></i>
-                                            Technology and financial sectors showed highest sentiment sensitivity
-                                        </li>
-                                        <li class="mb-2"><i class="fas fa-globe text-danger me-2"></i>
-                                            Market volatility amplifies sentiment-price correlation during crisis periods
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Business Applications -->
-                    <div class="card border-0 shadow-sm mt-4">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Business Applications & Impact</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4 text-center mb-3">
-                                    <div class="feature-icon bg-primary text-white">
-                                        <i class="fas fa-robot"></i>
-                                    </div>
-                                    <h6 class="fw-bold">Algorithmic Trading</h6>
-                                    <p class="text-muted small">Real-time sentiment signals for automated trading decisions with 73% correlation confidence</p>
-                                </div>
-                                <div class="col-md-4 text-center mb-3">
-                                    <div class="feature-icon bg-success text-white">
-                                        <i class="fas fa-shield-alt"></i>
-                                    </div>
-                                    <h6 class="fw-bold">Risk Management</h6>
-                                    <p class="text-muted small">Early warning system for market volatility based on negative sentiment trends</p>
-                                </div>
-                                <div class="col-md-4 text-center mb-3">
-                                    <div class="feature-icon bg-info text-white">
-                                        <i class="fas fa-chart-pie"></i>
-                                    </div>
-                                    <h6 class="fw-bold">Portfolio Optimization</h6>
-                                    <p class="text-muted small">Sentiment-weighted asset allocation strategies for enhanced returns</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Live Demo Section -->
-    <section id="demo" class="py-5 bg-dark text-white">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="display-5 fw-bold mb-4">Interactive Demo</h2>
-                    <p class="lead mb-4">Experience the sentiment analysis system in action with real financial news headlines</p>
-                    
-                    <div class="card bg-light text-dark">
-                        <div class="card-body">
-                            <h5 class="card-title">Try the Sentiment Analyzer</h5>
-                            <div class="mb-3">
-                                <textarea class="form-control" rows="3" placeholder="Enter a financial news headline..." id="demoInput">Apple reports record quarterly earnings, beating analyst expectations by 15%</textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="analyzeSentiment()">Analyze Sentiment</button>
-                            
-                            <div id="demoResult" class="mt-4" style="display: none;">
-                                <div class="alert alert-success">
-                                    <h6>Analysis Result:</h6>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <strong>Sentiment:</strong> <span id="sentimentLabel"></span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <strong>Confidence:</strong> <span id="confidence"></span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <strong>Score:</strong> <span id="sentimentScore"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <a href="https://github.com/duleab/financial-news-sentiment-analysis" class="btn btn-outline-light me-3" target="_blank">
-                            <i class="fab fa-github me-2"></i>Full Implementation
-                        </a>
-                        <a href="../index.html#contact" class="btn btn-warning">
-                            <i class="fas fa-download me-2"></i>Download Dataset
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Future Enhancements -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="display-5 fw-bold text-center mb-5">Future Enhancements & Roadmap</h2>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Short-term Goals</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Real-time news feed integration</li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Multi-language sentiment analysis</li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Enhanced visualization dashboard</li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>API endpoint development</li>
-                                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Mobile-responsive interface</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>Long-term Vision</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>AI-powered trading recommendations</li>
-                                        <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Social media sentiment integration</li>
-                                        <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Risk assessment algorithms</li>
-                                        <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Portfolio optimization features</li>
-                                        <li class="mb-2"><i class="fas fa-lightbulb text-warning me-2"></i>Institutional-grade analytics</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Contact & Collaboration -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="display-5 fw-bold mb-4">Let's Collaborate</h2>
-                    <p class="lead mb-4">Interested in financial sentiment analysis or machine learning projects? I'm always open to discussing new opportunities and collaborations.</p>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-0 shadow-sm h-100">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
-                                    <h5>Email</h5>
-                                    <p class="text-muted">Get in touch for project discussions</p>
-                                    <a href="mailto:duleabera05@gmail.com" class="btn btn-outline-primary">Send Email</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-0 shadow-sm h-100">
-                                <div class="card-body text-center">
-                                    <i class="fab fa-linkedin fa-2x text-primary mb-3"></i>
-                                    <h5>LinkedIn</h5>
-                                    <p class="text-muted">Connect for professional networking</p>
-                                    <a href="https://www.linkedin.com/in/duleabera" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer">Connect</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-0 shadow-sm h-100">
-                                <div class="card-body text-center">
-                                    <i class="fab fa-github fa-2x text-primary mb-3"></i>
-                                    <h5>GitHub</h5>
-                                    <p class="text-muted">Explore more projects and code</p>
-                                    <a href="https://github.com/duleab" class="btn btn-outline-primary" target="_blank">Follow</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-info">
-                        <h5 class="alert-heading"><i class="fas fa-lightbulb me-2"></i>Project Insights</h5>
-                        <p class="mb-0">This project demonstrates the practical application of NLP in financial markets. The strong correlation between news sentiment and stock movements opens up possibilities for algorithmic trading strategies and risk management systems.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Related Projects -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <h2 class="text-center mb-5">Related Projects</h2>
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <div class="card border-0 shadow-sm card-hover">
-                                <div class="card-body">
-                                    <i class="fas fa-chart-line fa-2x text-primary mb-3"></i>
-                                    <h5 class="card-title">Stock Price Prediction</h5>
-                                    <p class="card-text">LSTM-based model for predicting stock prices using technical indicators and market data.</p>
-                                    <a href="../index.html#projects" class="btn btn-outline-primary">View Projects</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card border-0 shadow-sm card-hover">
-                                <div class="card-body">
-                                    <i class="fas fa-robot fa-2x text-success mb-3"></i>
-                                    <h5 class="card-title">Trading Bot</h5>
-                                    <p class="card-text">Automated trading system using sentiment analysis and technical indicators for decision making.</p>
-                                    <a href="../index.html#projects" class="btn btn-outline-success">View Projects</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card border-0 shadow-sm card-hover">
-                                <div class="card-body">
-                                    <i class="fas fa-newspaper fa-2x text-info mb-3"></i>
-                                    <h5 class="card-title">News Aggregator</h5>
-                                    <p class="card-text">Real-time financial news aggregation and sentiment scoring dashboard with market impact analysis.</p>
-                                    <a href="../index.html#projects" class="btn btn-outline-info">View Projects</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><i class="fas fa-chart-line me-2"></i>Dule Abera</h5>
-                    <p class="text-muted">Selected work in NLP, computer vision, analytics, and BI.</p>
-                    <div class="social-links">
-                        <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="text-white me-3"><i class="fab fa-github fa-lg"></i></a>
-                        <a href="https://www.linkedin.com/in/duleabera" target="_blank" rel="noopener noreferrer" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="mailto:duleabera05@gmail.com" class="text-white"><i class="fas fa-envelope fa-lg"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <h6>Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="../index.html" class="text-muted">Home</a></li>
-                        <li><a href="../index.html#experience" class="text-muted">Experience</a></li>
-                        <li><a href="../index.html#projects" class="text-muted">Projects</a></li>
-                        <li><a href="../index.html#contact" class="text-muted">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Technologies</h6>
-                    <ul class="list-unstyled">
-                        <li class="text-muted">Python & TensorFlow</li>
-                        <li class="text-muted">Machine Learning</li>
-                        <li class="text-muted">Natural Language Processing</li>
-                        <li class="text-muted">Data Visualization</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">Built with <i class="fas fa-heart text-danger"></i> and Bootstrap</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button class="btn btn-primary position-fixed bottom-0 end-0 m-4 rounded-circle" id="backToTop" style="display: none; z-index: 1000;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script>
-        // Back to top button functionality
-        window.addEventListener('scroll', function() {
-            const backToTop = document.getElementById('backToTop');
-            if (window.pageYOffset > 300) {
-                backToTop.style.display = 'block';
-            } else {
-                backToTop.style.display = 'none';
-            }
-        });
-
-        document.getElementById('backToTop').addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add animation to cards on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-    </script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

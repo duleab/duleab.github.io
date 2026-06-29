@@ -3,153 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Parking (Space Classification) | Dule Abera</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <title>Parking Lot Classification | Dule Abera</title>
+    <meta name="description" content="Smart parking system that classifies available and occupied parking spaces using Convolutional Neural Networks and OpenCV.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
+        
+        .media-full { margin:2rem 0; border-radius:8px; overflow:hidden; border:1px solid var(--border-color); }
+        .media-full img { width:100%; display:block; height:auto; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">Dule<span>.</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#experience">Experience</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="../index.html#projects">Projects</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
                 </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Smart Parking Lot Classification</span>
+                </nav>
+                <h1>Parking Lot Classification</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    A smart parking system that utilizes computer vision to classify parking spaces as available or occupied. Processes video feeds to generate real-time availability tracking.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">CNN</span><span class="tag">TensorFlow</span><span class="tag">OpenCV</span>
+                    <span class="tag">Python</span><span class="tag">Computer Vision</span>
+                </div>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
         </div>
-    </nav>
-
-    <!-- Project Header -->
-    <section class="project-header py-5">
-        <div class="container pt-5">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">Parking Lot Classification</h1>
-                    <div class="mb-4">
-                        <span class="badge bg-primary me-2">CNN</span>
-                        <span class="badge bg-primary me-2">TensorFlow</span>
-                        <span class="badge bg-primary me-2">Computer Vision</span>
-                    </div>
-                    <p class="lead">Smart parking system that classifies available and occupied parking spaces.</p>
-                </div>
-                <div class="col-lg-6">
-                    <img src="../assets/images/parking-lot.jpg" alt="Parking Lot Classification" class="img-fluid rounded shadow">
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">CNN</span><span class="kpi-label">Algorithm</span></div>
+                    <div><span class="kpi-number">Real-Time</span><span class="kpi-label">Tracking</span></div>
+                    <div><span class="kpi-number">Binary</span><span class="kpi-label">Classification Task</span></div>
+                    <div><span class="kpi-number">Static</span><span class="kpi-label">Camera Feed</span></div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Project Details -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h2 class="mb-4">Project Overview</h2>
-                    <p>This project implements a smart parking system that uses computer vision to classify parking spaces as available or occupied. The system processes video feeds from parking lot cameras and provides real-time information about parking availability, helping drivers find parking spaces quickly and efficiently.</p>
-                    
-                    <h3 class="mt-5 mb-3">Key Features</h3>
-                    <ul class="list-group list-group-flush mb-5">
-                        <li class="list-group-item">Real-time classification of parking spaces</li>
-                        <li class="list-group-item">High accuracy in various lighting and weather conditions</li>
-                        <li class="list-group-item">Automated space counting and availability tracking</li>
-                        <li class="list-group-item">Integration with parking management systems</li>
-                        <li class="list-group-item">Historical data analysis for parking trends</li>
-                    </ul>
-                    
-                    <h3 class="mb-3">Technical Implementation</h3>
-                    <p>The system uses a convolutional neural network (CNN) trained on a large dataset of parking space images. The model is optimized for both accuracy and speed to enable real-time processing. TensorFlow is used for model training and inference, while custom computer vision algorithms handle the detection and segmentation of individual parking spaces.</p>
-                    
-                    <div class="mt-5 mb-5">
-                        <h3 class="mb-3">Project Demo Video</h3>
-                        <p class="text-muted mt-2 mb-0">
-                            Demo video is not embedded here (to keep the page fast). If you’d like to see footage or a
-                            walkthrough, reach out via email or check my GitHub profile.
-                        </p>
-                    </div>
-                    
-                    <h3 class="mb-3">Research Paper</h3>
-                    <div class="card mb-5">
-                        <div class="card-body">
-                            <h5 class="card-title">Deep Learning Approaches for Efficient Parking Space Classification</h5>
-                            <p class="card-text">This research paper details the methodology, experiments, and results of our parking lot classification system.</p>
-                            <span class="text-muted">Paper link available on request.</span>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <div class="media-full mb-5">
+                            <img src="../assets/images/parking-lot.jpg" alt="Parking Lot Classification UI Preview">
                         </div>
-                    </div>
-                    
-                    <h3 class="mb-3">Technical Architecture</h3>
-                    <p>The system architecture consists of the following components:</p>
-                    <ol>
-                        <li><strong>Input Module:</strong> Processes video feeds from parking lot cameras</li>
-                        <li><strong>Space Detection Module:</strong> Identifies and segments individual parking spaces</li>
-                        <li><strong>Classification Module:</strong> Uses CNN to classify each space as available or occupied</li>
-                        <li><strong>Tracking Module:</strong> Maintains state information and handles temporal consistency</li>
-                        <li><strong>Visualization Module:</strong> Generates user-friendly displays of parking availability</li>
-                    </ol>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Project Details</h4>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><strong>Duration:</strong> 3 months</li>
-                                <li class="mb-2"><strong>Completion:</strong> May 2023</li>
-                                <li class="mb-2"><strong>Category:</strong> Computer Vision, Deep Learning</li>
-                                <li class="mb-2"><strong>Tools:</strong> Python, TensorFlow, OpenCV</li>
+
+                        <p class="case-heading">Project Overview</p>
+                        <h2 class="case-title">Automated Space Tracking</h2>
+                        <p class="case-body">This project implements a smart parking system aimed at helping drivers find spaces efficiently. By analyzing static CCTV feeds of parking lots, the system maps out designated spaces and continually updates their occupancy status using deep learning.</p>
+
+                        <div class="insight-callout">
+                            <strong>System Optimization:</strong> To ensure fast processing on edge devices, the system uses static coordinate mapping for space locations and evaluates a lightweight Convolutional Neural Network (CNN) only on cropped image patches corresponding to individual parking spots.
+                        </div>
+
+                        <p class="case-heading">Technical Pipeline</p>
+                        <h2 class="case-title">System Architecture</h2>
+                        <p class="case-body">The implementation is divided into independent modules for scalability:</p>
+                        
+                        <ul class="case-body" style="padding-left:1.5rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Space Segmentation:</strong> Pre-defining polygon regions for each parking spot to isolate the areas of interest.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>CNN Classification:</strong> A TensorFlow model trained to classify image patches into <em>Empty</em> or <em>Occupied</em> classes, robust to lighting variations.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Tracking & State Management:</strong> Buffering predictions temporally to prevent flickering when cars are maneuvering.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Visualization:</strong> Drawing intuitive red/green overlays over the video feed with real-time capacity counters.</li>
+                        </ul>
+
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Duration</strong><br>3 months</li>
+                                <li><strong>Task</strong><br>Image Patch Classification</li>
+                                <li><strong>Status</strong><br>Completed May 2023</li>
                             </ul>
                         </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Presentation</h4>
-                            <p>View the project presentation for a comprehensive overview of the system design and results.</p>
-                            <span class="text-muted">Slides available on request.</span>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Source Code</h4>
-                            <p>The complete source code is available on GitHub with documentation.</p>
-                            <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark w-100"><i class="fab fa-github me-2"></i>View on GitHub</a>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Related Projects</h4>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="license-plate-recognition.html" class="text-decoration-none">License Plate Recognition</a>
-                                </li>
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="people-detection.html" class="text-decoration-none">People Detection & Counting</a>
-                                </li>
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>TensorFlow</strong> — Deep Learning</li>
+                                <li><strong>OpenCV</strong> — Video Processing</li>
+                                <li><strong>Python</strong> — Development</li>
                             </ul>
                         </div>
-                    </div>
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="license-plate-recognition.html">License Plate Recognition</a></li>
+                                <li><a href="people-detection.html">People Detection</a></li>
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

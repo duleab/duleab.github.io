@@ -4,645 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insurance Risk Analytics & Predictive Modeling | Dule Abera</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="description" content="Risk analytics and predictive modeling on a South African car-insurance dataset to identify claim drivers and build a transparent model for risk segmentation.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
     <style>
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-        }
-        .tech-badge {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin: 5px;
-            display: inline-block;
-            font-size: 0.9em;
-        }
-        .metric-card {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            border-left: 4px solid #007bff;
-            transition: transform 0.3s ease;
-        }
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-        .feature-icon {
-            font-size: 2.5rem;
-            color: #007bff;
-            margin-bottom: 1rem;
-        }
-        .code-block {
-            background: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 5px 5px 0;
-        }
-        .pipeline-step {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px 0;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .pipeline-step:hover {
-            border-color: #007bff;
-            box-shadow: 0 5px 15px rgba(0,123,255,0.1);
-        }
-        .pipeline-arrow {
-            text-align: center;
-            color: #007bff;
-            font-size: 1.5rem;
-            margin: 10px 0;
-        }
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .pipeline-steps { list-style:none; padding:0; margin:1.25rem 0; }
+        .pipeline-steps li { display:flex; gap:1rem; margin-bottom:1.5rem; }
+        .step-num { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--text-primary); color:var(--bg-color); font-size:0.75rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+        .step-content h4 { font-size:0.95rem; font-weight:700; margin-bottom:0.25rem; }
+        .step-content p { font-size:0.88rem; margin:0; }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">
-                <i class="fas fa-arrow-left me-2"></i>Back to Portfolio
-            </a>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">
-                        <i class="fas fa-shield-alt me-3"></i>
-                        Insurance Risk Analytics & Predictive Modeling
-                    </h1>
-                    <p class="lead mb-4">
-                        Risk analytics and predictive modeling on a South African car-insurance dataset, focused on understanding claim drivers and building a transparent baseline model for risk segmentation.
-                    </p>
-                    <div class="mb-4">
-                        <span class="tech-badge"><i class="fab fa-python"></i> Python</span>
-                        <span class="tech-badge"><i class="fas fa-chart-line"></i> Machine Learning</span>
-                        <span class="tech-badge"><i class="fas fa-database"></i> DVC Pipeline</span>
-                        <span class="tech-badge"><i class="fas fa-chart-bar"></i> Statistical Analysis</span>
-                        <span class="tech-badge"><i class="fab fa-github"></i> Version Control</span>
-                    </div>
-                    <div>
-                        <a href="#overview" class="btn btn-light btn-lg me-3">
-                            <i class="fas fa-info-circle me-2"></i>Project Overview
-                        </a>
-                        <a href="https://github.com/duleab" class="btn btn-outline-light btn-lg" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-github me-2"></i>GitHub
-                        </a>
-                    </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Insurance Risk Analytics</span>
+                </nav>
+                <h1>Insurance Risk Analytics & Predictive Modeling</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    A comprehensive data science project analyzing a South African car-insurance dataset to identify low-risk customer segments for targeted premium reductions while maintaining profitability.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">Python</span><span class="tag">Machine Learning</span><span class="tag">DVC</span>
+                    <span class="tag">Statistical Analysis</span><span class="tag">Random Forest</span>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <i class="fas fa-chart-pie" style="font-size: 8rem; opacity: 0.3;"></i>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
+            </div>
+        </div>
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">87%</span><span class="kpi-label">Model Accuracy</span></div>
+                    <div><span class="kpi-number">0.91</span><span class="kpi-label">ROC AUC Score</span></div>
+                    <div><span class="kpi-number">9.2%</span><span class="kpi-label">Loss Ratio</span></div>
+                    <div><span class="kpi-number">10K+</span><span class="kpi-label">Policies Analyzed</span></div>
                 </div>
             </div>
         </div>
-    </section>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <p class="case-heading">Project Overview</p>
+                        <h2 class="case-title">Targeted Risk Segmentation</h2>
+                        <p class="case-body">Insurance profitability hinges on accurately assessing risk. This project leverages historical claims data to segment customers, specifically identifying "low-risk" profiles that can be offered premium reductions without negatively impacting the portfolio's overall loss ratio.</p>
 
-    <!-- Key Metrics -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <div class="card metric-card h-100 text-center p-4">
-                        <h3 class="text-primary fw-bold">87%</h3>
-                        <p class="mb-0">Model Accuracy</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card metric-card h-100 text-center p-4">
-                        <h3 class="text-success fw-bold">0.91</h3>
-                        <p class="mb-0">ROC AUC Score</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card metric-card h-100 text-center p-4">
-                        <h3 class="text-info fw-bold">Segmentation</h3>
-                        <p class="mb-0">Risk Buckets</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card metric-card h-100 text-center p-4">
-                        <h3 class="text-warning fw-bold">Explainable</h3>
-                        <p class="mb-0">Model Insights</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <p class="case-heading">Key Findings</p>
+                        <h2 class="case-title">Identifying Low-Risk Drivers</h2>
+                        <p class="case-body">Rigorous statistical analysis and hypothesis testing across geographic, demographic, and vehicle characteristic dimensions revealed clear low-risk segments:</p>
+                        <ol class="pipeline-steps">
+                            <li><span class="step-num">1</span><div class="step-content"><h4>Geographic Clusters</h4><p>Drivers in the Western Cape and Gauteng provinces showed significantly lower claim frequencies.</p></div></li>
+                            <li><span class="step-num">2</span><div class="step-content"><h4>Demographics</h4><p>Statistically, male drivers in the dataset exhibited a lower risk profile.</p></div></li>
+                            <li><span class="step-num">3</span><div class="step-content"><h4>Vehicle Characteristics</h4><p>Hatchback and Sedan vehicle types, specifically from Toyota and Volkswagen, correlated with lower average claims.</p></div></li>
+                        </ol>
 
-    <!-- Project Overview -->
-    <section id="overview" class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-center mb-5">Project Overview</h2>
-                    <p class="lead text-center mb-5">
-                        This comprehensive data science project analyzes historical insurance data to identify low-risk customer segments for targeted premium reductions while maintaining profitability.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="text-center">
-                        <i class="fas fa-search feature-icon"></i>
-                        <h4>Statistical Analysis</h4>
-                        <p>Rigorous hypothesis testing across geographic regions, customer demographics, and vehicle characteristics to identify significant risk variations.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="text-center">
-                        <i class="fas fa-robot feature-icon"></i>
-                        <h4>Machine Learning</h4>
-                        <p>Advanced predictive models including Random Forest and Logistic Regression for claims prediction and risk assessment.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="text-center">
-                        <i class="fas fa-cogs feature-icon"></i>
-                        <h4>DVC Pipeline</h4>
-                        <p>Reproducible data science pipeline using Data Version Control for scalable and maintainable analytics workflow.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <div class="insight-callout">
+                            <strong>Portfolio Health:</strong> The identified low-risk segment demonstrated an excellent 9.2% loss ratio and a 14.5% claim frequency, strongly validating the segmentation strategy.
+                        </div>
 
-    <!-- Dataset Information -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3 class="mb-4">Dataset Overview</h3>
-                    <ul class="list-unstyled">
-                        <li class="mb-3"><i class="fas fa-database text-primary me-2"></i><strong>Size:</strong> 10,000+ insurance policies</li>
-                        <li class="mb-3"><i class="fas fa-calendar text-primary me-2"></i><strong>Period:</strong> February 2014 to August 2015</li>
-                        <li class="mb-3"><i class="fas fa-users text-primary me-2"></i><strong>Demographics:</strong> Age, gender, marital status, driving experience</li>
-                        <li class="mb-3"><i class="fas fa-map-marker-alt text-primary me-2"></i><strong>Geographic:</strong> Province, city, postal code data</li>
-                        <li class="mb-3"><i class="fas fa-car text-primary me-2"></i><strong>Vehicle Details:</strong> Make, model, year, type, value</li>
-                        <li class="mb-3"><i class="fas fa-file-contract text-primary me-2"></i><strong>Policy Info:</strong> Premium, coverage, claims history</li>
-                    </ul>
-                </div>
-                <div class="col-lg-6">
-                    <h3 class="mb-4">Key Findings</h3>
-                    <div class="code-block">
-                        <h5>Low-Risk Segments Identified:</h5>
-                        <ul>
-                            <li><strong>Geographic:</strong> Western Cape, Gauteng provinces</li>
-                            <li><strong>Demographics:</strong> Male drivers</li>
-                            <li><strong>Vehicles:</strong> Hatchback/Sedan types</li>
-                            <li><strong>Brands:</strong> Toyota/Volkswagen makes</li>
+                        <p class="case-heading">Data Pipeline</p>
+                        <h2 class="case-title">Reproducible MLOps with DVC</h2>
+                        <p class="case-body">To ensure reproducibility and maintainability, the entire data science workflow was orchestrated using <strong>Data Version Control (DVC)</strong>.</p>
+                        <ul style="color:var(--text-secondary); font-size:0.95rem; line-height:1.7; padding-left:1.5rem;">
+                            <li><strong>Data Preparation:</strong> Automated cleaning, missing value imputation, and outlier handling.</li>
+                            <li><strong>Feature Engineering:</strong> Systematic creation of risk ratios, temporal features, and interaction terms.</li>
+                            <li><strong>Model Training:</strong> Version-controlled training of Random Forest and Logistic Regression baselines for transparent risk assessment.</li>
                         </ul>
-                    </div>
-                    <div class="code-block">
-                        <h5>Portfolio Metrics:</h5>
-                        <ul>
-                            <li><strong>Loss Ratio:</strong> 9.2% (Excellent profitability)</li>
-                            <li><strong>Claim Frequency:</strong> 14.5%</li>
-                            <li><strong>Average Premium:</strong> $5,162</li>
-                            <li><strong>Average Claim:</strong> $3,023</li>
-                        </ul>
-                    </div>
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Dataset Overview</h3>
+                            <ul>
+                                <li><strong>Size</strong><br>10,000+ Insurance Policies</li>
+                                <li><strong>Period</strong><br>Feb 2014 - Aug 2015</li>
+                                <li><strong>Avg Premium</strong><br>$5,162</li>
+                                <li><strong>Avg Claim</strong><br>$3,023</li>
+                            </ul>
+                        </div>
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>Python</strong> — Core Analysis</li>
+                                <li><strong>Scikit-learn</strong> — ML Models</li>
+                                <li><strong>DVC</strong> — Pipeline Orchestration</li>
+                                <li><strong>Statsmodels</strong> — Hypothesis Testing</li>
+                            </ul>
+                        </div>
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="credit-risk-model.html">Credit Risk Assessment</a></li>
+                                <li><a href="financial-news-sentiment-analysis.html">Financial News Sentiment</a></li>
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- DVC Pipeline -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Data Science Pipeline</h2>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="pipeline-step">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <i class="fas fa-download text-primary" style="font-size: 2rem;"></i>
-                            </div>
-                            <div class="col-md-10">
-                                <h5>Data Preparation</h5>
-                                <p class="mb-0">Data cleaning, transformation, and quality assessment with missing value handling and outlier detection.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pipeline-arrow">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div class="pipeline-step">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <i class="fas fa-tools text-primary" style="font-size: 2rem;"></i>
-                            </div>
-                            <div class="col-md-10">
-                                <h5>Feature Engineering</h5>
-                                <p class="mb-0">Creation of risk ratios, temporal features, geographic clusters, and interaction terms for enhanced model performance.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pipeline-arrow">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div class="pipeline-step">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <i class="fas fa-chart-line text-primary" style="font-size: 2rem;"></i>
-                            </div>
-                            <div class="col-md-10">
-                                <h5>Statistical Testing</h5>
-                                <p class="mb-0">Hypothesis testing for risk variations across demographics, geography, and vehicle characteristics.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pipeline-arrow">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div class="pipeline-step">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <i class="fas fa-brain text-primary" style="font-size: 2rem;"></i>
-                            </div>
-                            <div class="col-md-10">
-                                <h5>Model Training</h5>
-                                <p class="mb-0">Development and evaluation of Random Forest and Logistic Regression models for claims prediction.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pipeline-arrow">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div class="pipeline-step">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <i class="fas fa-lightbulb text-primary" style="font-size: 2rem;"></i>
-                            </div>
-                            <div class="col-md-10">
-                                <h5>Business Recommendations</h5>
-                                <p class="mb-0">Translation of insights into actionable premium optimization strategies and implementation roadmap.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Model Performance -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Model Performance Comparison</h2>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Model</th>
-                                    <th>Accuracy</th>
-                                    <th>Precision</th>
-                                    <th>Recall</th>
-                                    <th>F1 Score</th>
-                                    <th>ROC AUC</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Random Forest</strong></td>
-                                    <td><span class="badge bg-success">87%</span></td>
-                                    <td><span class="badge bg-success">84%</span></td>
-                                    <td><span class="badge bg-success">79%</span></td>
-                                    <td><span class="badge bg-success">0.81</span></td>
-                                    <td><span class="badge bg-success">0.91</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Logistic Regression</strong></td>
-                                    <td><span class="badge bg-info">85%</span></td>
-                                    <td><span class="badge bg-info">82%</span></td>
-                                    <td><span class="badge bg-info">75%</span></td>
-                                    <td><span class="badge bg-info">0.78</span></td>
-                                    <td><span class="badge bg-info">0.88</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Analytics Results & Visualizations -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Analytics Results & Visualizations</h2>
-            <p class="text-center lead mb-5">Comprehensive analysis results showcasing risk patterns, model performance, and business insights derived from the insurance dataset.</p>
-            
-            <div class="row">
-                <!-- ROC Curve Comparison -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/roc_curve_comparison.png" class="card-img-top" alt="ROC Curve Comparison" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-line text-primary me-2"></i>ROC Curve Comparison</h5>
-                            <p class="card-text">Comparative analysis of model performance showing Random Forest achieving superior AUC of 0.91 vs Logistic Regression's 0.88. The curves demonstrate excellent discrimination capability with both models significantly outperforming random chance.</p>
-                            <div class="row text-center mt-3">
-                                <div class="col-6">
-                                    <small class="text-muted">Random Forest AUC</small>
-                                    <div class="fw-bold text-success">0.91</div>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Logistic Regression AUC</small>
-                                    <div class="fw-bold text-info">0.88</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Importance -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/feature_importance.png" class="card-img-top" alt="Feature Importance Analysis" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-ranking-star text-primary me-2"></i>Feature Importance Analysis</h5>
-                            <p class="card-text">Random Forest feature importance ranking reveals key risk drivers: vehicle value, driver age, and geographic location emerge as top predictors. This analysis guides premium pricing strategies and risk assessment protocols.</p>
-                            <div class="mt-3">
-                                <small class="text-muted">Top Risk Factors:</small>
-                                <ul class="list-unstyled mt-2">
-                                    <li><i class="fas fa-car text-warning me-1"></i> Vehicle Value & Type</li>
-                                    <li><i class="fas fa-user text-info me-1"></i> Driver Demographics</li>
-                                    <li><i class="fas fa-map-marker-alt text-success me-1"></i> Geographic Location</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SHAP Summary -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/shap_summary.png" class="card-img-top" alt="SHAP Summary Plot" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-brain text-primary me-2"></i>SHAP Explainability Analysis</h5>
-                            <p class="card-text">SHAP (SHapley Additive exPlanations) values provide model interpretability, showing how each feature contributes to individual predictions. This ensures transparent and explainable AI for regulatory compliance and business understanding.</p>
-                            <div class="mt-3">
-                                <small class="text-muted">Key Insights:</small>
-                                <ul class="list-unstyled mt-2">
-                                    <li><i class="fas fa-eye text-primary me-1"></i> Model Transparency</li>
-                                    <li><i class="fas fa-balance-scale text-success me-1"></i> Regulatory Compliance</li>
-                                    <li><i class="fas fa-lightbulb text-warning me-1"></i> Business Interpretability</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Risk Segmentation Matrix -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/risk_segmentation_matrix.png" class="card-img-top" alt="Risk Segmentation Matrix" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-th text-primary me-2"></i>Risk Segmentation Matrix</h5>
-                            <p class="card-text">Strategic customer segmentation based on risk profiles and premium potential. This matrix identifies optimal target segments for premium adjustments, balancing profitability with competitive positioning.</p>
-                            <div class="row text-center mt-3">
-                                <div class="col-4">
-                                    <small class="text-muted">Low Risk</small>
-                                    <div class="fw-bold text-success">23%</div>
-                                </div>
-                                <div class="col-4">
-                                    <small class="text-muted">Medium Risk</small>
-                                    <div class="fw-bold text-warning">62%</div>
-                                </div>
-                                <div class="col-4">
-                                    <small class="text-muted">High Risk</small>
-                                    <div class="fw-bold text-danger">15%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Claim Distribution Analysis -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/claim_distribution.png" class="card-img-top" alt="Claim Distribution Analysis" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-bar text-primary me-2"></i>Claim Distribution Analysis</h5>
-                            <p class="card-text">Comprehensive analysis of claim patterns across different customer segments and time periods. Shows seasonal variations, demographic trends, and helps optimize reserve allocation and pricing strategies.</p>
-                            <div class="mt-3">
-                                <small class="text-muted">Distribution Insights:</small>
-                                <ul class="list-unstyled mt-2">
-                                    <li><i class="fas fa-calendar text-info me-1"></i> Seasonal Patterns</li>
-                                    <li><i class="fas fa-users text-success me-1"></i> Demographic Trends</li>
-                                    <li><i class="fas fa-dollar-sign text-warning me-1"></i> Claim Severity Analysis</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Premium vs Claims Analysis -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/premium_vs_claims.png" class="card-img-top" alt="Premium vs Claims Scatter Plot" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-scatter-chart text-primary me-2"></i>Premium vs Claims Correlation</h5>
-                            <p class="card-text">Scatter plot analysis revealing the relationship between premium amounts and claim values. Identifies underpriced segments and validates pricing model effectiveness with correlation coefficient of 0.73.</p>
-                            <div class="row text-center mt-3">
-                                <div class="col-6">
-                                    <small class="text-muted">Correlation</small>
-                                    <div class="fw-bold text-primary">0.73</div>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">R² Score</small>
-                                    <div class="fw-bold text-success">0.53</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vehicle Risk Analysis -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/comprehensive vehicle risk analysis.png" class="card-img-top" alt="Comprehensive Vehicle Risk Analysis" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-car text-primary me-2"></i>Vehicle Risk Analysis</h5>
-                            <p class="card-text">Detailed breakdown of risk factors by vehicle characteristics including make, model, age, and type. Hatchbacks and sedans show 23% lower claim rates compared to SUVs and luxury vehicles.</p>
-                            <div class="mt-3">
-                                <small class="text-muted">Risk by Vehicle Type:</small>
-                                <ul class="list-unstyled mt-2">
-                                    <li><i class="fas fa-arrow-down text-success me-1"></i> Hatchback: Low Risk</li>
-                                    <li><i class="fas fa-minus text-warning me-1"></i> Sedan: Medium Risk</li>
-                                    <li><i class="fas fa-arrow-up text-danger me-1"></i> SUV: High Risk</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Loss Ratio Analysis -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/loss ratio analysis by vehicle type.png" class="card-img-top" alt="Loss Ratio Analysis by Vehicle Type" style="height: 300px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-percentage text-primary me-2"></i>Loss Ratio by Vehicle Type</h5>
-                            <p class="card-text">Loss ratio analysis across vehicle categories showing profitability metrics. Overall portfolio maintains excellent 9.2% loss ratio, with hatchbacks achieving the lowest ratio at 6.8%.</p>
-                            <div class="row text-center mt-3">
-                                <div class="col-4">
-                                    <small class="text-muted">Hatchback</small>
-                                    <div class="fw-bold text-success">6.8%</div>
-                                </div>
-                                <div class="col-4">
-                                    <small class="text-muted">Sedan</small>
-                                    <div class="fw-bold text-info">8.5%</div>
-                                </div>
-                                <div class="col-4">
-                                    <small class="text-muted">SUV</small>
-                                    <div class="fw-bold text-warning">12.3%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Business Impact Projection -->
-                <div class="col-lg-12 mb-4">
-                    <div class="card shadow-sm">
-                        <img src="../assets/images/insurance-risk-analytics/business_impact_projection.png" class="card-img-top" alt="Business Impact Projection" style="height: 400px; object-fit: contain; padding: 15px;">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fas fa-chart-line text-primary me-2"></i>Business Impact Projection</h5>
-                            <p class="card-text">Illustrative impact view showing how you can translate segmentation into pricing experiments. In a real deployment, these numbers should be validated with controlled A/B testing and monitoring.</p>
-                            <div class="row text-center mt-4">
-                                <div class="col-md-3">
-                                    <div class="metric-card p-3">
-                                        <h4 class="text-success mb-1">A/B</h4>
-                                        <small class="text-muted">Pricing Experiments</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="metric-card p-3">
-                                        <h4 class="text-info mb-1">KPIs</h4>
-                                        <small class="text-muted">Loss ratio, churn</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="metric-card p-3">
-                                        <h4 class="text-warning mb-1">Guardrails</h4>
-                                        <small class="text-muted">Fairness & drift</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="metric-card p-3">
-                                        <h4 class="text-primary mb-1">Monitor</h4>
-                                        <small class="text-muted">Post-deploy</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Business Recommendations -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Business Recommendations</h2>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-percentage text-primary me-3" style="font-size: 1.5rem;"></i>
-                                <h5 class="card-title mb-0">Targeted Discount Program</h5>
-                            </div>
-                            <p class="card-text">Implement 5-10% premium reduction for identified low-risk segments to improve customer retention and market competitiveness.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-trophy text-primary me-3" style="font-size: 1.5rem;"></i>
-                                <h5 class="card-title mb-0">Loyalty Rewards</h5>
-                            </div>
-                            <p class="card-text">Develop increasing discount tiers for policy renewal years to enhance customer lifetime value and reduce churn.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-shield-alt text-primary me-3" style="font-size: 1.5rem;"></i>
-                                <h5 class="card-title mb-0">Safe Driver Program</h5>
-                            </div>
-                            <p class="card-text">Enhance existing programs with additional tiers specifically for low-risk vehicle types and driver profiles.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-chart-line text-primary me-3" style="font-size: 1.5rem;"></i>
-                                <h5 class="card-title mb-0">Dynamic Pricing Model</h5>
-                            </div>
-                            <p class="card-text">Implement model-based pricing adjustments using real-time risk assessment and market conditions.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technology Stack -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Technology Stack</h2>
-            <div class="row">
-                <div class="col-md-3 mb-4 text-center">
-                    <i class="fab fa-python text-primary" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">Python</h5>
-                    <p>Core programming language for data analysis and modeling</p>
-                </div>
-                <div class="col-md-3 mb-4 text-center">
-                    <i class="fas fa-chart-bar text-primary" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">Scikit-learn</h5>
-                    <p>Machine learning library for model development and evaluation</p>
-                </div>
-                <div class="col-md-3 mb-4 text-center">
-                    <i class="fas fa-database text-primary" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">DVC</h5>
-                    <p>Data Version Control for reproducible ML pipelines</p>
-                </div>
-                <div class="col-md-3 mb-4 text-center">
-                    <i class="fab fa-github text-primary" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">GitHub Actions</h5>
-                    <p>CI/CD pipeline for automated testing and deployment</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-            <p class="mb-0">Insurance Risk Analytics &amp; Predictive Modeling</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>

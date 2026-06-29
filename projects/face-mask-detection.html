@@ -4,253 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Mask Detection | Dule Abera</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
+    <meta name="description" content="Real-time face mask detection system using Convolutional Neural Networks and OpenCV for COVID-19 safety compliance.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip { background:var(--bg-alt); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding:2rem 0; }
+        .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.5rem; text-align:center; }
+        .kpi-number { display:block; font-size:2.25rem; font-weight:800; color:var(--text-primary); letter-spacing:-1px; line-height:1; }
+        .kpi-label { display:block; font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-top:0.3rem; }
+        .page-layout { display:grid; grid-template-columns:1fr 300px; gap:4rem; align-items:start; }
+        @media (max-width:900px) { .page-layout { grid-template-columns:1fr; } }
+        .case-heading { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-secondary); margin-bottom:0.4rem; margin-top:2.5rem; }
+        .case-heading:first-of-type { margin-top:0; }
+        .case-title { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+        .case-body { font-size:0.97rem; color:var(--text-secondary); line-height:1.75; margin-bottom:1rem; }
+        .insight-callout { border-left:3px solid var(--text-primary); padding:0.9rem 1.2rem; background:var(--bg-alt); border-radius:0 6px 6px 0; margin:1.25rem 0; font-size:0.93rem; color:var(--text-secondary); }
+        .insight-callout strong { color:var(--text-primary); }
+        .sidebar-card { border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1.25rem; }
+        .sidebar-card h3 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-color); }
+        .sidebar-card ul { list-style:none; padding:0; margin:0; font-size:0.88rem; }
+        .sidebar-card li { padding:0.35rem 0; border-bottom:1px solid var(--border-color); color:var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom:none; }
+        .sidebar-card li strong { color:var(--text-primary); }
+        .tag-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem; }
+        .tag { font-size:0.78rem; font-weight:500; border:1px solid var(--border-color); border-radius:4px; padding:0.2rem 0.6rem; color:var(--text-secondary); background:var(--bg-alt); }
+        .breadcrumb { font-size:0.85rem; color:var(--text-secondary); margin-bottom:2rem; }
+        .breadcrumb a { text-decoration:none; color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--text-primary); }
+        .breadcrumb span { margin:0 0.4rem; }
+        
+        .media-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin:1.5rem 0; }
+        .media-card img { width:100%; border-radius:6px; border:1px solid var(--border-color); display:block; aspect-ratio:4/3; object-fit:contain; background:#f9f9f9; }
+        .media-card p { font-size:0.8rem; text-align:center; color:var(--text-secondary); margin-top:0.5rem; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="../index.html">Dule<span>.</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="../index.html#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#experience">Experience</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="../index.html#projects">Projects</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
                 </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="section" style="padding-bottom:0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>Face Mask Detection</span>
+                </nav>
+                <h1>Face Mask Detection</h1>
+                <p style="font-size:1.1rem;color:var(--text-secondary);max-width:680px;margin-bottom:1.5rem;line-height:1.7;">
+                    A real-time face mask detection system using Convolutional Neural Networks and computer vision techniques. Developed for safety compliance, analyzing multi-person video streams.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">CNN</span><span class="tag">OpenCV</span><span class="tag">Python</span>
+                    <span class="tag">TensorFlow</span><span class="tag">Computer Vision</span>
+                </div>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
         </div>
-    </nav>
-
-    <!-- Project Header -->
-    <section class="project-header py-5">
-        <div class="container pt-5">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">Face Mask Detection</h1>
-                    <div class="mb-4">
-                        <span class="badge bg-primary me-2">CNN</span>
-                        <span class="badge bg-primary me-2">OpenCV</span>
-                        <span class="badge bg-primary me-2">Python</span>
-                    </div>
-                    <p class="lead">Real-time face mask detection system for COVID-19 safety compliance.</p>
-                </div>
-                <div class="col-lg-6">
-                    <img src="../assets/images/face-mask.jpg" alt="Face Mask Detection" class="img-fluid rounded shadow">
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">CNN</span><span class="kpi-label">Architecture</span></div>
+                    <div><span class="kpi-number">10k+</span><span class="kpi-label">Training Images</span></div>
+                    <div><span class="kpi-number">3</span><span class="kpi-label">Classes Detected</span></div>
+                    <div><span class="kpi-number">Real-time</span><span class="kpi-label">Performance</span></div>
                 </div>
             </div>
         </div>
-    </section>
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+                    <article>
+                        <p class="case-heading">Project Overview</p>
+                        <h2 class="case-title">Safety Compliance Monitoring</h2>
+                        <p class="case-body">This project implements a robust real-time face mask detection system designed to integrate with existing CCTV infrastructure. The pipeline identifies faces in a frame and classifies them into three categories: wearing a mask correctly, incorrectly, or not wearing a mask at all.</p>
 
-    <!-- Project Details -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <h2 class="mb-4">Project Overview</h2>
-                    <p>This project implements a real-time face mask detection system using Convolutional Neural Networks (CNN) and computer vision techniques. The system can detect whether a person is wearing a face mask correctly, incorrectly, or not at all from video streams or images.</p>
-                    
-                    <h3 class="mt-5 mb-3">Key Features</h3>
-                    <ul class="list-group list-group-flush mb-5">
-                        <li class="list-group-item">Real-time face mask detection with high accuracy</li>
-                        <li class="list-group-item">Multi-class classification (with mask, without mask, incorrectly worn)</li>
-                        <li class="list-group-item">Support for multiple faces in a single frame</li>
-                        <li class="list-group-item">Integration with existing CCTV systems</li>
-                        <li class="list-group-item">Alert system for non-compliance</li>
-                    </ul>
-                    
-                    <h3 class="mb-3">Technical Implementation</h3>
-                    <p>The system uses a two-stage approach: first, faces are detected using a pre-trained face detection model, then a custom CNN classifier determines if a mask is being worn. The model was trained on a dataset of over 10,000 images of people with and without masks in various settings and lighting conditions.</p>
-                    
-                    <div class="mt-5 mb-5">
-                        <h3 class="mb-3">Project Demo Video</h3>
-                        <p class="text-muted mt-2 mb-0">
-                            Demo video is not embedded here (to keep the page lightweight). If you’d like to see a demo,
-                            reach out via email or check my GitHub profile.
-                        </p>
-                    </div>
-                    
-                    <h3 class="mb-3">Research Paper</h3>
-                    <div class="card mb-5">
-                        <div class="card-body">
-                            <h5 class="card-title">Real-time Face Mask Detection for COVID-19 Safety Compliance</h5>
-                            <p class="card-text">This research paper details the methodology, experiments, and results of our face mask detection system.</p>
-                            <span class="text-muted">Paper link available on request.</span>
+                        <div class="insight-callout">
+                            <strong>Technical Approach:</strong> A two-stage architecture first locates faces using a pre-trained face detection model, then passes the cropped regions to a custom Convolutional Neural Network (CNN) trained on over 10,000 diverse images.
                         </div>
-                    </div>
-                    
-                    <h3 class="mb-3">Technical Architecture</h3>
-                    <p>The system architecture consists of the following components:</p>
-                    <ol>
-                        <li><strong>Input Module:</strong> Handles video streams from cameras or image files</li>
-                        <li><strong>Face Detection Module:</strong> Locates faces in the input using a pre-trained model</li>
-                        <li><strong>Mask Classification Module:</strong> Determines mask status for each detected face</li>
-                        <li><strong>Alert Module:</strong> Triggers notifications for non-compliance</li>
-                        <li><strong>Visualization Module:</strong> Renders detection results with bounding boxes and status</li>
-                    </ol>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Project Details</h4>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><strong>Duration:</strong> 2 months</li>
-                                <li class="mb-2"><strong>Completion:</strong> June 2023</li>
-                                <li class="mb-2"><strong>Category:</strong> Computer Vision</li>
-                                <li class="mb-2"><strong>Tools:</strong> Python, TensorFlow, OpenCV</li>
+
+                        <p class="case-heading">System Components</p>
+                        <h2 class="case-title">Technical Implementation</h2>
+                        <p class="case-body">The system operates via a streamlined sequence of modules for maximum frame-rate efficiency:</p>
+                        
+                        <ul class="case-body" style="padding-left:1.5rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Face Detection:</strong> Identifies regions of interest regardless of scale or partial occlusion.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Mask Classification:</strong> A lightweight TensorFlow CNN evaluates each face.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Alert & Visualization:</strong> Renders color-coded bounding boxes and triggers alerts for non-compliance.</li>
+                        </ul>
+
+                        <p class="case-heading">Research Presentation</p>
+                        <h2 class="case-title">Methodology Slides</h2>
+                        <p class="case-body">Excerpts from the project presentation detailing dataset distribution, training curves, and inference examples.</p>
+                        
+                        <div class="media-grid">
+                            <div class="media-card">
+                                <img src="../assets/FInal Paper FaceMask Detection-1/1.jpg" alt="Title slide" loading="lazy">
+                            </div>
+                            <div class="media-card">
+                                <img src="../assets/FInal Paper FaceMask Detection-1/3.jpg" alt="Architecture slide" loading="lazy">
+                            </div>
+                            <div class="media-card">
+                                <img src="../assets/FInal Paper FaceMask Detection-1/7.jpg" alt="Dataset slide" loading="lazy">
+                            </div>
+                            <div class="media-card">
+                                <img src="../assets/FInal Paper FaceMask Detection-1/14.jpg" alt="Results slide" loading="lazy">
+                            </div>
+                        </div>
+
+                    </article>
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Duration</strong><br>2 months</li>
+                                <li><strong>Task</strong><br>Classification & Detection</li>
+                                <li><strong>Status</strong><br>Completed June 2023</li>
                             </ul>
                         </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Project Presentation</h4>
-                            <p>View the complete project presentation with detailed methodology and results.</p>
-                            <button class="btn btn-primary w-100" onclick="openPresentationModal()">View Presentation</button>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h4 class="card-title">Source Code</h4>
-                            <p>The complete source code is available on GitHub with documentation.</p>
-                            <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark w-100"><i class="fab fa-github me-2"></i>View on GitHub</a>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Related Projects</h4>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="people-detection.html" class="text-decoration-none">People Detection & Counting</a>
-                                </li>
-                                <li class="list-group-item p-0 border-0 mb-2">
-                                    <a href="license-plate-recognition.html" class="text-decoration-none">License Plate Recognition</a>
-                                </li>
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>TensorFlow</strong> — Deep Learning</li>
+                                <li><strong>OpenCV</strong> — Video Processing</li>
+                                <li><strong>Python</strong> — Core Language</li>
                             </ul>
                         </div>
-                    </div>
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="people-detection.html">People Detection</a></li>
+                                <li><a href="police-officer-detection.html">Police Officer Detection</a></li>
+                            </ul>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; 2026 Dule Abera. Built with care &amp; curiosity.</p>
-        </div>
-    </footer>
-
-    <!-- Presentation Modal -->
-    <div class="modal fade" id="presentationModal" tabindex="-1" aria-labelledby="presentationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="presentationModalLabel">Face Mask Detection - Project Presentation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="presentation-container">
-                        <div class="slide-navigation mb-3 p-3 bg-light">
-                            <button class="btn btn-outline-primary btn-sm me-2" onclick="previousSlide()" id="prevBtn">
-                                <i class="fas fa-chevron-left"></i> Previous
-                            </button>
-                            <span class="slide-counter mx-3">Slide <span id="currentSlide">1</span> of <span id="totalSlides">20</span></span>
-                            <button class="btn btn-outline-primary btn-sm ms-2" onclick="nextSlide()" id="nextBtn">
-                                Next <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                        <div class="slide-content" style="height: 70vh; overflow: hidden;">
-                            <div id="presentationFrame" style="width: 100%; height: 100%; overflow-y: auto;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
-    
-    <script>
-        let currentSlideIndex = 1;
-        const totalSlides = 20;
-        
-        function openPresentationModal() {
-            const modal = new bootstrap.Modal(document.getElementById('presentationModal'));
-            // Display first slide
-            showSlide(currentSlideIndex);
-            modal.show();
-        }
-        
-        function showSlide(slideNumber) {
-            const slideImages = [
-                '../assets/FInal Paper FaceMask Detection-1/1.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/2.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/3.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/4.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/5.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/6.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/7.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/8.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/9.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/10.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/11.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/12.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/13.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/14.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/15.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/16.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/17.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/18.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/19.jpg',
-                '../assets/FInal Paper FaceMask Detection-1/FInal Paper FaceMask Detection-21.jpg'
-            ];
-            
-            if (slideNumber >= 1 && slideNumber <= slideImages.length) {
-                const slideImageSrc = slideImages[slideNumber - 1];
-                document.getElementById('presentationFrame').innerHTML = `
-                    <div class="text-center p-3">
-                        <img src="${slideImageSrc}" class="img-fluid" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Slide ${slideNumber}">
-                    </div>
-                `;
-            }
-        }
-        
-        function nextSlide() {
-            if (currentSlideIndex < totalSlides) {
-                currentSlideIndex++;
-                showSlide(currentSlideIndex);
-                updateSlideDisplay();
-            }
-        }
-        
-        function previousSlide() {
-            if (currentSlideIndex > 1) {
-                currentSlideIndex--;
-                showSlide(currentSlideIndex);
-                updateSlideDisplay();
-            }
-        }
-        
-        function updateSlideDisplay() {
-            document.getElementById('currentSlide').textContent = currentSlideIndex;
-            document.getElementById('prevBtn').disabled = currentSlideIndex === 1;
-            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides;
-        }
-        
-        // Initialize slide display
-        document.addEventListener('DOMContentLoaded', function() {
-            updateSlideDisplay();
-        });
-    </script>
+        </section>
+    </main>
+    <footer class="site-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Dule Abera. All rights reserved.</p></div></div></footer>
 </body>
 </html>
