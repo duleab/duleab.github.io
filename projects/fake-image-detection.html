@@ -1,355 +1,177 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forensic Fake Image Detection | Dule Abera — Data Scientist</title>
-    <meta name="description" content="End-to-end computer vision pipeline for detecting AI-generated images using forensic analysis, EfficientNetB0, and Grad-CAM explainability.">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-    <style>
-        /* ── Base ── */
-        body { background: #0a0f1e; color: #e2e8f0; font-family: 'DM Sans', sans-serif; }
 
-        /* ── Nav ── */
-        .site-nav {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(10,15,30,0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            padding: 0.85rem 0;
-        }
-        .site-nav .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
-        .site-nav .brand span { color: #8b5cf6; }
-        .site-nav a.nav-pill {
-            color: rgba(255,255,255,0.65); font-size: 0.9rem;
-            text-decoration: none; padding: 0.35rem 0.9rem;
-            border-radius: 999px; transition: all 0.2s;
-        }
-        .site-nav a.nav-pill:hover { color: #fff; background: rgba(255,255,255,0.07); }
 
-        /* ── Hero ── */
-        .hero-section {
-            background: linear-gradient(135deg, #1e1b4b 0%, #1e1b4b 60%, #0a0f1e 100%);
-            padding: 80px 0 60px;
-            position: relative; overflow: hidden;
-        }
-        .hero-section::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(139,92,246,0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3);
-            color: #c4b5fd; font-size: 0.78rem; font-weight: 700;
-            padding: 0.35rem 0.9rem; border-radius: 999px; text-transform: uppercase;
-            letter-spacing: 0.08em; margin-bottom: 1.25rem;
-        }
-        .hero-title { font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.15; color: #fff; margin-bottom: 1rem; }
-        .hero-subtitle { font-size: 1.05rem; color: rgba(255,255,255,0.6); max-width: 680px; line-height: 1.7; margin-bottom: 2rem; }
-        .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
-        .tech-badge {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.75); font-size: 0.78rem; font-weight: 600;
-            padding: 0.3rem 0.8rem; border-radius: 6px;
-        }
-        .tech-badge.purple { border-color: rgba(139,92,246,0.4); color: #c4b5fd; }
-        .tech-badge.green  { border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
-        .tech-badge.blue   { border-color: rgba(59,130,246,0.4); color: #93c5fd; }
-        .tech-badge.orange { border-color: rgba(249,115,22,0.4); color: #fdba74; }
 
-        /* ── KPI strip ── */
-        .kpi-strip { background: #0d1117; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 1.5rem 0; }
-        .kpi-item { text-align: center; padding: 0.5rem 1rem; }
-        .kpi-number { font-size: 2rem; font-weight: 800; line-height: 1; display: block; }
-        .kpi-label  { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-top: 0.25rem; display: block; }
-        .kpi-number.purple { color: #a78bfa; }
-        .kpi-number.green  { color: #34d399; }
-        .kpi-number.blue   { color: #60a5fa; }
-        .kpi-number.orange { color: #fb923c; }
 
-        /* ── Layout ── */
-        .content-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 1.5rem; }
-        .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; align-items: start; }
-        @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
 
-        /* ── Section headings ── */
-        .section-label {
-            font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em;
-            color: #c4b5fd; margin-bottom: 0.4rem;
-        }
-        .section-title { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 1rem; line-height: 1.2; }
 
-        /* ── Glass card ── */
-        .glass-card {
-            background: rgba(255,255,255,0.025);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 14px; padding: 1.5rem;
-            backdrop-filter: blur(8px);
-        }
-        .glass-card + .glass-card { margin-top: 1.25rem; }
 
-        /* ── Timeline ── */
-        .timeline { position: relative; padding-left: 1.75rem; }
-        .timeline::before {
-            content: ''; position: absolute; left: 0; top: 6px; bottom: 0;
-            width: 2px; background: linear-gradient(to bottom, #8b5cf6, rgba(139,92,246,0.05));
-        }
-        .tl-item { position: relative; padding-bottom: 2rem; }
-        .tl-item:last-child { padding-bottom: 0; }
-        .tl-dot {
-            position: absolute; left: -2.1rem; top: 0;
-            width: 14px; height: 14px; border-radius: 50%;
-            background: #8b5cf6; border: 3px solid #0a0f1e;
-            box-shadow: 0 0 0 3px rgba(139,92,246,0.25);
-        }
-        .tl-step { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #8b5cf6; margin-bottom: 0.2rem; }
-        .tl-title { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.4rem; }
-        .tl-body { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.65; margin: 0; }
-
-        /* ── Image frames ── */
-        .img-frame {
-            border-radius: 12px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.07);
-            background: #0d1117;
-            margin-bottom: 1.25rem;
-        }
-        .img-frame img { width: 100%; display: block; transition: transform 0.35s; }
-        .img-frame:hover img { transform: scale(1.02); }
-        .img-caption { padding: 0.6rem 1rem 0.8rem; font-size: 0.78rem; color: rgba(255,255,255,0.4); text-align: center; }
-
-        /* ── Insight highlight ── */
-        .insight-box {
-            background: rgba(139,92,246,0.08);
-            border-left: 3px solid #8b5cf6;
-            border-radius: 0 10px 10px 0;
-            padding: 1rem 1.25rem;
-            margin: 1.25rem 0;
-        }
-        .insight-box p { margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
-
-        /* ── Sidebar blocks ── */
-        .sidebar-block { margin-bottom: 1.25rem; }
-        .sidebar-block .blk-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #c4b5fd; margin-bottom: 0.8rem; }
-        .sidebar-block ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-block li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.86rem; color: rgba(255,255,255,0.65); padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .sidebar-block li:last-child { border-bottom: none; }
-        .sidebar-block li i { color: #8b5cf6; width: 14px; margin-top: 2px; flex-shrink: 0; }
-        .sidebar-block li b { color: #e2e8f0; }
-
-        /* ── CTA strip ── */
-        .cta-strip {
-            background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.06));
-            border: 1px solid rgba(139,92,246,0.2);
-            border-radius: 16px; padding: 2rem;
-            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        .cta-strip h4 { margin: 0 0 0.25rem; font-weight: 800; color: #fff; font-size: 1.1rem; }
-        .cta-strip p  { margin: 0; font-size: 0.88rem; color: rgba(255,255,255,0.5); }
-        .btn-cta {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: #7c3aed; color: #fff; font-weight: 700; font-size: 0.9rem;
-            padding: 0.65rem 1.4rem; border-radius: 8px; text-decoration: none;
-            transition: background 0.2s; white-space: nowrap;
-        }
-        .btn-cta:hover { background: #5b21b6; color: #fff; }
-
-        /* ── Footer ── */
-        .site-footer { background: #0d1117; border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 0; text-align: center; }
-        .site-footer p { margin: 0; font-size: 0.82rem; color: rgba(255,255,255,0.3); }
-    </style>
 </head>
 <body>
 
-    <!-- ── NAV ── -->
-    <nav class="site-nav">
-        <div class="container d-flex align-items-center justify-content-between">
-            <a href="../index.html" class="brand">Dule<span>.</span></a>
-            <div class="d-flex gap-1">
-                <a href="../index.html#home" class="nav-pill">Home</a>
-                <a href="../index.html#experience" class="nav-pill">Experience</a>
-                <a href="../index.html#projects" class="nav-pill">Projects</a>
-                <a href="../index.html#contact" class="nav-pill">Contact</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- ── HERO ── -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="hero-badge">
-                <i class="fas fa-search"></i> Forensic Deep Learning · Computer Vision
+<main id="main-content"><section class="section"><div class="container">
+ ── NAV ── 
+
+ ── HERO ── 
+<section class="hero-section">
+<div class="container">
+<div class="hero-badge">
+<i class="fas fa-search"></i> Forensic Deep Learning · Computer Vision
             </div>
-            <h1 class="hero-title">Forensic Fake Image Detection<br>Pipeline</h1>
-            <p class="hero-subtitle">
+<h1 class="hero-title">Forensic Fake Image Detection<br/>Pipeline</h1>
+<p class="hero-subtitle">
                 An end-to-end computer vision pipeline explicitly designed for detecting AI-generated media (Stable Diffusion) via frequency-domain artifact analysis and EfficientNetB0 transfer learning.
             </p>
-            <div class="tag-row">
-                <span class="tech-badge purple">PyTorch</span>
-                <span class="tech-badge blue">EfficientNetB0</span>
-                <span class="tech-badge green">Computer Vision</span>
-                <span class="tech-badge orange">Grad-CAM</span>
-                <span class="tech-badge purple">Transfer Learning</span>
-            </div>
-            <div class="d-flex gap-3 flex-wrap">
-                <a href="https://github.com/duleab" class="btn-cta" target="_blank" rel="noopener">
-                    <i class="fab fa-github"></i> View Repository
+<div class="tag-row">
+<span class="tech-badge purple">PyTorch</span>
+<span class="tech-badge blue">EfficientNetB0</span>
+<span class="tech-badge green">Computer Vision</span>
+<span class="tech-badge orange">Grad-CAM</span>
+<span class="tech-badge purple">Transfer Learning</span>
+</div>
+<div class="d-flex gap-3 flex-wrap">
+<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
+<i class="fab fa-github"></i> View Repository
                 </a>
-                <a href="#methodology" class="btn-cta" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);">
-                    <i class="fas fa-flask"></i> Methodology
+<a class="btn-cta" href="#methodology">
+<i class="fas fa-flask"></i> Methodology
                 </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ── KPI STRIP ── -->
-    <section class="kpi-strip">
-        <div class="container">
-            <div class="row g-0 text-center">
-                <div class="col-6 col-md-3">
-                    <div class="kpi-item">
-                        <span class="kpi-number green">97.2%</span>
-                        <span class="kpi-label">Recall Rate</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="kpi-item">
-                        <span class="kpi-number blue">+5.37%</span>
-                        <span class="kpi-label">Accuracy Gain</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="kpi-item">
-                        <span class="kpi-number purple">0.95</span>
-                        <span class="kpi-label">F1 Score</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="kpi-item">
-                        <span class="kpi-number orange">Phase-2</span>
-                        <span class="kpi-label">Transfer Learning</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ── MAIN CONTENT ── -->
-    <div class="content-wrap">
-        <div class="two-col">
-
-            <!-- ── LEFT COLUMN ── -->
-            <div id="methodology">
-
-                <!-- Frequency Analysis -->
-                <div class="section-label">Frequency Domain Features</div>
-                <h2 class="section-title">Detecting Invisible Generative Artifacts</h2>
-                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.5rem;">
+</div>
+</div>
+</section>
+ ── KPI STRIP ── 
+<section class="kpi-strip">
+<div class="container">
+<div class="row g-0 text-center">
+<div class="col-6 col-md-3">
+<div class="kpi-item">
+<span class="kpi-number green">97.2%</span>
+<span class="kpi-label">Recall Rate</span>
+</div>
+</div>
+<div class="col-6 col-md-3">
+<div class="kpi-item">
+<span class="kpi-number blue">+5.37%</span>
+<span class="kpi-label">Accuracy Gain</span>
+</div>
+</div>
+<div class="col-6 col-md-3">
+<div class="kpi-item">
+<span class="kpi-number purple">0.95</span>
+<span class="kpi-label">F1 Score</span>
+</div>
+</div>
+<div class="col-6 col-md-3">
+<div class="kpi-item">
+<span class="kpi-number orange">Phase-2</span>
+<span class="kpi-label">Transfer Learning</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+ ── MAIN CONTENT ── 
+<div class="content-wrap">
+<div class="two-col">
+<!-- ── LEFT COLUMN ── -->
+<div id="methodology">
+<!-- Frequency Analysis -->
+<div class="section-label">Frequency Domain Features</div>
+<h2 class="section-title">Detecting Invisible Generative Artifacts</h2>
+<p>
                     Visual inspection often fails against modern generative models like Stable Diffusion, especially at low resolutions. 
                     This pipeline utilizes forensic signals in the frequency and texture domains to identify synthetic media. Fast Fourier Transform (FFT) analysis revealed substantial radial power spectrum divergences at mid-high frequencies.
                 </p>
-
-                <div class="img-frame">
-                    <img src="../assets/images/fake-image/fft_spectra.png" alt="FFT Magnitude Spectra comparing Real and Fake frequency content">
-                    <div class="img-caption">Fig 1 — FFT Magnitude Spectra: Comparing Real (left) and Fake (center) frequency content showing distinct high-frequency structural differences in synthetic media.</div>
-                </div>
-
-                <div class="insight-box">
-                    <p><i class="fas fa-lightbulb" style="color:#8b5cf6;margin-right:0.5rem;"></i>
-                    <strong style="color:#e2e8f0;">Forensic Reality:</strong> The core finding of this research demonstrates that forensic signals (like spectral signatures and LBP patterns) are statistically far more reliable for detection than semantic image content, which frequently tricks standard spatial classifiers.</p>
-                </div>
-
-                <!-- Transfer Learning -->
-                <div class="section-label" style="margin-top:2.5rem;">Model Architecture</div>
-                <h2 class="section-title">Two-Phase EfficientNetB0 Training</h2>
-                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.25rem;">
+<div class="img-frame">
+<img alt="FFT Magnitude Spectra comparing Real and Fake frequency content" src="../assets/images/fake-image/fft_spectra.png"/>
+<div class="img-caption">Fig 1 — FFT Magnitude Spectra: Comparing Real (left) and Fake (center) frequency content showing distinct high-frequency structural differences in synthetic media.</div>
+</div>
+<div class="insight-box">
+<p><i class="fas fa-lightbulb"></i>
+<strong>Forensic Reality:</strong> The core finding of this research demonstrates that forensic signals (like spectral signatures and LBP patterns) are statistically far more reliable for detection than semantic image content, which frequently tricks standard spatial classifiers.</p>
+</div>
+<!-- Transfer Learning -->
+<div class="section-label">Model Architecture</div>
+<h2 class="section-title">Two-Phase EfficientNetB0 Training</h2>
+<p>
                     A scratch-trained CNN baseline suffered from overfitting and limited recall. To resolve this, a pre-trained EfficientNetB0 model was implemented using a strict two-phase transfer learning methodology. This approach yielded a dramatic +17.1 percentage point improvement in recall over the baseline.
                 </p>
-
-                <div class="timeline mt-4" style="margin-bottom:2.5rem;">
-                    <div class="tl-item">
-                        <div class="tl-dot"></div>
-                        <div class="tl-step">Phase 1: Feature Extraction</div>
-                        <div class="tl-title">Freezing Backbone Weights</div>
-                        <p class="tl-body">Training only the classification head to map the pre-learned generic feature space to the specific forensic detection objective, ensuring base representations are preserved.</p>
-                    </div>
-                    <div class="tl-item">
-                        <div class="tl-dot"></div>
-                        <div class="tl-step">Phase 2: Fine-Tuning</div>
-                        <div class="tl-title">Unfreezing Top Layers</div>
-                        <p class="tl-body">Gradually unfreezing the final blocks of the EfficientNet architecture with a low learning rate. This allowed the model to specifically adapt its texture and spatial perception to generative artifact patterns without catastrophic forgetting.</p>
-                    </div>
-                </div>
-
-                <!-- Grad-CAM Interpretability -->
-                <div class="section-label" style="margin-top:2.5rem;">Explainability</div>
-                <h2 class="section-title">Grad-CAM Interpretability</h2>
-                <p style="color:rgba(255,255,255,0.55);font-size:0.93rem;line-height:1.7;margin-bottom:1.25rem;">
+<div class="timeline mt-4">
+<div class="tl-item">
+<div class="tl-dot"></div>
+<div class="tl-step">Phase 1: Feature Extraction</div>
+<div class="tl-title">Freezing Backbone Weights</div>
+<p class="tl-body">Training only the classification head to map the pre-learned generic feature space to the specific forensic detection objective, ensuring base representations are preserved.</p>
+</div>
+<div class="tl-item">
+<div class="tl-dot"></div>
+<div class="tl-step">Phase 2: Fine-Tuning</div>
+<div class="tl-title">Unfreezing Top Layers</div>
+<p class="tl-body">Gradually unfreezing the final blocks of the EfficientNet architecture with a low learning rate. This allowed the model to specifically adapt its texture and spatial perception to generative artifact patterns without catastrophic forgetting.</p>
+</div>
+</div>
+<!-- Grad-CAM Interpretability -->
+<div class="section-label">Explainability</div>
+<h2 class="section-title">Grad-CAM Interpretability</h2>
+<p>
                     For content moderation applications, establishing trust is critical. Gradient-weighted Class Activation Mapping (Grad-CAM) was implemented to guarantee the model focuses on synthetic texture cues and boundaries rather than "cheating" by memorizing dataset biases (e.g. background scenes).
                 </p>
-
-                <div class="img-frame">
-                    <img src="../assets/images/fake-image/gradcam.png" alt="Grad-CAM error analysis heatmaps">
-                    <div class="img-caption">Fig 2 — Grad-CAM Error Analysis: Demonstrating the model's focus on texture anomalies and edge irregularities, proving it learns structural features over simple semantics.</div>
-                </div>
-
-                <!-- CTA -->
-                <div class="cta-strip mt-5">
-                    <div>
-                        <h4>Explore the Insight Report</h4>
-                        <p>View the complete methodology and validation in the repository whitepaper.</p>
-                    </div>
-                    <a href="https://github.com/duleab" class="btn-cta" target="_blank" rel="noopener">
+<div class="img-frame">
+<img alt="Grad-CAM error analysis heatmaps" src="../assets/images/fake-image/gradcam.png"/>
+<div class="img-caption">Fig 2 — Grad-CAM Error Analysis: Demonstrating the model's focus on texture anomalies and edge irregularities, proving it learns structural features over simple semantics.</div>
+</div>
+<!-- CTA -->
+<div class="cta-strip mt-5">
+<div>
+<h4>Explore the Insight Report</h4>
+<p>View the complete methodology and validation in the repository whitepaper.</p>
+</div>
+<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
                         View Repository <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
+</a>
+</div>
+</div><!-- /left col -->
+<!-- ── RIGHT SIDEBAR ── -->
+<aside>
+<!-- Quick Info -->
+<div class="glass-card sidebar-block">
+<div class="blk-title">Project Details</div>
+<ul>
+<li><i class="fas fa-bullseye"></i><div><b>Objective</b><br/>Forensic deepfake detection</div></li>
+<li><i class="fas fa-tags"></i><div><b>Category</b><br/>Computer Vision · PyTorch</div></li>
+<li><i class="fas fa-chart-line"></i><div><b>Performance</b><br/>95.1% Accuracy, 97.2% Recall</div></li>
+</ul>
+</div>
+<!-- Technology -->
+<div class="glass-card sidebar-block">
+<div class="blk-title">Core Technology</div>
+<ul>
+<li><i class="fab fa-python"></i><b>PyTorch</b> Deep learning framework</li>
+<li><i class="fas fa-network-wired"></i><b>EfficientNetB0</b> Transfer learning</li>
+<li><i class="fas fa-wave-square"></i><b>FFT</b> Frequency domain analysis</li>
+<li><i class="fas fa-eye"></i><b>Grad-CAM</b> Model explainability</li>
+<li><i class="fas fa-desktop"></i><b>Streamlit</b> Inference application</li>
+</ul>
+</div>
+<!-- Related Projects -->
+<div class="glass-card sidebar-block">
+<div class="blk-title">Related Projects</div>
+<ul>
+<li><i class="fas fa-link"></i><a href="crisis-detection.html">Real-Time Crisis Detection</a></li>
+<li><i class="fas fa-link"></i><a href="wildfire-early-warning.html">Wildfire Early Warning</a></li>
+</ul>
+</div>
+</aside>
+</div>
+</div>
+ ── FOOTER ── 
 
-            </div><!-- /left col -->
 
-            <!-- ── RIGHT SIDEBAR ── -->
-            <aside>
-                <!-- Quick Info -->
-                <div class="glass-card sidebar-block">
-                    <div class="blk-title">Project Details</div>
-                    <ul>
-                        <li><i class="fas fa-bullseye"></i><div><b>Objective</b><br>Forensic deepfake detection</div></li>
-                        <li><i class="fas fa-tags"></i><div><b>Category</b><br>Computer Vision · PyTorch</div></li>
-                        <li><i class="fas fa-chart-line"></i><div><b>Performance</b><br>95.1% Accuracy, 97.2% Recall</div></li>
-                    </ul>
-                </div>
+</div></section></main>
 
-                <!-- Technology -->
-                <div class="glass-card sidebar-block">
-                    <div class="blk-title">Core Technology</div>
-                    <ul>
-                        <li><i class="fab fa-python"></i><b>PyTorch</b> Deep learning framework</li>
-                        <li><i class="fas fa-network-wired"></i><b>EfficientNetB0</b> Transfer learning</li>
-                        <li><i class="fas fa-wave-square"></i><b>FFT</b> Frequency domain analysis</li>
-                        <li><i class="fas fa-eye"></i><b>Grad-CAM</b> Model explainability</li>
-                        <li><i class="fas fa-desktop"></i><b>Streamlit</b> Inference application</li>
-                    </ul>
-                </div>
-
-                <!-- Related Projects -->
-                <div class="glass-card sidebar-block">
-                    <div class="blk-title">Related Projects</div>
-                    <ul>
-                        <li><i class="fas fa-link"></i><a href="crisis-detection.html" style="color:#c4b5fd;text-decoration:none;">Real-Time Crisis Detection</a></li>
-                        <li><i class="fas fa-link"></i><a href="wildfire-early-warning.html" style="color:#c4b5fd;text-decoration:none;">Wildfire Early Warning</a></li>
-                    </ul>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <!-- ── FOOTER ── -->
-    <footer class="site-footer">
-        <p>&copy; 2026 Dule Abera &mdash; Fake Image Detection System &middot; Data Science Portfolio</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

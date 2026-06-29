@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Crisis Detection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Space Grotesk', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                },
+                extend: {
+                    colors: {
+                        background: '#03040B',
+                        brand: { blue: '#3b82f6', purple: '#8B5CF6', cyan: '#06b6d4' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: #03040B;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #03040B; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-brand {
+            background: linear-gradient(135deg, #3b82f6 0%, #8B5CF6 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Aurora Blob */
+        @keyframes aurora-float {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(5%, 10%) scale(1.1) rotate(10deg); }
+            100% { transform: translate(-5%, 5%) scale(0.9) rotate(-5deg); }
+        }
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            mix-blend-mode: screen;
+            animation: aurora-float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        /* Reveal Animation */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Stagger */
+        .stagger-1 { transition-delay: 0.05s; }
+        .stagger-2 { transition-delay: 0.1s; }
+        .stagger-3 { transition-delay: 0.15s; }
+        .stagger-4 { transition-delay: 0.2s; }
+        .stagger-5 { transition-delay: 0.25s; }
+        .stagger-6 { transition-delay: 0.3s; }
+        .stagger-7 { transition-delay: 0.35s; }
+
+        /* Bar chart animation */
+        .bar-fill {
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bar-fill.active {
+            width: var(--bar-width);
+        }
+
+        /* Pulse ring */
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        /* Glow */
+        .glow-blue { box-shadow: 0 0 30px rgba(59, 130, 246, 0.15); }
+        .glow-purple { box-shadow: 0 0 30px rgba(139, 92, 246, 0.15); }
+        .glow-cyan { box-shadow: 0 0 30px rgba(6, 182, 212, 0.15); }
+
+        /* Architecture flow line */
+        @keyframes flow-down {
+            0% { height: 0; opacity: 0; }
+            100% { height: 100%; opacity: 1; }
+        }
+        .flow-line {
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.6));
+            width: 2px;
+            height: 0;
+            transition: height 1s ease;
+        }
+        .flow-line.active { height: 100%; }
+
+        /* Nav active indicator */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8B5CF6);
+            border-radius: 1px;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Code block */
+        .code-block {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* Metric counter animation */
+        .metric-value {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Tab system */
+        .tab-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Pipeline step connector */
+        .step-connector {
+            position: relative;
+        }
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -1.5rem;
+            width: 1.5rem;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(59,130,246,0.4), transparent);
+        }
+
+        /* Floating badge */
+        @keyframes float-badge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .float-badge {
+            animation: float-badge 3s ease-in-out infinite;
+        }
+
+        /* Tooltip */
+        .tooltip-trigger { position: relative; cursor: help; }
+        .tooltip-trigger .tooltip-content {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            background: rgba(15, 17, 26, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        .tooltip-trigger:hover .tooltip-content {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" style="background: transparent;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
+        <a href="#hero" class="flex items-center gap-3 group">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center relative" style="background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2)); border: 1px solid rgba(59,130,246,0.3);">
+                <i data-lucide="radar" class="w-5 h-5 text-brand-blue"></i>
+                <div class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="box-shadow: 0 0 20px rgba(59,130,246,0.3);"></div>
+            </div>
+            <span class="font-display font-semibold text-sm tracking-tight">CrisisDetect</span>
+        </a>
+
+        <div class="hidden md:flex items-center bg-[#03040B]/40 backdrop-blur-xl px-2 py-1.5 rounded-full border border-white/10">
+            <a href="#overview" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Overview</a>
+            <a href="#results" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Results</a>
+            <a href="#architecture" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Architecture</a>
+            <a href="#pipeline" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Pipeline</a>
+            <a href="#dataset" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Dataset</a>
+            <a href="#tech" class="nav-link text-sm font-medium text-white/60 hover:text-white px-4 py-1.5 rounded-full transition-colors">Tech</a>
+        </div>
+
+        <a href="#setup" class="hidden md:flex items-center gap-2 bg-white text-black text-xs font-bold tracking-wide px-5 py-2.5 rounded-full hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-300 hover:-translate-y-0.5">
+            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+            GET STARTED
+        </a>
+
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden hidden px-6 pb-6">
+        <div class="glass-card rounded-2xl p-4 space-y-1">
+            <a href="#overview" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Overview</a>
+            <a href="#results" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Results</a>
+            <a href="#architecture" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Architecture</a>
+            <a href="#pipeline" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Pipeline</a>
+            <a href="#dataset" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Dataset</a>
+            <a href="#tech" class="block text-sm text-white/60 hover:text-white px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all">Tech</a>
+            <a href="#setup" class="block text-sm text-center text-black bg-white font-bold px-4 py-2.5 rounded-xl mt-2">GET STARTED</a>
+        </div>
+    </div>
+</nav>
+
+
+<!-- ==================== HERO ==================== -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Aurora Blobs -->
+    <div class="aurora-blob" style="width:50vw; height:50vw; top:-10%; left:-10%; background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);"></div>
+    <div class="aurora-blob" style="width:60vw; height:60vw; bottom:-20%; right:-15%; background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%); animation-delay: -5s;"></div>
+    <div class="aurora-blob" style="width:40vw; height:40vw; top:30%; right:20%; background: radial-gradient(circle, rgba(6,182,212,0.08), transparent 70%); animation-delay: -10s;"></div>
+
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="https://picsum.photos/seed/crisis-map-dark/1920/1080.jpg" alt="" class="w-full h-full object-cover opacity-20 mix-blend-overlay" style="filter: grayscale(1) contrast(1.2);">
+        <div class="absolute inset-0" style="background: linear-gradient(to top, #03040B 0%, rgba(3,4,11,0.7) 40%, rgba(3,4,11,0.5) 100%);"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <!-- Status Badge -->
+        <div class="reveal-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
+            <span class="relative flex h-2 w-2">
+                <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-emerald-400"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+            </span>
+            <span class="text-xs font-medium text-white/60 tracking-wide">LIVE DETECTION ACTIVE</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="reveal-up stagger-1 font-display font-medium text-5xl sm:text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.9] mb-6">
+            <span class="gradient-text">Crisis</span><br>
+            <span class="gradient-text-brand">Detection</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="reveal-up stagger-2 text-base md:text-lg font-light text-white/50 max-w-2xl mx-auto leading-relaxed mb-10">
+            End-to-end NLP pipeline that monitors social media & news feeds, classifies crisis events into 
+            <span class="text-white/80 font-medium">7 categories</span> using a fine-tuned 
+            <span class="text-white/80 font-medium">XLM-RoBERTa</span> model, and visualizes detected crises on an interactive map.
+        </p>
+
+        <!-- Badges Row -->
+        <div class="reveal-up stagger-3 flex flex-wrap items-center justify-center gap-3 mb-12">
+            <span class="float-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-blue-500/20 bg-blue-500/10 text-blue-400" style="animation-delay: 0s;">
+                <i data-lucide="cpu" class="w-3 h-3"></i> PyTorch 2.0
+            </span>
+            <span class="float-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-emerald-500/20 bg-emerald-500/10 text-emerald-400" style="animation-delay: 0.3s;">
+                <i data-lucide="check-circle" class="w-3 h-3"></i> 96.7% Accuracy
+            </span>
+            <span class="float-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-purple-500/20 bg-purple-500/10 text-purple-400" style="animation-delay: 0.6s;">
+                <i data-lucide="languages" class="w-3 h-3"></i> Multilingual
+            </span>
+            <span class="float-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-cyan-500/20 bg-cyan-500/10 text-cyan-400" style="animation-delay: 0.9s;">
+                <i data-lucide="globe" class="w-3 h-3"></i> 278M Params
+            </span>
+            <span class="float-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-amber-500/20 bg-amber-500/10 text-amber-400" style="animation-delay: 1.2s;">
+                <i data-lucide="scale" class="w-3 h-3"></i> MIT License
+            </span>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="reveal-up stagger-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#results" class="group flex items-center gap-2 bg-white text-black text-sm font-bold tracking-wide px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-300 hover:-translate-y-1">
+                VIEW RESULTS
+                <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-0.5 transition-transform"></i>
+            </a>
+            <a href="#setup" class="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white px-8 py-4 rounded-full border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-300">
+                <i data-lucide="terminal" class="w-4 h-4"></i>
+                SETUP GUIDE
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+        <span class="text-[10px] font-mono text-white/30 tracking-widest uppercase">Scroll</span>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-white/30"></i>
+    </div>
+</section>
+
+
+<!-- ==================== OVERVIEW ==================== -->
+<section id="overview" class="relative py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="reveal-up max-w-3xl mb-20">
+            <span class="inline-block text-[10px] font-mono text-brand-blue tracking-widest uppercase mb-4">01 — Overview</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Real-time crisis intelligence
+            </h2>
+            <p class="text-lg font-light text-white/50 leading-relaxed">
+                This system provides real-time detection and classification of crisis events from multilingual social media and news sources. Designed for emergency response coordinators, it aggregates raw posts, classifies crisis type with high confidence, clusters related events geographically, and displays them on an interactive map.
+            </p>
+        </div>
+
+        <!-- Feature Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="radio-tower" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">Multi-Source Ingestion</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    Collects from Reddit, Telegram, BMKG RSS feeds, and news aggregators in real-time.
+                </p>
+            </div>
+            <!-- Card 2 -->
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="brain" class="w-6 h-6 text-purple-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">XLM-RoBERTa Classifier</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    Fine-tuned multilingual transformer achieving 96.7% accuracy across 7 crisis categories.
+                </p>
+            </div>
+            <!-- Card 3 -->
+            <div class="reveal-up stagger-3 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="map-pin" class="w-6 h-6 text-cyan-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">Geo-Clustering</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    SBERT embeddings + DBSCAN clustering to group related events geographically.
+                </p>
+            </div>
+            <!-- Card 4 -->
+            <div class="reveal-up stagger-4 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-emerald-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">Credibility Scoring</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    Multi-signal credibility assessment to filter noise and prioritize verified reports.
+                </p>
+            </div>
+            <!-- Card 5 -->
+            <div class="reveal-up stagger-5 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="scan-eye" class="w-6 h-6 text-amber-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">SHAP Explainability</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    Word-level attribution showing exactly which tokens drive each classification decision.
+                </p>
+            </div>
+            <!-- Card 6 -->
+            <div class="reveal-up stagger-6 glass-card rounded-2xl p-8 group">
+                <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6 text-rose-400"></i>
+                </div>
+                <h3 class="font-display font-medium text-xl tracking-tight mb-3">Interactive Dashboard</h3>
+                <p class="text-sm font-light text-white/50 leading-relaxed">
+                    Folium-powered map with GeoJSON export, event timelines, and cluster visualization.
+                </p>
+            </div>
+        </div>
+
+        <!-- Target Region Callout -->
+        <div class="reveal-up mt-12 glass-card rounded-2xl p-8 flex flex-col md:flex-row items-start md:items-center gap-6 border-l-2 border-l-brand-blue">
+            <div class="flex-shrink-0">
+                <i data-lucide="target" class="w-8 h-8 text-brand-blue"></i>
+            </div>
+            <div>
+                <h4 class="font-display font-medium text-lg mb-1">Target Region: Indonesia</h4>
+                <p class="text-sm font-light text-white/50">With global capability via the multilingual XLM-RoBERTa backbone. Data sources include BMKG (Indonesia Meteorological Agency), USGS Earthquake API, and NASA FIRMS fire detection.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== KEY RESULTS ==================== -->
+<section id="results" class="relative py-32 px-6">
+    <!-- Subtle background -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="aurora-blob" style="width:40vw; height:40vw; top:10%; right:-10%; background: radial-gradient(circle, rgba(59,130,246,0.06), transparent 70%); animation-delay: -3s;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-brand-purple tracking-widest uppercase mb-4">02 — Key Results</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Numbers that matter
+            </h2>
+        </div>
+
+        <!-- Hero Metrics -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-6 text-center glow-blue">
+                <div class="text-4xl md:text-5xl font-display font-medium text-blue-400 metric-value" data-target="96.7" data-suffix="%">0%</div>
+                <div class="text-xs font-mono text-white/40 tracking-widest uppercase mt-2">Val Accuracy</div>
+            </div>
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-6 text-center glow-purple">
+                <div class="text-4xl md:text-5xl font-display font-medium text-purple-400 metric-value" data-target="0.96" data-prefix="" data-suffix="">0</div>
+                <div class="text-xs font-mono text-white/40 tracking-widest uppercase mt-2">Macro F1</div>
+            </div>
+            <div class="reveal-up stagger-3 glass-card rounded-2xl p-6 text-center glow-cyan">
+                <div class="text-4xl md:text-5xl font-display font-medium text-cyan-400 metric-value" data-target="28415" data-suffix="">0</div>
+                <div class="text-xs font-mono text-white/40 tracking-widest uppercase mt-2">Training Samples</div>
+            </div>
+            <div class="reveal-up stagger-4 glass-card rounded-2xl p-6 text-center" style="box-shadow: 0 0 30px rgba(16,185,129,0.15);">
+                <div class="text-4xl md:text-5xl font-display font-medium text-emerald-400 metric-value" data-target="278" data-suffix="M">0</div>
+                <div class="text-xs font-mono text-white/40 tracking-widest uppercase mt-2">Parameters</div>
+            </div>
+        </div>
+
+        <!-- Per-Class Performance Table -->
+        <div class="reveal-up glass-card rounded-2xl overflow-hidden">
+            <div class="p-8 pb-4 border-b border-white/5">
+                <h3 class="font-display font-medium text-xl tracking-tight">Per-Class Performance</h3>
+                <p class="text-sm text-white/40 mt-1">Validation set metrics across all 7 crisis categories</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-[10px] font-mono text-white/30 tracking-widest uppercase">
+                            <th class="px-8 py-4">Crisis Type</th>
+                            <th class="px-8 py-4">Precision</th>
+                            <th class="px-8 py-4">Recall</th>
+                            <th class="px-8 py-4">F1-Score</th>
+                            <th class="px-8 py-4 min-w-[200px]">Visual</th>
+                        </tr>
+                    </thead>
+                    <tbody id="perf-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SHAP Examples -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                    <span class="text-[10px] font-mono text-white/40 tracking-widest uppercase">SHAP Attribution</span>
+                </div>
+                <p class="text-sm text-white/70 mb-4 leading-relaxed">
+                    <span class="text-white/40">"</span>roads completely flooded in jakarta selatan<span class="text-white/40">"</span>
+                </p>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/15 text-blue-400 border border-blue-500/20">flood — 99.9%</span>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono text-emerald-400 w-16 text-right">+0.533</span>
+                        <div class="flex-1 h-5 rounded bg-white/5 overflow-hidden">
+                            <div class="h-full rounded bg-gradient-to-r from-emerald-500/60 to-emerald-400/30 bar-fill" style="--bar-width: 89%"></div>
+                        </div>
+                        <span class="text-xs text-white/60 w-14">flood</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono text-emerald-400 w-16 text-right">+0.464</span>
+                        <div class="flex-1 h-5 rounded bg-white/5 overflow-hidden">
+                            <div class="h-full rounded bg-gradient-to-r from-emerald-500/40 to-emerald-400/20 bar-fill" style="--bar-width: 78%"></div>
+                        </div>
+                        <span class="text-xs text-white/60 w-14">road</span>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                    <span class="text-[10px] font-mono text-white/40 tracking-widest uppercase">SHAP Attribution</span>
+                </div>
+                <p class="text-sm text-white/70 mb-4 leading-relaxed">
+                    <span class="text-white/40">"</span>Earthquake M5.2 at depth 10km in PALU-SULTENG<span class="text-white/40">"</span>
+                </p>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-purple-500/15 text-purple-400 border border-purple-500/20">earthquake — 99.9%</span>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono text-emerald-400 w-16 text-right">+0.353</span>
+                        <div class="flex-1 h-5 rounded bg-white/5 overflow-hidden">
+                            <div class="h-full rounded bg-gradient-to-r from-emerald-500/40 to-emerald-400/20 bar-fill" style="--bar-width: 59%"></div>
+                        </div>
+                        <span class="text-xs text-white/60 w-14">km</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono text-emerald-400 w-16 text-right">+0.146</span>
+                        <div class="flex-1 h-5 rounded bg-white/5 overflow-hidden">
+                            <div class="h-full rounded bg-gradient-to-r from-emerald-500/25 to-emerald-400/10 bar-fill" style="--bar-width: 24%"></div>
+                        </div>
+                        <span class="text-xs text-white/60 w-14">Tenggara</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== ARCHITECTURE ==================== -->
+<section id="architecture" class="relative py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="reveal-up max-w-3xl mb-20">
+            <span class="inline-block text-[10px] font-mono text-brand-cyan tracking-widest uppercase mb-4">03 — Architecture</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                End-to-end pipeline
+            </h2>
+            <p class="text-lg font-light text-white/50 leading-relaxed">
+                Five distinct layers transform raw social media posts into actionable crisis intelligence on an interactive map.
+            </p>
+        </div>
+
+        <!-- Architecture Flow -->
+        <div class="space-y-4">
+            <!-- Layer 1 -->
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-6 md:p-8 border-l-2 border-l-blue-500/50 group">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                            <i data-lucide="radio-tower" class="w-6 h-6 text-blue-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono text-blue-400/60 tracking-widest">LAYER 01</span>
+                            <h3 class="font-display font-medium text-lg tracking-tight">Data Collection</h3>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white/50 leading-relaxed">Reddit API · BMKG RSS · Telegram · News RSS · Bulk Datasets</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-white/20 hidden md:block"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connector -->
+            <div class="flex justify-center">
+                <div class="w-0.5 h-6 flow-line"></div>
+            </div>
+
+            <!-- Layer 2 -->
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-6 md:p-8 border-l-2 border-l-indigo-500/50 group">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                            <i data-lucide="filter" class="w-6 h-6 text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono text-indigo-400/60 tracking-widest">LAYER 02</span>
+                            <h3 class="font-display font-medium text-lg tracking-tight">Preprocessing</h3>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white/50 leading-relaxed">Text cleaning · Geo-resolution · Timestamp normalization</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-white/20 hidden md:block"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="w-0.5 h-6 flow-line"></div>
+            </div>
+
+            <!-- Layer 3 -->
+            <div class="reveal-up stagger-3 glass-card rounded-2xl p-6 md:p-8 border-l-2 border-l-purple-500/50 group relative overflow-hidden">
+                <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-lg bg-purple-500/10 border-b border-l border-purple-500/20">
+                    <span class="text-[10px] font-mono text-purple-400 tracking-widest">CORE</span>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                            <i data-lucide="brain" class="w-6 h-6 text-purple-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono text-purple-400/60 tracking-widest">LAYER 03</span>
+                            <h3 class="font-display font-medium text-lg tracking-tight">Classification Model</h3>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white/50 leading-relaxed">XLM-RoBERTa-base fine-tuned · 7-class · <span class="text-purple-400 font-medium">96.7% accuracy</span></p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-white/20 hidden md:block"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="w-0.5 h-6 flow-line"></div>
+            </div>
+
+            <!-- Layer 4 -->
+            <div class="reveal-up stagger-4 glass-card rounded-2xl p-6 md:p-8 border-l-2 border-l-cyan-500/50 group">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                            <i data-lucide="git-merge" class="w-6 h-6 text-cyan-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono text-cyan-400/60 tracking-widest">LAYER 04</span>
+                            <h3 class="font-display font-medium text-lg tracking-tight">Credibility & Clustering</h3>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white/50 leading-relaxed">SBERT embeddings · DBSCAN clustering · Credibility scoring</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-white/20 hidden md:block"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="w-0.5 h-6 flow-line"></div>
+            </div>
+
+            <!-- Layer 5 -->
+            <div class="reveal-up stagger-5 glass-card rounded-2xl p-6 md:p-8 border-l-2 border-l-emerald-500/50 group">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                    <div class="flex-shrink-0 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                            <i data-lucide="layout-dashboard" class="w-6 h-6 text-emerald-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-mono text-emerald-400/60 tracking-widest">LAYER 05</span>
+                            <h3 class="font-display font-medium text-lg tracking-tight">Visualization Dashboard</h3>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white/50 leading-relaxed">Folium interactive map · GeoJSON export · Event timeline</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== PIPELINE / PROJECT STRUCTURE ==================== -->
+<section id="pipeline" class="relative py-32 px-6">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="aurora-blob" style="width:35vw; height:35vw; bottom:5%; left:-5%; background: radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%); animation-delay: -8s;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-emerald-400 tracking-widest uppercase mb-4">04 — Pipeline</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Step by step
+            </h2>
+            <p class="text-lg font-light text-white/50 leading-relaxed">
+                Run notebooks in order. Each saves outputs that the next one consumes.
+            </p>
+        </div>
+
+        <!-- Pipeline Steps -->
+        <div class="space-y-3">
+            <!-- Step 1 -->
+            <div class="reveal-up stagger-1 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="1">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center font-mono text-sm text-blue-400 font-medium">01</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Data Collection</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">NB01</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">Collect live posts from Reddit, BMKG, RSS → posts_unified.csv</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Connects to Reddit API, BMKG RSS feeds, Telegram channels, and news RSS sources to collect real-time crisis-related posts. Handles rate limiting and deduplication.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">data/raw/posts_unified.csv</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1B -->
+            <div class="reveal-up stagger-2 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="1b">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center font-mono text-sm text-indigo-400 font-medium">1B</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Bulk Dataset Loader</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">NB01B</span>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">ONE-TIME</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">Load 28K+ labeled training data from HumAID, CrisisLex, DisasterTweets → training_data.csv</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Aggregates and balances data from multiple crisis NLP datasets. Includes enrichment scripts for earthquake (69→3,966) and fire (379→5,000) classes using USGS and NASA FIRMS data.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">data/external/training_data.csv</code> <code class="text-white/30">(28,415 samples)</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="reveal-up stagger-3 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="2">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center font-mono text-sm text-violet-400 font-medium">02</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Preprocessing</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/10 text-violet-400 border border-violet-500/20">NB02</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">Text cleaning, geo-resolution, timestamp normalization → posts_processed.csv</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Cleans HTML artifacts, normalizes unicode, extracts and resolves location mentions to lat/lng coordinates, and standardizes timestamps to UTC.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">data/processed/posts_processed.csv</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="reveal-up stagger-4 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="3">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center font-mono text-sm text-pink-400 font-medium">03</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Feature Engineering</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-pink-500/10 text-pink-400 border border-pink-500/20">NB03</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">Credibility feature engineering — source trust, urgency signals, named entities</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Extracts features for downstream credibility scoring: source reliability score, urgency keyword density, named entity counts, hashtag patterns, and post metadata signals.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">Features appended to processed CSV</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="reveal-up stagger-5 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group relative overflow-hidden" data-step="4">
+                <div class="absolute top-0 right-0 px-3 py-1 rounded-bl-lg bg-purple-500/10 border-b border-l border-purple-500/20">
+                    <span class="text-[10px] font-mono text-purple-400 tracking-widest">KEY STEP</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center font-mono text-sm text-purple-400 font-medium">04</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Event Classification</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/20">NB04</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">XLM-RoBERTa fine-tuning & classification → classified_events.csv + model weights</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-4">Fine-tunes XLM-RoBERTa-base on the 28K balanced dataset. Uses AdamW optimizer with 2e-5 learning rate, linear warmup, and early stopping. Saves best checkpoint by validation loss.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto mb-2">
+                        <code class="text-emerald-400/80">Outputs:</code><br>
+                        <code class="text-white/60">data/processed/classified_events.csv</code><br>
+                        <code class="text-white/60">models/crisis_classifier/model_weights/</code><br>
+                        <code class="text-white/60">models/crisis_classifier/tokenizer/</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="reveal-up stagger-6 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="5">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center font-mono text-sm text-cyan-400 font-medium">05</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Credibility & Clustering</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">NB05</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">DBSCAN event clustering with composite distance → clustered_events.csv</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Generates SBERT embeddings, computes composite distance (semantic + geographic), runs DBSCAN to cluster co-occurring events, and applies multi-signal credibility scoring.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">data/processed/clustered_events.csv</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="reveal-up stagger-7 pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="6">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center font-mono text-sm text-amber-400 font-medium">06</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Evaluation & Explainability</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">NB06</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">SHAP word attribution + full classification report + confusion matrix</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Generates per-class precision/recall/F1, confusion matrix visualization, and SHAP PartitionExplainer attributions for individual predictions. Saves all figures to outputs/.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Output:</code> <code class="text-white/60">outputs/figures/ (confusion_matrix.png, shap_*.png, training_curves.png)</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="reveal-up pipeline-step glass-card rounded-2xl p-6 cursor-pointer group" data-step="7">
+                <div class="flex items-center gap-6">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center font-mono text-sm text-emerald-400 font-medium">07</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-display font-medium text-base tracking-tight truncate">Dashboard & Map</h4>
+                            <span class="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">NB07</span>
+                        </div>
+                        <p class="text-xs text-white/40 truncate">Interactive Folium map with crisis markers, cluster overlays, and timeline → interactive_crisis_map.html</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
+                </div>
+                <div class="step-detail hidden mt-4 pt-4 border-t border-white/5 pl-16">
+                    <p class="text-sm text-white/50 leading-relaxed mb-3">Creates a Folium interactive map with color-coded markers per crisis type, cluster circle overlays, popups with post details and credibility scores. Exports GeoJSON for external tools.</p>
+                    <div class="code-block rounded-xl p-4 overflow-x-auto">
+                        <code class="text-emerald-400/80">Outputs:</code><br>
+                        <code class="text-white/60">outputs/maps/interactive_crisis_map.html</code><br>
+                        <code class="text-white/60">outputs/events_dashboard.geojson</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== TRAINING PERFORMANCE ==================== -->
+<section id="training" class="relative py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-amber-400 tracking-widest uppercase mb-4">05 — Training</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Model training
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <!-- Config Card -->
+            <div class="reveal-up stagger-1 lg:col-span-2 glass-card rounded-2xl p-8">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-6 flex items-center gap-2">
+                    <i data-lucide="settings" class="w-4 h-4 text-white/40"></i>
+                    Configuration
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Model</span>
+                        <span class="text-sm font-mono text-white/80">xlm-roberta-base</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Task</span>
+                        <span class="text-sm font-mono text-white/80">7-class Seq Cls</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Optimizer</span>
+                        <span class="text-sm font-mono text-white/80">AdamW</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Learning Rate</span>
+                        <span class="text-sm font-mono text-white/80">2e-5</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Batch Size</span>
+                        <span class="text-sm font-mono text-white/80">32</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Epochs</span>
+                        <span class="text-sm font-mono text-white/80">5</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Warmup</span>
+                        <span class="text-sm font-mono text-white/80">373 steps</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-white/5">
+                        <span class="text-sm text-white/40">Scheduler</span>
+                        <span class="text-sm font-mono text-white/80">Linear decay</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-white/40">Device</span>
+                        <span class="text-sm font-mono text-white/80">CUDA (T4)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Progression -->
+            <div class="reveal-up stagger-2 lg:col-span-3 glass-card rounded-2xl p-8">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-6 flex items-center gap-2">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-white/40"></i>
+                    Training Progression
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-[10px] font-mono text-white/30 tracking-widest uppercase">
+                                <th class="pb-4 pr-4">Epoch</th>
+                                <th class="pb-4 pr-4">Train Loss</th>
+                                <th class="pb-4 pr-4">Train Acc</th>
+                                <th class="pb-4 pr-4">Val Loss</th>
+                                <th class="pb-4">Val Acc</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm font-mono">
+                            <tr class="border-t border-white/5">
+                                <td class="py-3 pr-4 text-white/40">1</td>
+                                <td class="py-3 pr-4 text-white/60">0.568</td>
+                                <td class="py-3 pr-4 text-white/60">82.2%</td>
+                                <td class="py-3 pr-4 text-white/60">0.170</td>
+                                <td class="py-3 text-white/60">94.8%</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="py-3 pr-4 text-white/40">2</td>
+                                <td class="py-3 pr-4 text-white/60">0.138</td>
+                                <td class="py-3 pr-4 text-white/60">96.1%</td>
+                                <td class="py-3 pr-4 text-white/60">0.130</td>
+                                <td class="py-3 text-white/60">96.4%</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="py-3 pr-4 text-white/40">3</td>
+                                <td class="py-3 pr-4 text-white/60">0.099</td>
+                                <td class="py-3 pr-4 text-white/60">97.3%</td>
+                                <td class="py-3 pr-4 text-white/60">0.148</td>
+                                <td class="py-3 text-white/60">96.4%</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="py-3 pr-4 text-white/40">4</td>
+                                <td class="py-3 pr-4 text-white/60">0.071</td>
+                                <td class="py-3 pr-4 text-white/60">98.1%</td>
+                                <td class="py-3 pr-4 text-white/60">0.142</td>
+                                <td class="py-3 text-white/60">96.5%</td>
+                            </tr>
+                            <tr class="border-t border-white/5 bg-white/[0.02]">
+                                <td class="py-3 pr-4 text-emerald-400 font-medium">5</td>
+                                <td class="py-3 pr-4 text-emerald-400 font-medium">0.052</td>
+                                <td class="py-3 pr-4 text-emerald-400 font-medium">98.7%</td>
+                                <td class="py-3 pr-4 text-emerald-400 font-medium">0.148</td>
+                                <td class="py-3 text-emerald-400 font-medium">96.7%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Visual loss curve approximation -->
+                <div class="mt-8 pt-6 border-t border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs text-white/30 font-mono">LOSS CURVE</span>
+                        <div class="flex items-center gap-4">
+                            <span class="flex items-center gap-1.5 text-xs text-blue-400"><span class="w-3 h-0.5 bg-blue-400 rounded"></span>Train</span>
+                            <span class="flex items-center gap-1.5 text-xs text-purple-400"><span class="w-3 h-0.5 bg-purple-400 rounded"></span>Val</span>
+                        </div>
+                    </div>
+                    <svg viewBox="0 0 400 100" class="w-full h-24" preserveAspectRatio="none">
+                        <!-- Grid lines -->
+                        <line x1="0" y1="25" x2="400" y2="25" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="50" x2="400" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="75" x2="400" y2="75" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <!-- Train loss curve (0.568 -> 0.052) -->
+                        <polyline points="0,10 100,70 200,82 300,87 400,92" fill="none" stroke="rgba(59,130,246,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="0" cy="10" r="3" fill="#3b82f6"/>
+                        <circle cx="100" cy="70" r="3" fill="#3b82f6"/>
+                        <circle cx="200" cy="82" r="3" fill="#3b82f6"/>
+                        <circle cx="300" cy="87" r="3" fill="#3b82f6"/>
+                        <circle cx="400" cy="92" r="3" fill="#3b82f6"/>
+                        <!-- Val loss curve (0.170 -> 0.148) -->
+                        <polyline points="0,65 100,75 200,68 300,70 400,68" fill="none" stroke="rgba(139,92,246,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="0" cy="65" r="3" fill="#8B5CF6"/>
+                        <circle cx="100" cy="75" r="3" fill="#8B5CF6"/>
+                        <circle cx="200" cy="68" r="3" fill="#8B5CF6"/>
+                        <circle cx="300" cy="70" r="3" fill="#8B5CF6"/>
+                        <circle cx="400" cy="68" r="3" fill="#8B5CF6"/>
+                    </svg>
+                    <div class="flex justify-between mt-1">
+                        <span class="text-[10px] text-white/20 font-mono">Epoch 1</span>
+                        <span class="text-[10px] text-white/20 font-mono">Epoch 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== DATASET ==================== -->
+<section id="dataset" class="relative py-32 px-6">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="aurora-blob" style="width:45vw; height:45vw; top:20%; right:-15%; background: radial-gradient(circle, rgba(6,182,212,0.05), transparent 70%); animation-delay: -12s;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-rose-400 tracking-widest uppercase mb-4">06 — Dataset</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                28,415 training samples
+            </h2>
+            <p class="text-lg font-light text-white/50 leading-relaxed">
+                Aggregated from multiple crisis NLP benchmarks, enriched with real geophysical data, and balanced across all 7 classes.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Sources Table -->
+            <div class="reveal-up stagger-1 glass-card rounded-2xl overflow-hidden">
+                <div class="p-8 pb-4 border-b border-white/5">
+                    <h3 class="font-display font-medium text-lg tracking-tight">Data Sources</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-[10px] font-mono text-white/30 tracking-widest uppercase">
+                                <th class="px-8 py-4">Source</th>
+                                <th class="px-8 py-4">Samples</th>
+                                <th class="px-8 py-4">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">HumAID</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~77K raw</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">19 disaster events, filtered</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">CrisisLex T6</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~6K</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">6 crisis events, 2013</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">DisasterTweets</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~7.6K</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">Kaggle NLP competition</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">USGS API</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~4K gen</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">Real quakes × templates</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">NASA FIRMS</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~500 gen</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">Satellite fire detections</td>
+                            </tr>
+                            <tr class="border-t border-white/5">
+                                <td class="px-8 py-3 font-medium text-white/80">Synthetic</td>
+                                <td class="px-8 py-3 font-mono text-white/50">~3K</td>
+                                <td class="px-8 py-3 text-white/40 text-xs">BMKG-style templates</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Label Distribution -->
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-8">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-8">Label Distribution (Balanced)</h3>
+                <div class="space-y-5" id="label-bars">
+                    <div class="label-bar" data-width="100">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">flood</span>
+                            <span class="text-xs font-mono text-white/40">5,000</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-blue-500/60 to-blue-400/30 bar-fill" style="--bar-width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="100">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">violence</span>
+                            <span class="text-xs font-mono text-white/40">5,000</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-rose-500/60 to-rose-400/30 bar-fill" style="--bar-width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="100">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">fire</span>
+                            <span class="text-xs font-mono text-white/40">5,000</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-amber-500/60 to-amber-400/30 bar-fill" style="--bar-width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="100">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">other</span>
+                            <span class="text-xs font-mono text-white/40">5,000</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-gray-500/60 to-gray-400/30 bar-fill" style="--bar-width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="93">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">accident</span>
+                            <span class="text-xs font-mono text-white/40">4,647</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-indigo-500/60 to-indigo-400/30 bar-fill" style="--bar-width: 93%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="88">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">storm</span>
+                            <span class="text-xs font-mono text-white/40">4,422</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-cyan-500/60 to-cyan-400/30 bar-fill" style="--bar-width: 88%"></div>
+                        </div>
+                    </div>
+                    <div class="label-bar" data-width="79">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm font-medium text-white/70">earthquake</span>
+                            <span class="text-xs font-mono text-white/40">3,966</span>
+                        </div>
+                        <div class="h-6 rounded-lg bg-white/5 overflow-hidden">
+                            <div class="h-full rounded-lg bg-gradient-to-r from-purple-500/60 to-purple-400/30 bar-fill" style="--bar-width: 79%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== TECHNOLOGIES ==================== -->
+<section id="tech" class="relative py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-white/40 tracking-widest uppercase mb-4">07 — Tech Stack</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Built with precision
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-6 text-center group hover:glow-blue">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="brain" class="w-7 h-7 text-blue-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">XLM-RoBERTa</h4>
+                <p class="text-xs text-white/40">NLP Classification</p>
+            </div>
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-6 text-center group hover:glow-purple">
+                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="boxes" class="w-7 h-7 text-purple-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">SBERT</h4>
+                <p class="text-xs text-white/40">Embeddings</p>
+            </div>
+            <div class="reveal-up stagger-3 glass-card rounded-2xl p-6 text-center group hover:glow-cyan">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="circle-dot" class="w-7 h-7 text-cyan-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">DBSCAN</h4>
+                <p class="text-xs text-white/40">Clustering</p>
+            </div>
+            <div class="reveal-up stagger-4 glass-card rounded-2xl p-6 text-center group" style="--tw-shadow-color: rgba(245,158,11,0.15); box-shadow: 0 0 30px rgba(245,158,11,0);">
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="scan-eye" class="w-7 h-7 text-amber-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">SHAP</h4>
+                <p class="text-xs text-white/40">Explainability</p>
+            </div>
+            <div class="reveal-up stagger-5 glass-card rounded-2xl p-6 text-center group" style="box-shadow: 0 0 30px rgba(16,185,129,0.15);">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="map" class="w-7 h-7 text-emerald-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">Folium</h4>
+                <p class="text-xs text-white/40">Mapping</p>
+            </div>
+            <div class="reveal-up stagger-6 glass-card rounded-2xl p-6 text-center group hover:glow-blue">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="flame" class="w-7 h-7 text-blue-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">PyTorch</h4>
+                <p class="text-xs text-white/40">Training</p>
+            </div>
+            <div class="reveal-up stagger-7 glass-card rounded-2xl p-6 text-center group hover:glow-purple">
+                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="database" class="w-7 h-7 text-purple-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">USGS / NASA</h4>
+                <p class="text-xs text-white/40">Data APIs</p>
+            </div>
+            <div class="reveal-up glass-card rounded-2xl p-6 text-center group hover:glow-cyan">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="code-2" class="w-7 h-7 text-cyan-400"></i>
+                </div>
+                <h4 class="font-display font-medium text-sm mb-1">Python 3.10</h4>
+                <p class="text-xs text-white/40">Language</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== SETUP ==================== -->
+<section id="setup" class="relative py-32 px-6">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="aurora-blob" style="width:50vw; height:50vw; bottom:-20%; left:-15%; background: radial-gradient(circle, rgba(59,130,246,0.05), transparent 70%); animation-delay: -7s;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="reveal-up max-w-3xl mb-16">
+            <span class="inline-block text-[10px] font-mono text-white/40 tracking-widest uppercase mb-4">08 — Setup</span>
+            <h2 class="font-display font-medium text-4xl md:text-6xl tracking-tighter gradient-text mb-6">
+                Get started
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Prerequisites -->
+            <div class="reveal-up stagger-1 glass-card rounded-2xl p-8">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-6 flex items-center gap-2">
+                    <i data-lucide="check-list" class="w-4 h-4 text-white/40"></i>
+                    Prerequisites
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-sm text-white/60">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                        Python 3.10+
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-white/60">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                        CUDA GPU (recommended for training; CPU works for inference)
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-white/60">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                        Google Drive (for Colab persistence)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Install -->
+            <div class="reveal-up stagger-2 glass-card rounded-2xl p-8">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-6 flex items-center gap-2">
+                    <i data-lucide="package" class="w-4 h-4 text-white/40"></i>
+                    Install Dependencies
+                </h3>
+                <div class="code-block rounded-xl p-5 overflow-x-auto">
+                    <div class="text-white/30 text-xs mb-2"># Core ML</div>
+                    <div class="text-emerald-400/80 mb-1">pip install torch transformers datasets</div>
+                    <div class="text-emerald-400/80 mb-4">pip install sentence-transformers</div>
+                    <div class="text-white/30 text-xs mb-2"># Data & Viz</div>
+                    <div class="text-emerald-400/80 mb-1">pip install pandas numpy scikit-learn</div>
+                    <div class="text-emerald-400/80 mb-1">pip install shap folium</div>
+                    <div class="text-emerald-400/80 mb-4">pip install tqdm</div>
+                    <div class="text-white/30 text-xs mb-2"># Data Sources</div>
+                    <div class="text-emerald-400/80 mb-1">pip install praw requests</div>
+                    <div class="text-emerald-400/80">pip install beautifulsoup4</div>
+                </div>
+                <button id="copy-deps-btn" class="mt-4 flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    Copy all commands
+                </button>
+            </div>
+
+            <!-- Colab Setup -->
+            <div class="reveal-up stagger-3 glass-card rounded-2xl p-8 lg:col-span-2">
+                <h3 class="font-display font-medium text-lg tracking-tight mb-6 flex items-center gap-2">
+                    <i data-lucide="cloud" class="w-4 h-4 text-white/40"></i>
+                    Google Colab Quick Start
+                </h3>
+                <div class="code-block rounded-xl p-5 overflow-x-auto mb-6">
+                    <div class="text-white/30 text-xs mb-2"># 1. Upload notebooks to Drive at:</div>
+                    <div class="text-white/60 mb-4">MyDrive/10Academy/crisis-detection-system/notebooks/</div>
+                    <div class="text-white/30 text-xs mb-2"># 2. Auto-mount (handled in each notebook):</div>
+                    <div class="text-purple-400/80 mb-1">if <span class="text-white/50">'google.colab'</span> <span class="text-cyan-400/80">in</span> sys.modules:</div>
+                    <div class="text-purple-400/80 mb-1 pl-4"><span class="text-cyan-400/80">from</span> google.colab <span class="text-cyan-400/80">import</span> drive</div>
+                    <div class="text-purple-400/80 mb-1 pl-4">drive.mount(<span class="text-emerald-400/80">'/content/drive'</span>)</div>
+                    <div class="text-purple-400/80 mb-4 pl-4">PROJECT_DIR = <span class="text-emerald-400/80">'/content/drive/MyDrive/10Academy/crisis-detection-system'</span></div>
+                    <div class="text-white/30 text-xs mb-2"># 3. Run order:</div>
+                    <div class="text-white/60">NB01B → NB01 → NB02 → NB03 → NB04 → NB05 → NB06 → NB07</div>
+                </div>
+
+                <!-- Project Tree -->
+                <div>
+                    <h4 class="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
+                        <i data-lucide="folder-tree" class="w-4 h-4"></i>
+                        Project Structure
+                    </h4>
+                    <div class="code-block rounded-xl p-5 text-xs leading-relaxed overflow-x-auto">
+                        <div class="text-amber-400/80">crisis-detection-system/</div>
+                        <div class="text-white/50">├── <span class="text-blue-400/80">notebooks/</span></div>
+                        <div class="text-white/40 pl-4">├── 01_data_collection.ipynb</div>
+                        <div class="text-white/40 pl-4">├── 01b_bulk_dataset_loader.ipynb</div>
+                        <div class="text-white/40 pl-4">├── 01b_earthquake_enrichment.py</div>
+                        <div class="text-white/40 pl-4">├── 01b_fire_enrichment.py</div>
+                        <div class="text-white/40 pl-4">├── 02_preprocessing.ipynb</div>
+                        <div class="text-white/40 pl-4">├── 03_feature_engineering.ipynb</div>
+                        <div class="text-white/40 pl-4">├── 04_event_classification.ipynb  <span class="text-purple-400/60">← core</span></div>
+                        <div class="text-white/40 pl-4">├── 05_credibility_and_clustering.ipynb</div>
+                        <div class="text-white/40 pl-4">├── 06_evaluation_and_explainability.ipynb</div>
+                        <div class="text-white/40 pl-4">└── 07_dashboard_and_map.ipynb</div>
+                        <div class="text-white/50">├── <span class="text-emerald-400/80">data/</span></div>
+                        <div class="text-white/40 pl-4">├── raw/</div>
+                        <div class="text-white/40 pl-4">├── processed/</div>
+                        <div class="text-white/40 pl-4">└── external/</div>
+                        <div class="text-white/50">├── <span class="text-purple-400/80">models/</span></div>
+                        <div class="text-white/40 pl-4">└── crisis_classifier/</div>
+                        <div class="text-white/40 pl-8">├── model_weights/</div>
+                        <div class="text-white/40 pl-8">└── tokenizer/</div>
+                        <div class="text-white/50">├── <span class="text-cyan-400/80">outputs/</span></div>
+                        <div class="text-white/40 pl-4">├── maps/</div>
+                        <div class="text-white/40 pl-4">├── figures/</div>
+                        <div class="text-white/40 pl-4">└── events_dashboard.geojson</div>
+                        <div class="text-white/50">├── <span class="text-rose-400/80">src/</span></div>
+                        <div class="text-white/40 pl-4">├── clustering_utils.py</div>
+                        <div class="text-white/40 pl-4">└── credibility_utils.py</div>
+                        <div class="text-white/50">├── requirements.txt</div>
+                        <div class="text-white/50">└── README.md</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="relative py-20 px-6 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2)); border: 1px solid rgba(59,130,246,0.3);">
+                        <i data-lucide="radar" class="w-4 h-4 text-brand-blue"></i>
+                    </div>
+                    <span class="font-display font-semibold text-sm tracking-tight">CrisisDetect</span>
+                </div>
+                <p class="text-sm text-white/30 max-w-md">Real-Time Crisis Detection System — Built for humanitarian impact as part of the Academy AI Mastery Program.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="text-xs text-white/20 font-mono">MIT License</span>
+                <span class="w-1 h-1 rounded-full bg-white/10"></span>
+                <span class="text-xs text-white/20 font-mono">2026</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // ---- Mobile Menu ----
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+    mobileMenuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('hidden');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            menuOpen = false;
+        });
+    });
+
+    // ---- Navbar Background on Scroll ----
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.background = 'rgba(3, 4, 11, 0.8)';
+            navbar.style.backdropFilter = 'blur(24px)';
+            navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        } else {
+            navbar.style.background = 'transparent';
+            navbar.style.backdropFilter = 'none';
+            navbar.style.borderBottom = 'none';
+        }
+    });
+
+    // ---- Active Nav Link ----
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 200;
+            if (window.scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // ---- Reveal on Scroll ----
+    const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ---- Bar Fill Animation ----
+    const barFills = document.querySelectorAll('.bar-fill');
+    const barObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+    barFills.forEach(bar => barObserver.observe(bar));
+
+    // ---- Flow Lines ----
+    const flowLines = document.querySelectorAll('.flow-line');
+    const flowObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.5 });
+    flowLines.forEach(line => flowObserver.observe(line));
+
+    // ---- Counter Animation ----
+    const metrics = document.querySelectorAll('.metric-value');
+    const metricObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.animated) {
+                entry.target.dataset.animated = 'true';
+                animateCounter(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    metrics.forEach(m => metricObserver.observe(m));
+
+    function animateCounter(el) {
+        const target = parseFloat(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        const prefix = el.dataset.prefix || '';
+        const duration = 2000;
+        const start = performance.now();
+        const isDecimal = target % 1 !== 0;
+        const isLarge = target > 1000;
+
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = target * eased;
+
+            if (isLarge) {
+                el.textContent = prefix + Math.round(current).toLocaleString() + suffix;
+            } else if (isDecimal) {
+                el.textContent = prefix + current.toFixed(2) + suffix;
+            } else {
+                el.textContent = prefix + Math.round(current) + suffix;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+        requestAnimationFrame(update);
+    }
+
+    // ---- Per-Class Performance Table ----
+    const perfData = [
+        { type: 'flood', precision: 0.95, recall: 0.97, f1: 0.96, color: 'blue', icon: '🌊' },
+        { type: 'earthquake', precision: 0.99, recall: 1.00, f1: 1.00, color: 'purple', icon: '⚠️', perfect: true },
+        { type: 'fire', precision: 1.00, recall: 1.00, f1: 1.00, color: 'amber', icon: '🔥', perfect: true },
+        { type: 'accident', precision: 0.96, recall: 0.97, f1: 0.96, color: 'indigo', icon: '💥' },
+        { type: 'violence', precision: 0.95, recall: 0.96, f1: 0.96, color: 'rose', icon: '🛡️' },
+        { type: 'storm', precision: 0.94, recall: 0.97, f1: 0.95, color: 'cyan', icon: '🌪️' },
+        { type: 'other', precision: 0.94, recall: 0.86, f1: 0.90, color: 'gray', icon: '📋' },
+    ];
+
+    const colorMap = {
+        blue: { bg: 'bg-blue-500', light: 'bg-blue-500/40' },
+        purple: { bg: 'bg-purple-500', light: 'bg-purple-500/40' },
+        amber: { bg: 'bg-amber-500', light: 'bg-amber-500/40' },
+        indigo: { bg: 'bg-indigo-500', light: 'bg-indigo-500/40' },
+        rose: { bg: 'bg-rose-500', light: 'bg-rose-500/40' },
+        cyan: { bg: 'bg-cyan-500', light: 'bg-cyan-500/40' },
+        gray: { bg: 'bg-gray-500', light: 'bg-gray-500/40' },
+    };
+
+    const tableBody = document.getElementById('perf-table-body');
+    perfData.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-white/5 hover:bg-white/[0.02] transition-colors';
+        tr.innerHTML = `
+            <td class="px-8 py-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">${row.icon}</span>
+                    <span class="text-sm font-medium text-white/80">${row.type}</span>
+                    ${row.perfect ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PERFECT</span>' : ''}
+                </div>
+            </td>
+            <td class="px-8 py-4 font-mono text-sm text-white/60">${row.precision.toFixed(2)}</td>
+            <td class="px-8 py-4 font-mono text-sm text-white/60">${row.recall.toFixed(2)}</td>
+            <td class="px-8 py-4 font-mono text-sm ${row.perfect ? 'text-emerald-400 font-medium' : 'text-white/60'}">${row.f1.toFixed(2)}</td>
+            <td class="px-8 py-4">
+                <div class="h-3 rounded-full bg-white/5 overflow-hidden">
+                    <div class="h-full rounded-full ${colorMap[row.color].bg} opacity-60 bar-fill" style="--bar-width: ${row.f1 * 100}%"></div>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(tr);
+    });
+
+    // ---- Pipeline Step Expand ----
+    document.querySelectorAll('.pipeline-step').forEach(step => {
+        step.addEventListener('click', () => {
+            const detail = step.querySelector('.step-detail');
+            const icon = step.querySelector('[data-lucide="chevron-right"]');
+            const isOpen = !detail.classList.contains('hidden');
+
+            // Close all
+            document.querySelectorAll('.step-detail').forEach(d => d.classList.add('hidden'));
+            document.querySelectorAll('.pipeline-step [data-lucide="chevron-right"]').forEach(ic => {
+                ic.style.transform = 'rotate(0deg)';
+            });
+
+            if (!isOpen) {
+                detail.classList.remove('hidden');
+                icon.style.transform = 'rotate(90deg)';
+            }
+        });
+    });
+
+    // ---- Copy Dependencies ----
+    document.getElementById('copy-deps-btn').addEventListener('click', function() {
+        const text = `pip install torch transformers datasets sentence-transformers pandas numpy scikit-learn shap folium praw requests beautifulsoup4 tqdm`;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = this;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> Copied!';
+            btn.classList.add('text-emerald-400');
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('text-emerald-400');
+                lucide.createIcons();
+            }, 2000);
+        });
+    });
+
+    // ---- Confetti on Perfect Score Click ----
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimating = false;
+
+    function resizeConfetti() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    resizeConfetti();
+    window.addEventListener('resize', resizeConfetti);
+
+    function launchConfetti(x, y) {
+        const colors = ['#3b82f6', '#8B5CF6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
+        for (let i = 0; i < 60; i++) {
+            confettiParticles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 15,
+                vy: (Math.random() - 0.5) * 15 - 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: Math.random() * 4 + 2,
+                life: 1,
+                decay: Math.random() * 0.02 + 0.01,
+                rotation: Math.random() * 360,
+                rotSpeed: (Math.random() - 0.5) * 10,
+            });
+        }
+        if (!confettiAnimating) {
+            confettiAnimating = true;
+            animateConfetti();
+        }
+    }
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confettiParticles = confettiParticles.filter(p => p.life > 0);
+        confettiParticles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.3;
+            p.vx *= 0.99;
+            p.life -= p.decay;
+            p.rotation += p.rotSpeed;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation * Math.PI / 180);
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+        });
+        if (confettiParticles.length > 0) {
+            requestAnimationFrame(animateConfetti);
+        } else {
+            confettiAnimating = false;
+        }
+    }
+
+    // Launch confetti on PERFECT badge click
+    document.querySelectorAll('.bg-emerald-500\\/10').forEach(badge => {
+        if (badge.textContent.trim() === 'PERFECT') {
+            badge.style.cursor = 'pointer';
+            badge.addEventListener('click', (e) => {
+                const rect = badge.getBoundingClientRect();
+                launchConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
