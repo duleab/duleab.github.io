@@ -1,188 +1,382 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-
-
-
-
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildfire Early Warning System | Dule Abera</title>
+    <meta name="description" content="AI-powered 72-hour fire risk prediction for indigenous forest communities in Borneo & Sumatra using NASA satellite data and XGBoost.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        /* ── Page-specific additions ── */
+        .project-meta-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .kpi-item {
+            padding: 1rem;
+        }
+        .kpi-number {
+            display: block;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .kpi-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .page-layout { grid-template-columns: 1fr; }
+        }
+        .case-heading {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            margin-top: 2.5rem;
+        }
+        .case-heading:first-of-type { margin-top: 0; }
+        .case-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .case-body {
+            font-size: 0.97rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .project-image {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1.25rem 0;
+        }
+        .project-image img {
+            width: 100%;
+            display: block;
+        }
+        .project-image figcaption {
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+        }
+        .insight-callout {
+            border-left: 3px solid var(--text-primary);
+            padding: 0.9rem 1.2rem;
+            background: var(--bg-alt);
+            border-radius: 0 6px 6px 0;
+            margin: 1.25rem 0;
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+        }
+        .insight-callout strong { color: var(--text-primary); }
+        .pipeline-steps {
+            list-style: none;
+            padding: 0;
+            margin: 1.25rem 0;
+            counter-reset: step-counter;
+        }
+        .pipeline-steps li {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            counter-increment: step-counter;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .step-content h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .step-content p {
+            font-size: 0.88rem;
+            margin: 0;
+        }
+        .sidebar-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .sidebar-card h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.88rem;
+        }
+        .sidebar-card li {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .sidebar-card li:last-child { border-bottom: none; }
+        .sidebar-card li strong { color: var(--text-primary); }
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+        .tag {
+            font-size: 0.78rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.2rem 0.6rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+        }
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        .breadcrumb a {
+            text-decoration: none;
+            color: var(--text-secondary);
+        }
+        .breadcrumb a:hover { color: var(--text-primary); }
+        .breadcrumb span { margin: 0 0.4rem; }
+    </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<main id="main-content"><section class="section"><div class="container">
- ── NAV ── 
+    <main id="main-content">
 
- ── HERO ── 
-<section class="hero-section">
-<div class="container">
-<div class="hero-badge">
-<i class="fas fa-fire-alt"></i> Machine Learning · Public Safety · Geospatial
+        <!-- Hero -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a>
+                    <span aria-hidden="true">›</span>
+                    <a href="../index.html#projects">Projects</a>
+                    <span aria-hidden="true">›</span>
+                    <span>Wildfire Early Warning System</span>
+                </nav>
+                <h1>Wildfire Early Warning System</h1>
+                <p style="font-size:1.1rem; color:var(--text-secondary); max-width:680px; margin-bottom:1.5rem; line-height:1.7;">
+                    An AI-powered system predicting 72-hour fire risks for vulnerable indigenous communities in Borneo & Sumatra, integrating NASA satellite detections, meteorological data, and XGBoost modeling with automated bilingual alerts.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">XGBoost</span>
+                    <span class="tag">Optuna</span>
+                    <span class="tag">NASA FIRMS</span>
+                    <span class="tag">Folium</span>
+                    <span class="tag">Copernicus ERA5</span>
+                    <span class="tag">SHAP</span>
+                    <span class="tag">Python</span>
+                </div>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
-<h1 class="hero-title">Wildfire Early Warning System<br/>&amp; Response Architecture</h1>
-<p class="hero-subtitle">
-                An AI-powered system predicting 72-hour fire risks for vulnerable indigenous communities in Borneo &amp; Sumatra using NASA satellite detections, meteorological data, and XGBoost modeling.
-            </p>
-<div class="tag-row">
-<span class="tech-badge orange">XGBoost</span>
-<span class="tech-badge purple">Optuna</span>
-<span class="tech-badge green">NASA FIRMS</span>
-<span class="tech-badge blue">Folium</span>
-<span class="tech-badge orange">Copernicus ERA5</span>
-<span class="tech-badge purple">SHAP Explainability</span>
-</div>
-<div class="d-flex gap-3 flex-wrap">
-<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
-<i class="fab fa-github"></i> View Repository
-                </a>
-<a class="btn-cta" href="#methodology">
-<i class="fas fa-flask"></i> Deep Dive
-                </a>
-</div>
-</div>
-</section>
- ── KPI STRIP ── 
-<section class="kpi-strip">
-<div class="container">
-<div class="row g-0 text-center">
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number green">85%</span>
-<span class="kpi-label">Recall Objective</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number orange">72 hrs</span>
-<span class="kpi-label">Lead Time</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number blue">26</span>
-<span class="kpi-label">Engineered Features</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number purple">50</span>
-<span class="kpi-label">Optuna Tuning Trials</span>
-</div>
-</div>
-</div>
-</div>
-</section>
- ── MAIN CONTENT ── 
-<div class="content-wrap">
-<div class="two-col">
-<!-- ── LEFT COLUMN ── -->
-<div id="methodology">
-<!-- Feature Distributions -->
-<div class="section-label">Data Engineering</div>
-<h2 class="section-title">Integrating Global Satellite and Meteorological Data</h2>
-<p>
-                    The system integrates real-time active fire detections from NASA's VIIRS and MODIS satellites, 
-                    combined with 35-year CHIRPS rainfall history to compute localized SPI drought indices. 
-                    These environmental factors are essential in identifying escalating fire risks before ignition.
-                </p>
-<div class="img-frame">
-<img alt="Distribution of key engineered features for wildfire prediction" src="../assets/images/wildfire/feature_distributions.png"/>
-<div class="img-caption">Fig 1 — Feature Distributions: Showing the separation power of engineered meteorological and historical features.</div>
-</div>
-<div class="insight-box">
-<p><i class="fas fa-lightbulb"></i>
-<strong>Key Insight:</strong> Merging the MODIS NDVI vegetation health index with ERA5 wind models allowed the system to construct "upwind neighbor fire exposure," a critical compound risk metric that significantly increased early detection recall.</p>
-</div>
-<!-- Alert Timeline -->
-<div class="section-label">Early Warning Operations</div>
-<h2 class="section-title">Automated Bilingual Alerting</h2>
-<p>
-                    The goal of the system is operational readiness for indigenous communities in Borneo and Sumatra. 
-                    Predictions from the XGBoost model are translated into automated, bilingual (English + Bahasa Indonesia) 
-                    SMS-ready alerts sent a full 72 hours before estimated critical fire exposure.
-                </p>
-<div class="img-frame">
-<img alt="Timeline of automated wildfire alerts" src="../assets/images/wildfire/alert_timeline.png"/>
-<div class="img-caption">Fig 2 — Alert Timeline: Demonstrating the 72-hour operational window between prediction and severe fire exposure.</div>
-</div>
-<div class="timeline mt-4">
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Stage 1: Data Ingestion</div>
-<div class="tl-title">Multimodal Integration</div>
-<p class="tl-body">Ingestion of NASA FIRMS API, Copernicus ERA5 wind data, and CHIRPS rainfall data, aggregated to the GADM district level.</p>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Stage 2: Modeling</div>
-<div class="tl-title">XGBoost &amp; Optuna Optimization</div>
-<p class="tl-body">Training an XGBoost Classifier using strict walk-forward temporal cross-validation (no data leakage). Optimized over 50 trials via Optuna targeting the F2-score to prioritize recall over precision.</p>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Stage 3: Explainability</div>
-<div class="tl-title">SHAP Per-District Explanations</div>
-<p class="tl-body">Utilizing SHAP TreeExplainer to break down why each specific district is flagged for risk, generating actionable transparency for disaster responders.</p>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Stage 4: Deployment</div>
-<div class="tl-title">Interactive Folium Dashboard</div>
-<p class="tl-body">Rendering predictions on a live, interactive map utilizing Folium choropleths, displaying the 72-hour fire spread projections.</p>
-</div>
-</div>
-<!-- CTA -->
-<div class="cta-strip mt-5">
-<div>
-<h4>Explore the Architecture</h4>
-<p>View the complete walk-forward cross-validation pipeline in the repository.</p>
-</div>
-<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
-                        Repository <i class="fas fa-arrow-right ms-2"></i>
-</a>
-</div>
-</div><!-- /left col -->
-<!-- ── RIGHT SIDEBAR ── -->
-<aside>
-<!-- Quick Info -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Project Details</div>
-<ul>
-<li><i class="fas fa-bullseye"></i><div><b>Objective</b><br/>SDG 13 &amp; 15: Climate Action and Life on Land</div></li>
-<li><i class="fas fa-tags"></i><div><b>Category</b><br/>Machine Learning · Geospatial</div></li>
-<li><i class="fas fa-map-marker-alt"></i><div><b>Coverage</b><br/>Borneo &amp; Sumatra (Indonesia)</div></li>
-<li><i class="fas fa-language"></i><div><b>Alerts</b><br/>Bilingual (English &amp; Bahasa Indonesia)</div></li>
-</ul>
-</div>
-<!-- Data Sources -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Key Data Sources</div>
-<ul>
-<li><i class="fas fa-satellite"></i><b>NASA FIRMS</b> VIIRS &amp; MODIS active fires</li>
-<li><i class="fas fa-leaf"></i><b>MODIS NDVI</b> Vegetation health</li>
-<li><i class="fas fa-cloud-rain"></i><b>CHIRPS</b> 35-year rainfall (SPI)</li>
-<li><i class="fas fa-wind"></i><b>ERA5 (Copernicus)</b> Wind direction/speed</li>
-<li><i class="fas fa-users"></i><b>WorldPop</b> Population density grids</li>
-</ul>
-</div>
-<!-- Related Projects -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Related Projects</div>
-<ul>
-<li><i class="fas fa-link"></i><a href="crisis-detection.html">Real-Time Crisis Detection</a></li>
-<li><i class="fas fa-link"></i><a href="conflict-food-crisis-prediction.html">Food Crisis Prediction System</a></li>
-</ul>
-</div>
-</aside>
-</div>
-</div>
- ── FOOTER ── 
+        </div>
 
+        <!-- KPI Strip -->
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <span class="kpi-number">85%</span>
+                        <span class="kpi-label">Recall Objective</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-number">72 hrs</span>
+                        <span class="kpi-label">Lead Time Warning</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-number">26</span>
+                        <span class="kpi-label">Engineered Features</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-number">50</span>
+                        <span class="kpi-label">Optuna Tuning Trials</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-</div></section></main>
+        <!-- Body -->
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
 
+                    <!-- Main Content -->
+                    <article>
+
+                        <p class="case-heading">Data Engineering</p>
+                        <h2 class="case-title">Integrating Global Satellite and Meteorological Data</h2>
+                        <p class="case-body">
+                            The system integrates real-time active fire detections from NASA's VIIRS and MODIS satellites, combined with 35-year CHIRPS rainfall history to compute localized SPI drought indices. These environmental factors are essential in identifying escalating fire risks before ignition occurs.
+                        </p>
+
+                        <figure class="project-image">
+                            <img src="../assets/images/wildfire/feature_distributions.png" alt="Distribution of key engineered features for wildfire prediction including rainfall, NDVI, and wind exposure metrics">
+                            <figcaption>Fig 1 — Feature Distributions: Showing the separation power of engineered meteorological and historical fire features.</figcaption>
+                        </figure>
+
+                        <div class="insight-callout">
+                            <strong>Key Insight:</strong> Merging the MODIS NDVI vegetation health index with ERA5 wind models allowed the system to construct "upwind neighbor fire exposure" — a critical compound risk metric that significantly increased early detection recall.
+                        </div>
+
+                        <p class="case-heading" style="margin-top:2.5rem;">Early Warning Operations</p>
+                        <h2 class="case-title">Automated Bilingual Alerting</h2>
+                        <p class="case-body">
+                            The goal of the system is operational readiness for indigenous communities in Borneo and Sumatra. Predictions from the XGBoost model are translated into automated, bilingual (English + Bahasa Indonesia) SMS-ready alerts, dispatched a full 72 hours before estimated critical fire exposure.
+                        </p>
+
+                        <figure class="project-image">
+                            <img src="../assets/images/wildfire/alert_timeline.png" alt="Timeline of automated wildfire alerts showing the 72-hour lead time window">
+                            <figcaption>Fig 2 — Alert Timeline: Demonstrating the 72-hour operational window between model prediction and severe fire exposure.</figcaption>
+                        </figure>
+
+                        <p class="case-heading" style="margin-top:2.5rem;">Pipeline Architecture</p>
+                        <h2 class="case-title">Four-Stage ML Pipeline</h2>
+
+                        <ol class="pipeline-steps">
+                            <li>
+                                <span class="step-num">1</span>
+                                <div class="step-content">
+                                    <h4>Multimodal Data Ingestion</h4>
+                                    <p>NASA FIRMS API, Copernicus ERA5 wind data, and CHIRPS rainfall, aggregated to GADM district level for spatial consistency.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">2</span>
+                                <div class="step-content">
+                                    <h4>XGBoost & Optuna Optimization</h4>
+                                    <p>Trained an XGBoost Classifier using strict walk-forward temporal cross-validation to prevent data leakage. Optimized over 50 Optuna trials targeting the F2-score to prioritize recall over precision.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">3</span>
+                                <div class="step-content">
+                                    <h4>SHAP Per-District Explainability</h4>
+                                    <p>SHAP TreeExplainer breaks down why each specific district is flagged for risk, generating actionable transparency for disaster responders and community leaders.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">4</span>
+                                <div class="step-content">
+                                    <h4>Interactive Folium Dashboard</h4>
+                                    <p>Predictions rendered on a live, interactive choropleth map using Folium, displaying 72-hour fire spread projections overlaid with population density grids.</p>
+                                </div>
+                            </li>
+                        </ol>
+
+                    </article>
+
+                    <!-- Sidebar -->
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Objective</strong><br>SDG 13 & 15: Climate Action and Life on Land</li>
+                                <li><strong>Category</strong><br>Machine Learning · Geospatial Analytics</li>
+                                <li><strong>Coverage</strong><br>Borneo & Sumatra, Indonesia</li>
+                                <li><strong>Alert Language</strong><br>English & Bahasa Indonesia</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Key Data Sources</h3>
+                            <ul>
+                                <li><strong>NASA FIRMS</strong> — VIIRS & MODIS active fire detections</li>
+                                <li><strong>MODIS NDVI</strong> — Vegetation health index</li>
+                                <li><strong>CHIRPS</strong> — 35-year rainfall history (SPI)</li>
+                                <li><strong>ERA5 (Copernicus)</strong> — Wind direction & speed</li>
+                                <li><strong>WorldPop</strong> — Population density grids</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="conflict-food-crisis-prediction.html">Food Crisis Prediction System</a></li>
+                                <li><a href="violence-detection.html">Crisis Recognition System</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

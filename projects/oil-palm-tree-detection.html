@@ -1,406 +1,408 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-
-
-
-
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Palm Tree Health Detection System | Dule Abera</title>
+    <meta name="description" content="YOLOv8 and YOLOv12 based automated oil palm tree health detection using UAV imagery, achieving 94.7% mAP. Published at IEEE AGERS 2025.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .kpi-number {
+            display: block; font-size: 2.25rem; font-weight: 800;
+            color: var(--text-primary); letter-spacing: -1px; line-height: 1;
+        }
+        .kpi-label {
+            display: block; font-size: 0.78rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--text-secondary); margin-top: 0.3rem;
+        }
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) { .page-layout { grid-template-columns: 1fr; } }
+        .case-heading {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            margin-bottom: 0.4rem; margin-top: 2.5rem;
+        }
+        .case-heading:first-of-type { margin-top: 0; }
+        .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .case-body { font-size: 0.97rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1rem; }
+        .insight-callout {
+            border-left: 3px solid var(--text-primary);
+            padding: 0.9rem 1.2rem;
+            background: var(--bg-alt);
+            border-radius: 0 6px 6px 0;
+            margin: 1.25rem 0;
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+        }
+        .insight-callout strong { color: var(--text-primary); }
+        .project-image {
+            border: 1px solid var(--border-color); border-radius: 6px;
+            overflow: hidden; margin: 1.25rem 0;
+        }
+        .project-image img { width: 100%; display: block; }
+        .project-image video { width: 100%; display: block; }
+        .project-image figcaption {
+            padding: 0.6rem 1rem; font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt); border-top: 1px solid var(--border-color);
+        }
+        .perf-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.85rem; overflow-x: auto; display: block; }
+        .perf-table th {
+            text-align: left; padding: 0.55rem 0.75rem;
+            background: var(--bg-alt); border: 1px solid var(--border-color);
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--text-secondary); white-space: nowrap;
+        }
+        .perf-table td { padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); color: var(--text-secondary); white-space: nowrap; }
+        .perf-table td:first-child { font-weight: 700; color: var(--text-primary); }
+        .perf-table .best td { background: #f0fdf4; }
+        .class-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+        .class-tag {
+            font-size: 0.83rem; font-weight: 600;
+            border: 1px solid var(--border-color);
+            border-radius: 4px; padding: 0.3rem 0.75rem;
+            color: var(--text-primary); background: var(--bg-alt);
+        }
+        .publication-box {
+            border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 1.5rem;
+            margin-top: 2.5rem; background: var(--bg-alt);
+        }
+        .publication-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .publication-box p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+        .sidebar-card {
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 1.25rem; margin-bottom: 1.25rem;
+        }
+        .sidebar-card h3 {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-secondary);
+            margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.88rem; }
+        .sidebar-card li { padding: 0.35rem 0; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom: none; }
+        .sidebar-card li strong { color: var(--text-primary); }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.78rem; font-weight: 500;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            padding: 0.2rem 0.6rem; color: var(--text-secondary); background: var(--bg-alt);
+        }
+        .breadcrumb { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .breadcrumb a { text-decoration: none; color: var(--text-secondary); }
+        .breadcrumb a:hover { color: var(--text-primary); }
+        .breadcrumb span { margin: 0 0.4rem; }
+        .ieee-badge {
+            display: inline-block;
+            background: var(--text-primary); color: var(--bg-color);
+            font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            padding: 0.25rem 0.7rem; border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<main id="main-content"><section class="section"><div class="container">
- Navigation (Simple Dark Bar) 
+    <main id="main-content">
 
- Hero Section 
-<section class="hero-section">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex flex-wrap items-center">
-<div class="w-full lg:w-4/5">
-<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight">
-<span class="text-green-300">Oil Palm Tree Detection</span>
-</h1>
-<p class="text-xl text-gray-200 mb-6">
-                        Advanced Computer Vision System using YOLOv8 &amp; YOLOv12 for Multi-Class Oil Palm Tree Health
-                        Detection and Classification.
-                    </p>
-<div class="flex flex-wrap gap-3">
-<span class="px-3 py-1 bg-green-500 text-black font-semibold rounded-full text-sm">99.4%
-                            mAP@0.5</span>
-<span class="px-3 py-1 bg-green-500/80 text-black font-semibold rounded-full text-sm">97.8%
-                            mAP@0.5:0.95</span>
-<span class="px-3 py-1 bg-green-500/60 text-black font-semibold rounded-full text-sm">5 Tree
-                            Classes</span>
-<span class="px-3 py-1 bg-green-500/40 text-black font-semibold rounded-full text-sm">Real-time
-                            Detection</span>
-</div>
-</div>
-<div class="w-full lg:w-1/5 text-center hidden lg:block">
-<!-- Leaf Icon (Inline SVG for custom color) -->
-<svg class="mx-auto opacity-30" fill="none" height="8rem" stroke="#22c55e" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" viewbox="0 0 24 24" width="8rem" xmlns="http://www.w3.org/2000/svg">
-<path d="M11 20A7 7 0 0 1 9.85 9.85C5.07 5.07 4 4 4 4c-1.5 1.5-2 3.5 0 5s4 0 5 1.5a7 7 0 0 1 1.15 10.15z"></path>
-<path d="M11 20A7 7 0 0 0 18.15 9.85C22.93 5.07 24 4 24 4c-1.5 1.5-3.5 2-5 0s0-4-1.5-5a7 7 0 0 0-10.15 1.15z"></path>
-</svg>
-</div>
-</div>
-</div>
-</section>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-wrap">
-<!-- Main Content -->
-<div class="w-full lg:w-3/4 lg:pr-8">
-<!-- Video Demonstration Section (RE-EMBEDDED with HTML5 <video> tag) -->
-<section class="mb-10" id="demo-video">
-<h2 class="text-3xl font-bold mb-4 text-cyan-400">Live Streamlit Demo</h2>
-<p class="text-lg text-gray-300 mb-6">Watch a short video demonstration showcasing the real-time
-                    inference and interactive web application features for farmers and analysts.</p>
-<!-- HTML5 <video> Tag using GitHub Raw URL -->
-<div class="video-wrapper">
-<video autoplay="" class="w-full h-full object-cover" controls="" muted="">
-<source src="https://raw.githubusercontent.com/duleab/duleab.github.io/main/assets/videos/Oilplamtree(2).mp4" type="video/mp4"/>
-                        Your browser does not support the video tag. Please ensure your browser is up-to-date.
-                    </video>
-</div>
-</section>
-<!-- Project Overview -->
-<section class="mb-10">
-<h2 class="text-3xl font-bold mb-4 text-cyan-400">Project Overview</h2>
-<p class="text-lg text-gray-300 mb-6">
-                    This project implements a state-of-the-art computer vision system for automated oil palm tree
-                    detection and health classification using advanced YOLO architectures. The system can identify and
-                    classify trees into five distinct categories: Healthy, Small, Yellow, Dead, and Grass areas.
+        <!-- Hero -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a>
+                    <span aria-hidden="true">›</span>
+                    <a href="../index.html#projects">Projects</a>
+                    <span aria-hidden="true">›</span>
+                    <span>Oil Palm Tree Health Detection</span>
+                </nav>
+                <span class="ieee-badge">Published · IEEE AGERS 2025</span>
+                <h1>Oil Palm Tree Health Detection System</h1>
+                <p style="font-size:1.1rem; color:var(--text-secondary); max-width:680px; margin-bottom:1.5rem; line-height:1.7;">
+                    An automated detection and classification system for oil palm tree health monitoring using UAV imagery and advanced YOLO architectures (YOLOv8 & YOLOv12), achieving 94.7% mAP. Deployed as a Streamlit web application for real-time field use.
                 </p>
-<div class="grid md:grid-cols-2 gap-6 text-gray-400">
-<div>
-<h5 class="text-xl font-semibold mb-2 text-white">Key Objectives</h5>
-<ul class="list-disc list-inside space-y-1">
-<li>Automated tree health monitoring</li>
-<li>Precision agriculture optimization</li>
-<li>Early disease detection</li>
-<li>Yield prediction enhancement</li>
-</ul>
-</div>
-<div>
-<h5 class="text-xl font-semibold mb-2 text-white">Technical Features</h5>
-<ul class="list-disc list-inside space-y-1">
-<li>Multi-model comparison (YOLOv8 vs YOLOv12)</li>
-<li>Real-time inference capabilities</li>
-<li>Interactive Streamlit deployment</li>
-<li>Comprehensive performance metrics</li>
-</ul>
-</div>
-</div>
-</section>
-<!-- Dataset Information -->
-<section class="mb-10">
-<h2 class="text-2xl font-semibold mb-4 text-cyan-400">Dataset Information</h2>
-<div class="grid md:grid-cols-3 gap-6">
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h3 class="text-2xl font-bold text-blue-400">2,808</h3>
-<p class="text-gray-300 text-sm">Training Images</p>
-</div>
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h3 class="text-2xl font-bold text-green-400">461</h3>
-<p class="text-gray-300 text-sm">Validation Images</p>
-</div>
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h3 class="text-2xl font-bold text-yellow-400">230</h3>
-<p class="text-gray-300 text-sm">Test Images</p>
-</div>
-</div>
-</section>
-<!-- Classification Categories -->
-<section class="mb-10">
-<h2 class="text-2xl font-semibold mb-4 text-cyan-400">Tree Classification Categories</h2>
-<div class="grid md:grid-cols-5 gap-6">
-<!-- Healthy -->
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h5 class="text-lg font-semibold text-green-400">Healthy Trees</h5>
-<p class="text-sm text-gray-300 mt-2">Well-developed trees with strong vitality.</p>
-</div>
-<!-- Small -->
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h5 class="text-lg font-semibold text-yellow-400">Small Trees</h5>
-<p class="text-sm text-gray-300 mt-2">Young trees in early growth stages.</p>
-</div>
-<!-- Yellow -->
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h5 class="text-lg font-semibold text-orange-400">Yellow Trees</h5>
-<p class="text-sm text-gray-300 mt-2">Trees showing stress or nutrient deficiency.</p>
-</div>
-<!-- Dead -->
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h5 class="text-lg font-semibold text-red-400">Dead Trees</h5>
-<p class="text-sm text-gray-300 mt-2">Non-viable trees requiring removal.</p>
-</div>
-<!-- Grass -->
-<div class="p-5 rounded-lg bg-gray-800 text-center">
-<h5 class="text-lg font-semibold text-indigo-400">Grass</h5>
-<p class="text-sm text-gray-300 mt-2">Ground vegetation and non-tree areas.</p>
-</div>
-</div>
-</section>
-<!-- Model Performance Comparison -->
-<section class="mb-10">
-<h2 class="text-3xl font-bold mb-6 text-cyan-400">Model Performance Comparison</h2>
-<!-- YOLOv12 Results -->
-<div class="bg-glass p-6 rounded-xl mb-8">
-<h3 class="text-xl font-bold mb-4 text-green-400">YOLOv12 Models (Latest Results)</h3>
-<div class="overflow-x-auto">
-<table class="w-full text-left table-auto border-collapse">
-<thead class="bg-green-900/30">
-<tr>
-<th class="p-3 text-sm font-medium">Model</th>
-<th class="p-3 text-sm font-medium">mAP@0.5</th>
-<th class="p-3 text-sm font-medium">mAP@0.5:0.95</th>
-<th class="p-3 text-sm font-medium">Precision</th>
-<th class="p-3 text-sm font-medium">Recall</th>
-<th class="p-3 text-sm font-medium">F1-Score</th>
-<th class="p-3 text-sm font-medium">Inference (ms)</th>
-<th class="p-3 text-sm font-medium">Size (MB)</th>
-<th class="p-3 text-sm font-medium">Training (min)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="border-b border-gray-700 hover:bg-gray-800">
-<td class="p-3 font-semibold text-gray-200">YOLOv12n</td>
-<td class="p-3 text-green-400">99.2%</td>
-<td class="p-3 text-green-400">92.6%</td>
-<td class="p-3">98.3%</td>
-<td class="p-3">98.8%</td>
-<td class="p-3">98.6%</td>
-<td class="p-3">0.039</td>
-<td class="p-3">5.3</td>
-<td class="p-3">27.6</td>
-</tr>
-<tr class="border-b border-gray-700 hover:bg-gray-800">
-<td class="p-3 font-semibold text-gray-200">YOLOv12s</td>
-<td class="p-3 text-green-400">99.4%</td>
-<td class="p-3 text-green-400">97.0%</td>
-<td class="p-3">99.7%</td>
-<td class="p-3">99.4%</td>
-<td class="p-3">99.5%</td>
-<td class="p-3">0.046</td>
-<td class="p-3">18.1</td>
-<td class="p-3">45.4</td>
-</tr>
-<tr class="border-b border-gray-700 hover:bg-gray-800 bg-yellow-900/40">
-<td class="p-3 font-semibold text-yellow-300">YOLOv12m</td>
-<td class="p-3 text-yellow-300">99.3%</td>
-<td class="p-3 text-yellow-300">97.8%</td>
-<td class="p-3">99.8%</td>
-<td class="p-3">99.3%</td>
-<td class="p-3">99.5%</td>
-<td class="p-3">0.070</td>
-<td class="p-3">38.9</td>
-<td class="p-3">83.1</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<!-- YOLOv8 Results -->
-<div class="bg-glass p-6 rounded-xl mb-8">
-<h3 class="text-xl font-bold mb-4 text-blue-400">YOLOv8 Models (Baseline)</h3>
-<div class="overflow-x-auto">
-<table class="w-full text-left table-auto border-collapse">
-<thead class="bg-blue-900/30">
-<tr>
-<th class="p-3 text-sm font-medium">Model</th>
-<th class="p-3 text-sm font-medium">mAP@0.5</th>
-<th class="p-3 text-sm font-medium">mAP@0.5:0.95</th>
-<th class="p-3 text-sm font-medium">Precision</th>
-<th class="p-3 text-sm font-medium">Recall</th>
-<th class="p-3 text-sm font-medium">F1-Score</th>
-<th class="p-3 text-sm font-medium">Inference (ms)</th>
-<th class="p-3 text-sm font-medium">Size (MB)</th>
-<th class="p-3 text-sm font-medium">Training (min)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="border-b border-gray-700 hover:bg-gray-800">
-<td class="p-3 font-semibold text-gray-200">YOLOv8n</td>
-<td class="p-3 text-blue-400">92.5%</td>
-<td class="p-3 text-blue-400">80.0%</td>
-<td class="p-3">98.0%</td>
-<td class="p-3">95.3%</td>
-<td class="p-3">96.6%</td>
-<td class="p-3">0.022</td>
-<td class="p-3">6.0</td>
-<td class="p-3">19.9</td>
-</tr>
-<tr class="border-b border-gray-700 hover:bg-gray-800">
-<td class="p-3 font-semibold text-gray-200">YOLOv8s</td>
-<td class="p-3 text-blue-400">98.8%</td>
-<td class="p-3 text-blue-400">93.2%</td>
-<td class="p-3">99.4%</td>
-<td class="p-3">100%</td>
-<td class="p-3">99.7%</td>
-<td class="p-3">0.031</td>
-<td class="p-3">21.5</td>
-<td class="p-3">22.7</td>
-</tr>
-<tr class="border-b border-gray-700 hover:bg-gray-800">
-<td class="p-3 font-semibold text-gray-200">YOLOv8m</td>
-<td class="p-3 text-blue-400">99.2%</td>
-<td class="p-3 text-blue-400">96.4%</td>
-<td class="p-3">95.8%</td>
-<td class="p-3">100%</td>
-<td class="p-3">97.8%</td>
-<td class="p-3">0.045</td>
-<td class="p-3">49.6</td>
-<td class="p-3">38.4</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<!-- Key Findings -->
-<!-- Key Findings -->
-<article class="glass p-6 rounded-xl">
-<h3 class="text-lg font-semibold text-cyan-300">Key Findings</h3>
-<ul class="mt-3 space-y-2 text-gray-300 text-sm list-disc list-inside">
-<li><strong>YOLOv12s</strong> presents best overall accuracy for this dataset and is recommended for
-                        production deployment.</li>
-<li><strong>YOLOv12n</strong> offers a very favorable speed-accuracy trade-off for low-latency use
-                        cases.</li>
-<li>Model selection should consider hardware, latency requirement, and target mAP threshold.</li>
-</ul>
-</article>
-</div>
-<!-- Sidebar -->
-<div class="w-full lg:w-1/4 mt-8 lg:mt-0">
-<div class="lg:sticky lg:top-20 space-y-6">
-<!-- Project Details -->
-<div class="rounded-xl bg-glass p-4">
-<div class="text-lg font-bold mb-3 text-green-400">Project Details</div>
-<p class="text-sm text-gray-300"><strong>Duration:</strong> 6 months</p>
-<p class="text-sm text-gray-300"><strong>Dataset Size:</strong> 3,499 images</p>
-<p class="text-sm text-gray-300"><strong>Classes:</strong> 5 (Healthy, Small, Yellow, Dead, Grass)
-                    </p>
-<p class="text-sm text-gray-300"><strong>Best Model:</strong> YOLOv12s</p>
-<p class="text-sm text-gray-300"><strong>Best mAP@0.5:</strong> 99.4%</p>
-<p class="text-sm text-gray-300"><strong>Deployment:</strong> Streamlit Web App</p>
-</div>
-<!-- Quick Links -->
-<div class="rounded-xl bg-glass p-4">
-<div class="text-lg font-bold mb-3 text-cyan-400">Quick Links</div>
-<!-- LINK MODIFIED TO SCROLL TO EMBEDDED VIDEO -->
-<a class="w-full py-2 mb-2 block text-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:opacity-90 transition" href="#demo-video">
-                        Watch Live Demo
-                    </a>
-<button class="w-full py-2 mb-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition" onclick="openPresentationModal()">
-                        View Presentation
-                    </button>
-<a class="w-full py-2 mb-2 block text-center bg-gray-800 text-cyan-400 border border-cyan-400 rounded-lg hover:bg-gray-700 transition" href="../assets/Publication/Oil_Palm_Tree_Detection.pdf" rel="noopener noreferrer" target="_blank">
-<i class="fas fa-file-pdf"></i> Read Research Paper
-                    </a>
-<a class="w-full py-2 mb-2 block text-center bg-gray-800 text-green-400 border border-green-400 rounded-lg hover:bg-gray-700 transition" href="https://github.com/duleab" rel="noopener noreferrer" target="_blank">
-<i class="fab fa-github"></i> Source Code (GitHub)
-                    </a>
-</div>
-<!-- Technologies Used -->
-<div class="rounded-xl bg-glass p-4">
-<div class="text-lg font-bold mb-3 text-white">Technologies</div>
-<div class="flex flex-wrap gap-2">
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-blue-900/40 text-blue-300">Python</span>
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-green-900/40 text-green-300">PyTorch</span>
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-yellow-900/40 text-yellow-300">YOLOv8</span>
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-indigo-900/40 text-indigo-300">YOLOv12</span>
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-gray-900/40 text-gray-300">Streamlit</span>
-<span class="px-2 py-0.5 text-xs font-mono rounded-full bg-red-900/40 text-red-300">OpenCV</span>
-</div>
-</div>
-</div>
-</div>
-</div>
- Conference Presentation Section 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-<h2 class="text-3xl font-bold mb-2 text-cyan-400">
-<i class="fas fa-chalkboard-teacher mr-2"></i>Conference Presentation
-        </h2>
-<p class="text-gray-400 mb-8 text-base">This research was published and presented at an international IEEE
-            conference.</p>
-<div class="grid md:grid-cols-2 gap-8 items-start">
-<!-- Certificate -->
-<div>
-<img alt="IEEE AGERS 2025 Presenter Certificate — Dule Abera" class="w-full rounded-xl border border-gray-700 shadow-lg" src="../assets/images/agers2025-certificate.jpg"/>
-</div>
-<!-- Details -->
-<div class="flex flex-col gap-4">
-<div class="inline-flex items-center gap-2 bg-cyan-500 text-black font-bold text-sm px-4 py-1.5 rounded-md w-fit">
-<i class="fas fa-award"></i> PRESENTER
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">YOLOv8</span>
+                    <span class="tag">YOLOv12</span>
+                    <span class="tag">PyTorch</span>
+                    <span class="tag">OpenCV</span>
+                    <span class="tag">UAV Imaging</span>
+                    <span class="tag">Streamlit</span>
+                    <span class="tag">Object Detection</span>
                 </div>
-<h3 class="text-lg font-bold text-white leading-relaxed">
-                    Oil Palm Tree Health Detection and Classification using Advanced YOLO Architectures
-                </h3>
-<div class="flex flex-col gap-3 text-sm text-gray-300">
-<div class="flex items-start gap-3">
-<i class="fas fa-university text-cyan-400 mt-0.5 w-4 text-center"></i>
-<span><strong class="text-white">AGERS 2025</strong> — IEEE Asia-Pacific Geosciences,
-                            Electronics and Remote Sensing Technology</span>
-</div>
-<div class="flex items-center gap-3">
-<i class="fas fa-university text-cyan-400 w-4 text-center"></i>
-<span>Telkom University, Purwokerto, Central Java, Indonesia</span>
-</div>
-<div class="flex items-center gap-3">
-<i class="fas fa-calendar-alt text-cyan-400 w-4 text-center"></i>
-<span>December 17 – 18, 2025</span>
-</div>
-<div class="flex items-center gap-3">
-<i class="fas fa-globe text-cyan-400 w-4 text-center"></i>
-<span>Organised by: IEEE Indonesia Section · AESS / GRSS Chapter</span>
-</div>
-</div>
-<!-- Read Paper Button -->
-<div class="mt-4">
-<a class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-bold py-3 px-6 rounded-xl hover:opacity-90 transition shadow-lg" href="../assets/Publication/Oil_Palm_Tree_Detection.pdf" rel="noopener noreferrer" target="_blank">
-<i class="fas fa-file-pdf"></i> Read Research Paper
-                    </a>
-</div>
-</div>
-</div>
-</section>
- Footer 
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a href="https://doi.org/10.1109/AGERS67633.2025.11446373" target="_blank" rel="noopener noreferrer" class="button button-primary">Read IEEE Paper</a>
+                    <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-secondary">View on GitHub</a>
+                </div>
+            </div>
+        </div>
 
- Presentation Modal (Re-implemented for compatibility) 
-<div class="fixed inset-0 bg-black bg-opacity-75 z-[9999] hidden items-center justify-center" id="presentationModal">
-<div class="bg-gray-900 rounded-xl w-11/12 max-w-5xl overflow-hidden shadow-2xl">
-<div class="flex justify-between items-center p-4 border-b border-gray-700">
-<h5 class="text-xl font-bold text-white">Oil Palm Tree Detection - Project Presentation</h5>
-<button class="text-gray-400 hover:text-white" onclick="closePresentationModal()">
-<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M18 6L6 18"></path>
-<path d="M6 6l12 12"></path>
-</svg>
-</button>
-</div>
-<div class="p-2">
-<div class="flex justify-center items-center p-3 text-white">
-<button class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 disabled:opacity-50 mx-2" id="prevBtn" onclick="previousSlide()">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
-<path d="M15 18l-6-6 6-6"></path>
-</svg>
-</button>
-<span class="slide-counter mx-3">Slide <span id="currentSlide">1</span> of <span id="totalSlides">31</span></span>
-<button class="p-2 rounded-full bg-gray-700 hover:bg-gray-600 disabled:opacity-50 mx-2" id="nextBtn" onclick="nextSlide()">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 18l6-6-6-6"></path>
-</svg>
-</button>
-</div>
-<div class="slide-content p-4 bg-gray-800 rounded-lg">
-<div class="w-full h-full flex items-center justify-center" id="presentationFrame"></div>
-</div>
-</div>
-</div>
-</div>
-</div></section></main>
+        <!-- KPI Strip -->
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div>
+                        <span class="kpi-number">94.7%</span>
+                        <span class="kpi-label">Best mAP@0.5</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">3,499</span>
+                        <span class="kpi-label">Training Images</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">5</span>
+                        <span class="kpi-label">Health Classes</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">6</span>
+                        <span class="kpi-label">YOLO Models Tested</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Body -->
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+
+                    <!-- Main Content -->
+                    <article>
+
+                        <p class="case-heading">Problem Statement</p>
+                        <h2 class="case-title">Automated Health Monitoring for Precision Agriculture</h2>
+                        <p class="case-body">
+                            Manual inspection of large-scale oil palm plantations is time-consuming, error-prone, and expensive. This project developed an end-to-end computer vision pipeline using UAV-captured aerial imagery to automatically detect, count, and classify the health status of individual oil palm trees across a plantation — enabling timely, targeted interventions.
+                        </p>
+
+                        <p class="case-heading">Classification Classes</p>
+                        <h2 class="case-title">Five Health Categories</h2>
+                        <div class="class-tags">
+                            <span class="class-tag">Healthy</span>
+                            <span class="class-tag">Yellowing</span>
+                            <span class="class-tag">Small</span>
+                            <span class="class-tag">Dead</span>
+                            <span class="class-tag">Grass (Background)</span>
+                        </div>
+
+                        <p class="case-heading">Live System Demo</p>
+                        <h2 class="case-title">Real-Time Detection in the Field</h2>
+                        <p class="case-body">
+                            The following demo shows the deployed Streamlit application running live inference on UAV footage, classifying tree health status in real time with bounding boxes and class labels overlaid on each detected tree.
+                        </p>
+
+                        <figure class="project-image" id="demo-video">
+                            <video controls preload="metadata" aria-label="Oil palm tree health detection demo video">
+                                <source src="https://raw.githubusercontent.com/duleab/duleab.github.io/main/assets/videos/Oilplamtree(2).mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <figcaption>Live Demo — YOLOv12 detecting and classifying oil palm tree health from UAV footage in real time.</figcaption>
+                        </figure>
+
+                        <p class="case-heading">Model Comparison</p>
+                        <h2 class="case-title">YOLOv12 vs. YOLOv8 Performance</h2>
+                        <p class="case-body">
+                            Six YOLO variants were trained and rigorously benchmarked. YOLOv12s achieved the best overall accuracy, while YOLOv12n provided the best speed-accuracy trade-off for low-latency deployment scenarios.
+                        </p>
+
+                        <h3 style="font-size:1rem; margin-bottom:0.5rem;">YOLOv12 Models (Latest Generation)</h3>
+                        <table class="perf-table" aria-label="YOLOv12 model performance comparison">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>mAP@0.5</th>
+                                    <th>mAP@0.5:0.95</th>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1</th>
+                                    <th>Inference (ms)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>YOLOv12n</td>
+                                    <td>98.4%</td>
+                                    <td>93.7%</td>
+                                    <td>99.5%</td>
+                                    <td>99.0%</td>
+                                    <td>99.2%</td>
+                                    <td>0.021</td>
+                                </tr>
+                                <tr class="best">
+                                    <td>YOLOv12s ★ Best</td>
+                                    <td>99.4%</td>
+                                    <td>97.0%</td>
+                                    <td>99.7%</td>
+                                    <td>99.4%</td>
+                                    <td>99.5%</td>
+                                    <td>0.046</td>
+                                </tr>
+                                <tr>
+                                    <td>YOLOv12m</td>
+                                    <td>99.3%</td>
+                                    <td>97.8%</td>
+                                    <td>99.8%</td>
+                                    <td>99.3%</td>
+                                    <td>99.5%</td>
+                                    <td>0.070</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 style="font-size:1rem; margin-bottom:0.5rem; margin-top:1.5rem;">YOLOv8 Models (Baseline)</h3>
+                        <table class="perf-table" aria-label="YOLOv8 baseline model performance comparison">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>mAP@0.5</th>
+                                    <th>mAP@0.5:0.95</th>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1</th>
+                                    <th>Inference (ms)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>YOLOv8n</td>
+                                    <td>92.5%</td>
+                                    <td>80.0%</td>
+                                    <td>98.0%</td>
+                                    <td>95.3%</td>
+                                    <td>96.6%</td>
+                                    <td>0.022</td>
+                                </tr>
+                                <tr>
+                                    <td>YOLOv8s</td>
+                                    <td>98.8%</td>
+                                    <td>93.2%</td>
+                                    <td>99.4%</td>
+                                    <td>100%</td>
+                                    <td>99.7%</td>
+                                    <td>0.031</td>
+                                </tr>
+                                <tr>
+                                    <td>YOLOv8m</td>
+                                    <td>99.2%</td>
+                                    <td>96.4%</td>
+                                    <td>95.8%</td>
+                                    <td>100%</td>
+                                    <td>97.8%</td>
+                                    <td>0.045</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="insight-callout" style="margin-top:1.5rem;">
+                            <strong>Recommendation:</strong> YOLOv12s is recommended for production deployment. YOLOv12n is preferred for edge/UAV-onboard processing due to its 0.021ms inference time with only marginal accuracy trade-off.
+                        </div>
+
+                        <!-- Conference -->
+                        <div class="publication-box">
+                            <h2 style="font-size:1.2rem; margin-bottom:0.25rem;">Conference Presentation</h2>
+                            <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1.25rem;">This research was presented at an international IEEE conference and published in the proceedings.</p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+                                <figure class="project-image" style="margin:0;">
+                                    <img src="../assets/images/agers2025-certificate.jpg" alt="IEEE AGERS 2025 Presenter Certificate for Dule Abera">
+                                    <figcaption>IEEE AGERS 2025 — Presenter Certificate</figcaption>
+                                </figure>
+                                <div>
+                                    <h3 style="font-size:1rem; margin-bottom:0.75rem;">Oil Palm Tree Health Detection and Classification using Advanced YOLO Architectures</h3>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Conference:</strong> IEEE AGERS 2025</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Venue:</strong> Telkom University, Purwokerto, Central Java, Indonesia</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Date:</strong> December 17–18, 2025</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1.25rem;"><strong>Organizer:</strong> IEEE Indonesia Section · AESS / GRSS Chapter</p>
+                                    <a href="https://doi.org/10.1109/AGERS67633.2025.11446373" target="_blank" rel="noopener noreferrer" class="button button-primary">Read the Paper</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </article>
+
+                    <!-- Sidebar -->
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Status</strong><br>Published — IEEE AGERS 2025</li>
+                                <li><strong>Dataset</strong><br>3,499 UAV images</li>
+                                <li><strong>Classes</strong><br>5 (Healthy, Yellowing, Small, Dead, Grass)</li>
+                                <li><strong>Best Model</strong><br>YOLOv12s — 99.4% mAP@0.5</li>
+                                <li><strong>Deployment</strong><br>Streamlit Web Application</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>Python</strong> — Core language</li>
+                                <li><strong>PyTorch</strong> — Training framework</li>
+                                <li><strong>YOLOv8 & v12</strong> — Detection models</li>
+                                <li><strong>OpenCV</strong> — Image processing</li>
+                                <li><strong>Streamlit</strong> — Web deployment</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="violence-detection.html">Real-Time Crisis Recognition System</a></li>
+                                <li><a href="wildfire-early-warning.html">Wildfire Early Warning System</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

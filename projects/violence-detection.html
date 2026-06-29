@@ -1,332 +1,377 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-
-
-
-
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Crisis Recognition & Response System | Dule Abera</title>
+    <meta name="description" content="Multimodal AI framework for protest violence detection using YOLO object detection, 17-keypoint pose estimation, and behavioral scoring. Published at ICCED 2025.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+        }
+        .kpi-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem; text-align: center;
+        }
+        .kpi-number {
+            display: block; font-size: 2.25rem; font-weight: 800;
+            color: var(--text-primary); letter-spacing: -1px; line-height: 1;
+        }
+        .kpi-label {
+            display: block; font-size: 0.78rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--text-secondary); margin-top: 0.3rem;
+        }
+        .page-layout {
+            display: grid; grid-template-columns: 1fr 300px;
+            gap: 4rem; align-items: start;
+        }
+        @media (max-width: 900px) { .page-layout { grid-template-columns: 1fr; } }
+        .case-heading {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.12em; color: var(--text-secondary);
+            margin-bottom: 0.4rem; margin-top: 2.5rem;
+        }
+        .case-heading:first-of-type { margin-top: 0; }
+        .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .case-body { font-size: 0.97rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1rem; }
+        .insight-callout {
+            border-left: 3px solid var(--text-primary);
+            padding: 0.9rem 1.2rem; background: var(--bg-alt);
+            border-radius: 0 6px 6px 0; margin: 1.25rem 0;
+            font-size: 0.93rem; color: var(--text-secondary);
+        }
+        .insight-callout strong { color: var(--text-primary); }
+        .project-image {
+            border: 1px solid var(--border-color); border-radius: 6px;
+            overflow: hidden; margin: 1.25rem 0;
+        }
+        .project-image img { width: 100%; display: block; }
+        .project-image video { width: 100%; display: block; }
+        .project-image figcaption {
+            padding: 0.6rem 1rem; font-size: 0.8rem;
+            color: var(--text-secondary); background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+        }
+        .img-gallery {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem; margin: 1.25rem 0;
+        }
+        .img-gallery figure {
+            border: 1px solid var(--border-color); border-radius: 6px;
+            overflow: hidden; margin: 0;
+        }
+        .img-gallery img { width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover; }
+        .img-gallery figcaption {
+            font-size: 0.75rem; padding: 0.5rem 0.75rem;
+            background: var(--bg-alt); color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+        .video-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin: 1.25rem 0;
+        }
+        .video-card { border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        .video-card video { width: 100%; display: block; }
+        .video-card .vid-info { padding: 0.75rem 1rem; background: var(--bg-alt); }
+        .video-card .vid-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .video-card .vid-desc { font-size: 0.82rem; color: var(--text-secondary); }
+        .pipeline-steps { list-style: none; padding: 0; margin: 1.25rem 0; }
+        .pipeline-steps li { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+        .step-num {
+            flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+            background: var(--text-primary); color: var(--bg-color);
+            font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px;
+        }
+        .step-content h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .step-content p { font-size: 0.88rem; margin: 0; }
+        .publication-box {
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 1.5rem; margin-top: 2.5rem; background: var(--bg-alt);
+        }
+        .sidebar-card {
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 1.25rem; margin-bottom: 1.25rem;
+        }
+        .sidebar-card h3 {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-secondary);
+            margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.88rem; }
+        .sidebar-card li { padding: 0.35rem 0; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+        .sidebar-card li:last-child { border-bottom: none; }
+        .sidebar-card li strong { color: var(--text-primary); }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.78rem; font-weight: 500;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            padding: 0.2rem 0.6rem; color: var(--text-secondary); background: var(--bg-alt);
+        }
+        .breadcrumb { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .breadcrumb a { text-decoration: none; color: var(--text-secondary); }
+        .breadcrumb a:hover { color: var(--text-primary); }
+        .breadcrumb span { margin: 0 0.4rem; }
+        .ieee-badge {
+            display: inline-block; background: var(--text-primary); color: var(--bg-color);
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; padding: 0.25rem 0.7rem; border-radius: 4px; margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<main id="main-content"><section class="section"><div class="container">
-<header class="project-hero">
-<div class="inner">
-<div class="breadcrumb-row">
-<a href="../index.html">Home</a>
-<i class="fas fa-chevron-right"></i>
-<a href="../index.html#projects">Projects</a>
-<i class="fas fa-chevron-right"></i>
-<span>Violence Detection</span>
-</div>
-<div class="cat-badge">
-<i class="fas fa-exclamation-triangle"></i> Computer Vision · Behavioural AI
-            </div>
-<h1>Violence Detection System</h1>
-<p class="hero-desc">
-                A deep learning system that detects violent behaviour — including <strong>physical fights</strong> and
-                <strong>object-throwing</strong> — in video streams using a CNN + LSTM architecture for spatial-temporal
-                analysis. Enables automated alerting in surveillance environments.
-            </p>
-<div class="tag-row">
-<span class="tag">CNN</span>
-<span class="tag">LSTM</span>
-<span class="tag">Python</span>
-<span class="tag">OpenCV</span>
-<span class="tag">TensorFlow / Keras</span>
-<span class="tag">PyTorch</span>
-<span class="tag">Action Recognition</span>
-<span class="tag">Video Classification</span>
-<span class="tag">Temporal Analysis</span>
-</div>
-<div class="hero-stats">
-<div class="hs-item">
-<span class="hs-num">2</span>
-<span class="hs-lab">Behaviour Classes</span>
-</div>
-<div class="hs-item">
-<span class="hs-num">CNN+LSTM</span>
-<span class="hs-lab">Architecture</span>
-</div>
-<div class="hs-item">
-<span class="hs-num">4</span>
-<span class="hs-lab">Demo Videos</span>
-</div>
-<div class="hs-item">
-<span class="hs-num">Temporal</span>
-<span class="hs-lab">Analysis Mode</span>
-</div>
-</div>
-</div>
-</header>
-<main>
-<!-- Model Architecture -->
-<section>
-<p class="sec-label">Architecture</p>
-<h2>Model Pipeline</h2>
-<p class="sec-desc">The system processes sequences of video frames through a spatial CNN encoder followed by
-                a temporal LSTM, enabling context-aware violence classification.</p>
-<div aria-label="Violence detection model pipeline diagram" class="arch-flow" role="img">
-<div class="arch-block">
-<i class="fas fa-video ab-icon"></i>
-<div class="ab-title">Video Input</div>
-<div class="ab-sub">Frames extracted</div>
-</div>
-<div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="arch-block">
-<i class="fas fa-th-large ab-icon"></i>
-<div class="ab-title">Frame Sequence</div>
-<div class="ab-sub">N consecutive frames</div>
-</div>
-<div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="arch-block">
-<i class="fas fa-brain ab-icon"></i>
-<div class="ab-title">CNN Encoder</div>
-<div class="ab-sub">Spatial features per frame</div>
-</div>
-<div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="arch-block">
-<i class="fas fa-stream ab-icon"></i>
-<div class="ab-title">LSTM</div>
-<div class="ab-sub">Temporal reasoning</div>
-</div>
-<div class="arch-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="arch-block">
-<i class="fas fa-tag ab-icon"></i>
-<div class="ab-title">Classification</div>
-<div class="ab-sub">Violent / Non-violent</div>
-</div>
-</div>
-</section>
-<!-- Detection Image Samples -->
-<section>
-<p class="sec-label">Detection Outputs</p>
-<h2>Detected Behaviour Samples</h2>
-<p class="sec-desc">Sample output frames showing the system classifying both <em>physical fights</em> and
-                <em>object-throwing</em> events with overlay annotations.
-            </p>
-<div class="img-grid">
-<!-- Throwing detection images -->
-<div class="img-card">
-<img alt="Throwing detection — frame 1" loading="lazy" src="../assets/images/throwing-detection/Picture1.png"/>
-<div class="img-cap">
-<div class="img-cap-title">Throwing Detection</div>
-<span class="img-cap-badge badge-throwing">Object Thrown</span>
-</div>
-</div>
-<div class="img-card">
-<img alt="Throwing detection — frame 2" loading="lazy" src="../assets/images/throwing-detection/Picture2.png"/>
-<div class="img-cap">
-<div class="img-cap-title">Throwing Detection</div>
-<span class="img-cap-badge badge-throwing">Object Thrown</span>
-</div>
-</div>
-<div class="img-card">
-<img alt="Throwing detection — frame 3" loading="lazy" src="../assets/images/throwing-detection/Picture3.png"/>
-<div class="img-cap">
-<div class="img-cap-title">Throwing Detection</div>
-<span class="img-cap-badge badge-throwing">Object Thrown</span>
-</div>
-</div>
-<div class="img-card">
-<img alt="Throwing action detection output" loading="lazy" src="../assets/images/throwing-detection/7db58318c90b346cd3bee0d06e7fb7cdc580c8096fce60cfe11142ba.jpg"/>
-<div class="img-cap">
-<div class="img-cap-title">Throwing Action Sample</div>
-<span class="img-cap-badge badge-throwing">Classified</span>
-</div>
-</div>
-<div class="img-card">
-<img alt="Throwing action detection — alternate frame" loading="lazy" src="../assets/images/throwing-detection/8c490210cf04be1fd1624a58dda2aa73c8d1719764a8220d3008eefe.jpg"/>
-<div class="img-cap">
-<div class="img-cap-title">Throwing Sample 2</div>
-<span class="img-cap-badge badge-throwing">Classified</span>
-</div>
-</div>
-<div class="img-card">
-<img alt="Violence / fighting detection output" loading="lazy" src="../assets/images/throwing-detection/fa068d0914548f9239abefbeda3630990508d2430b266dc4b4fdcbd5.jpg"/>
-<div class="img-cap">
-<div class="img-cap-title">Fight Detection</div>
-<span class="img-cap-badge badge-violent">Violent</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Demo Videos -->
-<section>
-<p class="sec-label">Live Demos</p>
-<h2>Detection Demo Videos</h2>
-<p class="sec-desc">Recorded inference demonstrations across fight detection and object-throwing scenarios.
-                Larger files may take a moment to buffer.</p>
-<div class="video-grid">
-<div class="video-card">
-<video controls="" preload="metadata">
-<source src="../assets/videos/throwing-detection/0303 (1).mp4" type="video/mp4"/>
-                        Your browser does not support the video tag.
-                    </video>
-<div class="vid-info">
-<div class="vid-title">Throwing Detection — Demo 1</div>
-<div class="vid-desc">Real-time inference on an object-throwing scenario. The model flags and
-                            annotates throwing actions frame by frame.</div>
-</div>
-</div>
-<div class="video-card">
-<video controls="" preload="metadata">
-<source src="../assets/videos/throwing-detection/0303 (1)(2).mp4" type="video/mp4"/>
-                        Your browser does not support the video tag.
-                    </video>
-<div class="vid-info">
-<div class="vid-title">Violence / Fight Detection — Demo 2</div>
-<div class="vid-desc">Behavioural classification sequence showing fight detection and movement
-                            analysis using the LSTM temporal layer.</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Overview -->
-<section>
-<p class="sec-label">Technical Deep-Dive</p>
-<h2>Project Overview</h2>
-<div class="overview-grid">
-<div class="overview-body">
-<p>
-                        This project builds a <strong>video-based violence detection system</strong> capable of
-                        identifying two types of aggressive behaviour: <em>physical fights</em> (punching, wrestling,
-                        brawling) and <em>object-throwing</em>. Unlike single-frame object detectors, this model
-                        processes <strong>sequences of frames</strong> to capture the temporal motion patterns that
-                        uniquely characterise violent acts.
-                    </p>
-<p>
-                        The architecture combines a <strong>Convolutional Neural Network (CNN)</strong> to extract
-                        spatial features per frame with a <strong>Long Short-Term Memory (LSTM)</strong> network to
-                        reason over time. This lets the model understand not just what is in a frame, but the <em>motion
-                            trajectory</em> across frames — making it far more robust to false positives from static
-                        violent-looking poses.
-                    </p>
-<h3>Behaviour Classes Detected</h3>
-<ul>
-<li><strong>Physical Fighting</strong> — punching, kicking, brawling, wrestling</li>
-<li><strong>Object Throwing</strong> — any thrown projectile directed toward people or property
-                        </li>
-<li><strong>Non-violent</strong> — normal movement baseline (walking, standing, running)</li>
-</ul>
-<h3>Technical Implementation</h3>
-<ul>
-<li>Input: fixed-length frame sequences (e.g., 16–32 frames per inference window)</li>
-<li>CNN backbone: pre-trained ResNet or MobileNet for spatial feature embedding</li>
-<li>LSTM layers: 2-layer LSTM captures temporal motion dynamics</li>
-<li>Sliding window inference for continuous real-time processing</li>
-<li>Temporal smoothing (majority vote over recent windows) reduces false alarm rate</li>
-<li>Output: per-window label overlaid on video frames in real time</li>
-</ul>
-<h3>Training &amp; Data</h3>
-<ul>
-<li>Dataset: custom-collected + publicly available violence / non-violence video clips</li>
-<li>Frame extraction at uniform intervals ensures temporal consistency</li>
-<li>Augmentation: random crop, horizontal flip, colour jitter, temporal jitter</li>
-<li>Loss: categorical cross-entropy with class-weighted sampling for imbalance</li>
-<li>Training: GPU-accelerated on Google Colab / Kaggle</li>
-</ul>
-<h3>Applications</h3>
-<ul>
-<li>Automated CCTV monitoring in public spaces</li>
-<li>School and campus safety systems</li>
-<li>Stadium and event security</li>
-<li>Prison and detention facility surveillance</li>
-<li>Triggering alerts for first-responder dispatch</li>
-</ul>
-</div>
-<aside>
-<div class="sidebar-card">
-<h3>Project Details</h3>
-<ul class="detail-list">
-<li><strong>Category</strong> <span>Computer Vision</span></li>
-<li><strong>Task</strong> <span>Video Classification</span></li>
-<li><strong>Architecture</strong> <span>CNN + LSTM</span></li>
-<li><strong>Classes</strong> <span>Fighting, Throwing, Normal</span></li>
-<li><strong>Input</strong> <span>Video frame sequences</span></li>
-<li><strong>Framework</strong> <span>TensorFlow / Keras</span></li>
-<li><strong>Inference</strong> <span>Sliding window, real-time</span></li>
-<li><strong>Status</strong> <span>Completed</span></li>
-</ul>
-</div>
-<div class="sidebar-card">
-<h3>Training Notebook</h3>
-<p>Full training notebook
-                            (Google Colab / Kaggle compatible) available on GitHub.</p>
-<a class="btn-sidebar" href="https://github.com/duleab" rel="noopener noreferrer" target="_blank">
-<i class="fab fa-github"></i> View on GitHub
-                        </a>
-</div>
-<div class="sidebar-card">
-<h3>Related Projects</h3>
-<a class="btn-sidebar" href="weapon-detection.html">
-<i class="fas fa-crosshairs"></i> Weapon Detection
-                        </a>
-<a class="btn-sidebar" href="police-officer-detection.html">
-<i class="fas fa-user-shield"></i> Police Officer Detection
-                        </a>
-</div>
-</aside>
-</div>
-</section>
-<!-- ── CONFERENCE PRESENTATION ──────────────────────────── -->
-<section>
-<div>
-<h2>
-<i class="fas fa-chalkboard-teacher"></i>
-                    Conference Presentation
-                </h2>
-<p>
-                    This research was published and presented at an international conference.
+    <main id="main-content">
+
+        <!-- Hero -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a>
+                    <span aria-hidden="true">›</span>
+                    <a href="../index.html#projects">Projects</a>
+                    <span aria-hidden="true">›</span>
+                    <span>Real-Time Crisis Recognition System</span>
+                </nav>
+                <span class="ieee-badge">Published · ICCED 2025</span>
+                <h1>Real-Time Crisis Recognition &amp; Response System</h1>
+                <p style="font-size:1.1rem; color:var(--text-secondary); max-width:680px; margin-bottom:1.5rem; line-height:1.7;">
+                    A multimodal AI framework combining YOLO object detection, 17-keypoint pose estimation, and behavioral scoring to classify protest violence in real time — generating timestamped crisis alerts for law enforcement situational awareness.
                 </p>
-<div>
-<!-- Certificate image -->
-<div>
-<img alt="ICCED 2025 Presenter Certificate — Dule Abera" src="../assets/images/icced_certificate.jpg"/>
-</div>
-<!-- Conference details -->
-<div>
-<div>
-<i class="fas fa-award"></i> PRESENTER
-                        </div>
-<h3>
-                            Real-Time Crisis Recognition and Response System for Protest Violence Detection
-                        </h3>
-<div>
-<div>
-<i class="fas fa-university"></i>
-<span><strong>ICCED 2025</strong> — 11th International Conference on Computing,
-                                    Engineering, and Design</span>
-</div>
-<div>
-<i class="fas fa-map-marker-alt"></i>
-<span>Badr City, Cairo, Egypt</span>
-</div>
-<div>
-<i class="fas fa-calendar-alt"></i>
-<span>November 13 – 15, 2025</span>
-</div>
-<div>
-<i class="fas fa-certificate"></i>
-<span>Certificate No. P-008/ICCED-SOCS/XI/2025</span>
-</div>
-</div>
-<!-- Read Paper Button -->
-<div>
-<a href="../assets/Publication/Real-Time Crisis Recognition and Response System for Protest Violence Detection.pdf" rel="noopener noreferrer" target="_blank">
-<i class="fas fa-file-pdf"></i> Read Research Paper
-                            </a>
-</div>
-</div>
-</div>
-</div>
-</section>
-</main>
-</div></section></main>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">YOLO</span>
+                    <span class="tag">OpenCV</span>
+                    <span class="tag">Pose Estimation</span>
+                    <span class="tag">Computer Vision</span>
+                    <span class="tag">PyTorch</span>
+                    <span class="tag">Real-Time Inference</span>
+                </div>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a href="https://doi.org/10.1109/ICCED68324.2025.11324702" target="_blank" rel="noopener noreferrer" class="button button-primary">Read IEEE Paper</a>
+                    <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-secondary">View on GitHub</a>
+                </div>
+            </div>
+        </div>
 
+        <!-- KPI Strip -->
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div>
+                        <span class="kpi-number">17</span>
+                        <span class="kpi-label">Body Keypoints Tracked</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">3</span>
+                        <span class="kpi-label">Violence Classes</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">Real-Time</span>
+                        <span class="kpi-label">Inference Speed</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">IEEE</span>
+                        <span class="kpi-label">ICCED 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+
+                    <!-- Main Content -->
+                    <article>
+
+                        <p class="case-heading">System Architecture</p>
+                        <h2 class="case-title">Multimodal Violence Detection Framework</h2>
+                        <p class="case-body">
+                            Unlike single-frame classifiers, this system processes <strong>sequences of video frames</strong> to capture the temporal motion patterns that uniquely characterize violent acts. It combines a YOLO-based detector for person localization, a 17-keypoint pose estimation module for skeletal tracking, and a behavioral scoring algorithm that analyzes joint angles and hand-object proximity to classify aggression level.
+                        </p>
+
+                        <div class="insight-callout">
+                            <strong>Key Insight:</strong> Analyzing joint velocity and arm trajectory over a sliding window — rather than static pose snapshots — dramatically reduces false positives from non-violent poses that visually resemble aggression.
+                        </div>
+
+                        <p class="case-heading">Detection Pipeline</p>
+                        <h2 class="case-title">Four-Stage Processing Pipeline</h2>
+
+                        <ol class="pipeline-steps">
+                            <li>
+                                <span class="step-num">1</span>
+                                <div class="step-content">
+                                    <h4>Person Detection (YOLO)</h4>
+                                    <p>Each video frame is processed by a YOLO model to detect and localize all persons in the scene with bounding boxes.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">2</span>
+                                <div class="step-content">
+                                    <h4>17-Keypoint Pose Estimation</h4>
+                                    <p>For each detected person, a pose estimation model extracts 17 anatomical keypoints (shoulders, elbows, wrists, hips, knees, etc.) to build a full skeletal representation.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">3</span>
+                                <div class="step-content">
+                                    <h4>Behavioral Scoring</h4>
+                                    <p>Joint angles, limb velocities, and hand-object proximity are computed across frames. A behavioral scoring model classifies the sequence as Throwing, Fighting, or Normal.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">4</span>
+                                <div class="step-content">
+                                    <h4>Alert Generation</h4>
+                                    <p>On a positive classification, the system generates a timestamped crisis alert with annotated keyframes, providing law enforcement with precise situational awareness.</p>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <p class="case-heading">Violence Classes</p>
+                        <h2 class="case-title">Three Behavioural Categories</h2>
+                        <ul class="case-body" style="padding-left:1.25rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Physical Fighting</strong> — Punching, kicking, brawling, wrestling identified through rapid limb movement and close inter-person proximity.</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Object Throwing</strong> — Any thrown projectile directed toward people or property, detected via arm-arc trajectory analysis.</li>
+                            <li><strong>Non-violent</strong> — Normal movement baseline (walking, standing, running) used as a negative class to reduce false alarms.</li>
+                        </ul>
+
+                        <p class="case-heading">Detection Outputs</p>
+                        <h2 class="case-title">Sample Annotated Frames</h2>
+                        <p class="case-body">Sample output frames showing the system classifying physical fights and object-throwing events with overlay annotations and keypoint visualizations.</p>
+                        <div class="img-gallery">
+                            <figure>
+                                <img src="../assets/images/throwing-detection/Picture1.png" alt="Throwing detection output frame 1 with YOLO bounding box" loading="lazy">
+                                <figcaption>Throwing Detection — Frame 1</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="../assets/images/throwing-detection/Picture2.png" alt="Throwing detection output frame 2" loading="lazy">
+                                <figcaption>Throwing Detection — Frame 2</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="../assets/images/throwing-detection/Picture3.png" alt="Throwing detection output frame 3" loading="lazy">
+                                <figcaption>Throwing Detection — Frame 3</figcaption>
+                            </figure>
+                        </div>
+
+                        <p class="case-heading">Demo Videos</p>
+                        <h2 class="case-title">Live Inference Recordings</h2>
+                        <p class="case-body">Recorded inference demonstrations across object-throwing and fight detection scenarios.</p>
+                        <div class="video-grid">
+                            <div class="video-card">
+                                <video controls preload="metadata" aria-label="Throwing detection demo 1">
+                                    <source src="../assets/videos/throwing-detection/0303 (1).mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="vid-info">
+                                    <div class="vid-title">Throwing Detection — Demo 1</div>
+                                    <div class="vid-desc">Real-time inference on an object-throwing scenario, with frame-by-frame annotations.</div>
+                                </div>
+                            </div>
+                            <div class="video-card">
+                                <video controls preload="metadata" aria-label="Fight detection demo 2">
+                                    <source src="../assets/videos/throwing-detection/0303 (1)(2).mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="vid-info">
+                                    <div class="vid-title">Fight Detection — Demo 2</div>
+                                    <div class="vid-desc">Behavioral classification sequence showing fight detection and movement analysis.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Conference -->
+                        <div class="publication-box">
+                            <h2 style="font-size:1.2rem; margin-bottom:0.25rem;">Conference Presentation</h2>
+                            <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1.25rem;">This research was presented and published at an international IEEE conference.</p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+                                <figure class="project-image" style="margin:0;">
+                                    <img src="../assets/images/icced_certificate.jpg" alt="ICCED 2025 Presenter Certificate — Dule Abera">
+                                    <figcaption>ICCED 2025 — Presenter Certificate</figcaption>
+                                </figure>
+                                <div>
+                                    <h3 style="font-size:1rem; margin-bottom:0.75rem;">Real-Time Crisis Recognition and Response System for Protest Violence Detection</h3>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Conference:</strong> ICCED 2025 (11th International Conference on Computing, Engineering, and Design)</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Venue:</strong> Badr City, Cairo, Egypt</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.35rem;"><strong>Date:</strong> November 13–15, 2025</p>
+                                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1.25rem;"><strong>Certificate:</strong> P-008/ICCED-SOCS/XI/2025</p>
+                                    <a href="https://doi.org/10.1109/ICCED68324.2025.11324702" target="_blank" rel="noopener noreferrer" class="button button-primary">Read the Paper</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </article>
+
+                    <!-- Sidebar -->
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Status</strong><br>Published — ICCED 2025</li>
+                                <li><strong>Category</strong><br>Computer Vision · Video Analysis</li>
+                                <li><strong>Architecture</strong><br>YOLO + Pose Estimation + LSTM</li>
+                                <li><strong>Classes</strong><br>Fighting, Throwing, Non-violent</li>
+                                <li><strong>Inference</strong><br>Real-time, sliding window</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Technology Stack</h3>
+                            <ul>
+                                <li><strong>YOLO</strong> — Person detection</li>
+                                <li><strong>OpenCV</strong> — Video processing</li>
+                                <li><strong>PyTorch</strong> — Model training</li>
+                                <li><strong>Pose Estimation</strong> — 17-keypoint skeleton</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="oil-palm-tree-detection.html">Oil Palm Tree Detection</a></li>
+                                <li><a href="wildfire-early-warning.html">Wildfire Early Warning System</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

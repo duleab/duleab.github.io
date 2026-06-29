@@ -1,177 +1,359 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-
-
-
-
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Fake Image Detection | Dule Abera</title>
+    <meta name="description" content="End-to-end computer vision pipeline for detecting AI-generated images using frequency-domain forensic analysis, EfficientNetB0 transfer learning, and Grad-CAM explainability.">
+    <meta name="author" content="Dule Abera">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+    <style>
+        .project-meta-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .kpi-number {
+            display: block;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .kpi-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) { .page-layout { grid-template-columns: 1fr; } }
+        .case-heading {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            margin-top: 2.5rem;
+        }
+        .case-heading:first-of-type { margin-top: 0; }
+        .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .case-body { font-size: 0.97rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1rem; }
+        .project-image {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1.25rem 0;
+        }
+        .project-image img { width: 100%; display: block; }
+        .project-image figcaption {
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+        }
+        .insight-callout {
+            border-left: 3px solid var(--text-primary);
+            padding: 0.9rem 1.2rem;
+            background: var(--bg-alt);
+            border-radius: 0 6px 6px 0;
+            margin: 1.25rem 0;
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+        }
+        .insight-callout strong { color: var(--text-primary); }
+        .pipeline-steps { list-style: none; padding: 0; margin: 1.25rem 0; }
+        .pipeline-steps li { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+        .step-num {
+            flex-shrink: 0;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-color);
+            font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            margin-top: 2px;
+        }
+        .step-content h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .step-content p { font-size: 0.88rem; margin: 0; }
+        .perf-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+        .perf-table th {
+            text-align: left;
+            padding: 0.6rem 0.75rem;
+            background: var(--bg-alt);
+            border: 1px solid var(--border-color);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        .perf-table td {
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .perf-table td:first-child { font-weight: 600; color: var(--text-primary); }
+        .perf-table .highlight td { background: var(--bg-alt); font-weight: 600; }
+        .sidebar-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .sidebar-card h3 {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-secondary);
+            margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.88rem; }
+        .sidebar-card li {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .sidebar-card li:last-child { border-bottom: none; }
+        .sidebar-card li strong { color: var(--text-primary); }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.78rem; font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 4px; padding: 0.2rem 0.6rem;
+            color: var(--text-secondary); background: var(--bg-alt);
+        }
+        .breadcrumb { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .breadcrumb a { text-decoration: none; color: var(--text-secondary); }
+        .breadcrumb a:hover { color: var(--text-primary); }
+        .breadcrumb span { margin: 0 0.4rem; }
+    </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<main id="main-content"><section class="section"><div class="container">
- ── NAV ── 
+    <main id="main-content">
 
- ── HERO ── 
-<section class="hero-section">
-<div class="container">
-<div class="hero-badge">
-<i class="fas fa-search"></i> Forensic Deep Learning · Computer Vision
+        <!-- Hero -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a>
+                    <span aria-hidden="true">›</span>
+                    <a href="../index.html#projects">Projects</a>
+                    <span aria-hidden="true">›</span>
+                    <span>Forensic Fake Image Detection</span>
+                </nav>
+                <h1>Forensic Fake Image Detection Pipeline</h1>
+                <p style="font-size:1.1rem; color:var(--text-secondary); max-width:680px; margin-bottom:1.5rem; line-height:1.7;">
+                    An end-to-end computer vision pipeline for detecting AI-generated images (Stable Diffusion) via frequency-domain artifact analysis, EfficientNetB0 transfer learning, and Grad-CAM explainability.
+                </p>
+                <div class="tag-list" style="margin-bottom:2rem;">
+                    <span class="tag">PyTorch</span>
+                    <span class="tag">EfficientNetB0</span>
+                    <span class="tag">Computer Vision</span>
+                    <span class="tag">Grad-CAM</span>
+                    <span class="tag">Transfer Learning</span>
+                    <span class="tag">FFT</span>
+                    <span class="tag">Streamlit</span>
+                </div>
+                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-primary">View on GitHub</a>
             </div>
-<h1 class="hero-title">Forensic Fake Image Detection<br/>Pipeline</h1>
-<p class="hero-subtitle">
-                An end-to-end computer vision pipeline explicitly designed for detecting AI-generated media (Stable Diffusion) via frequency-domain artifact analysis and EfficientNetB0 transfer learning.
-            </p>
-<div class="tag-row">
-<span class="tech-badge purple">PyTorch</span>
-<span class="tech-badge blue">EfficientNetB0</span>
-<span class="tech-badge green">Computer Vision</span>
-<span class="tech-badge orange">Grad-CAM</span>
-<span class="tech-badge purple">Transfer Learning</span>
-</div>
-<div class="d-flex gap-3 flex-wrap">
-<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
-<i class="fab fa-github"></i> View Repository
-                </a>
-<a class="btn-cta" href="#methodology">
-<i class="fas fa-flask"></i> Methodology
-                </a>
-</div>
-</div>
-</section>
- ── KPI STRIP ── 
-<section class="kpi-strip">
-<div class="container">
-<div class="row g-0 text-center">
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number green">97.2%</span>
-<span class="kpi-label">Recall Rate</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number blue">+5.37%</span>
-<span class="kpi-label">Accuracy Gain</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number purple">0.95</span>
-<span class="kpi-label">F1 Score</span>
-</div>
-</div>
-<div class="col-6 col-md-3">
-<div class="kpi-item">
-<span class="kpi-number orange">Phase-2</span>
-<span class="kpi-label">Transfer Learning</span>
-</div>
-</div>
-</div>
-</div>
-</section>
- ── MAIN CONTENT ── 
-<div class="content-wrap">
-<div class="two-col">
-<!-- ── LEFT COLUMN ── -->
-<div id="methodology">
-<!-- Frequency Analysis -->
-<div class="section-label">Frequency Domain Features</div>
-<h2 class="section-title">Detecting Invisible Generative Artifacts</h2>
-<p>
-                    Visual inspection often fails against modern generative models like Stable Diffusion, especially at low resolutions. 
-                    This pipeline utilizes forensic signals in the frequency and texture domains to identify synthetic media. Fast Fourier Transform (FFT) analysis revealed substantial radial power spectrum divergences at mid-high frequencies.
-                </p>
-<div class="img-frame">
-<img alt="FFT Magnitude Spectra comparing Real and Fake frequency content" src="../assets/images/fake-image/fft_spectra.png"/>
-<div class="img-caption">Fig 1 — FFT Magnitude Spectra: Comparing Real (left) and Fake (center) frequency content showing distinct high-frequency structural differences in synthetic media.</div>
-</div>
-<div class="insight-box">
-<p><i class="fas fa-lightbulb"></i>
-<strong>Forensic Reality:</strong> The core finding of this research demonstrates that forensic signals (like spectral signatures and LBP patterns) are statistically far more reliable for detection than semantic image content, which frequently tricks standard spatial classifiers.</p>
-</div>
-<!-- Transfer Learning -->
-<div class="section-label">Model Architecture</div>
-<h2 class="section-title">Two-Phase EfficientNetB0 Training</h2>
-<p>
-                    A scratch-trained CNN baseline suffered from overfitting and limited recall. To resolve this, a pre-trained EfficientNetB0 model was implemented using a strict two-phase transfer learning methodology. This approach yielded a dramatic +17.1 percentage point improvement in recall over the baseline.
-                </p>
-<div class="timeline mt-4">
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Phase 1: Feature Extraction</div>
-<div class="tl-title">Freezing Backbone Weights</div>
-<p class="tl-body">Training only the classification head to map the pre-learned generic feature space to the specific forensic detection objective, ensuring base representations are preserved.</p>
-</div>
-<div class="tl-item">
-<div class="tl-dot"></div>
-<div class="tl-step">Phase 2: Fine-Tuning</div>
-<div class="tl-title">Unfreezing Top Layers</div>
-<p class="tl-body">Gradually unfreezing the final blocks of the EfficientNet architecture with a low learning rate. This allowed the model to specifically adapt its texture and spatial perception to generative artifact patterns without catastrophic forgetting.</p>
-</div>
-</div>
-<!-- Grad-CAM Interpretability -->
-<div class="section-label">Explainability</div>
-<h2 class="section-title">Grad-CAM Interpretability</h2>
-<p>
-                    For content moderation applications, establishing trust is critical. Gradient-weighted Class Activation Mapping (Grad-CAM) was implemented to guarantee the model focuses on synthetic texture cues and boundaries rather than "cheating" by memorizing dataset biases (e.g. background scenes).
-                </p>
-<div class="img-frame">
-<img alt="Grad-CAM error analysis heatmaps" src="../assets/images/fake-image/gradcam.png"/>
-<div class="img-caption">Fig 2 — Grad-CAM Error Analysis: Demonstrating the model's focus on texture anomalies and edge irregularities, proving it learns structural features over simple semantics.</div>
-</div>
-<!-- CTA -->
-<div class="cta-strip mt-5">
-<div>
-<h4>Explore the Insight Report</h4>
-<p>View the complete methodology and validation in the repository whitepaper.</p>
-</div>
-<a class="btn-cta" href="https://github.com/duleab" rel="noopener" target="_blank">
-                        View Repository <i class="fas fa-arrow-right ms-2"></i>
-</a>
-</div>
-</div><!-- /left col -->
-<!-- ── RIGHT SIDEBAR ── -->
-<aside>
-<!-- Quick Info -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Project Details</div>
-<ul>
-<li><i class="fas fa-bullseye"></i><div><b>Objective</b><br/>Forensic deepfake detection</div></li>
-<li><i class="fas fa-tags"></i><div><b>Category</b><br/>Computer Vision · PyTorch</div></li>
-<li><i class="fas fa-chart-line"></i><div><b>Performance</b><br/>95.1% Accuracy, 97.2% Recall</div></li>
-</ul>
-</div>
-<!-- Technology -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Core Technology</div>
-<ul>
-<li><i class="fab fa-python"></i><b>PyTorch</b> Deep learning framework</li>
-<li><i class="fas fa-network-wired"></i><b>EfficientNetB0</b> Transfer learning</li>
-<li><i class="fas fa-wave-square"></i><b>FFT</b> Frequency domain analysis</li>
-<li><i class="fas fa-eye"></i><b>Grad-CAM</b> Model explainability</li>
-<li><i class="fas fa-desktop"></i><b>Streamlit</b> Inference application</li>
-</ul>
-</div>
-<!-- Related Projects -->
-<div class="glass-card sidebar-block">
-<div class="blk-title">Related Projects</div>
-<ul>
-<li><i class="fas fa-link"></i><a href="crisis-detection.html">Real-Time Crisis Detection</a></li>
-<li><i class="fas fa-link"></i><a href="wildfire-early-warning.html">Wildfire Early Warning</a></li>
-</ul>
-</div>
-</aside>
-</div>
-</div>
- ── FOOTER ── 
+        </div>
 
+        <!-- KPI Strip -->
+        <div class="project-meta-strip" style="margin-top:2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div>
+                        <span class="kpi-number">97.2%</span>
+                        <span class="kpi-label">Recall Rate</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">95.1%</span>
+                        <span class="kpi-label">Accuracy</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">0.95</span>
+                        <span class="kpi-label">F1 Score</span>
+                    </div>
+                    <div>
+                        <span class="kpi-number">+17.1%</span>
+                        <span class="kpi-label">Recall Gain vs. Baseline</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-</div></section></main>
+        <!-- Body -->
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
 
+                    <!-- Main Content -->
+                    <article id="methodology">
+
+                        <p class="case-heading">Frequency Domain Analysis</p>
+                        <h2 class="case-title">Detecting Invisible Generative Artifacts</h2>
+                        <p class="case-body">
+                            Visual inspection often fails against modern generative models like Stable Diffusion, especially at low resolutions. This pipeline uses forensic signals in the frequency and texture domains to identify synthetic media. Fast Fourier Transform (FFT) analysis revealed substantial radial power spectrum divergences at mid-high spatial frequencies — patterns invisible to the human eye but detectable by the model.
+                        </p>
+
+                        <figure class="project-image">
+                            <img src="../assets/images/fake-image/fft_spectra.png" alt="FFT Magnitude Spectra comparing Real and AI-generated image frequency content">
+                            <figcaption>Fig 1 — FFT Magnitude Spectra: Comparing Real (left) and AI-generated (center) frequency content, showing distinct high-frequency structural differences in synthetic media.</figcaption>
+                        </figure>
+
+                        <div class="insight-callout">
+                            <strong>Core Finding:</strong> Forensic signals such as spectral signatures and Local Binary Pattern (LBP) texture features are statistically far more reliable for deepfake detection than semantic image content, which frequently misleads standard spatial classifiers.
+                        </div>
+
+                        <p class="case-heading">Model Architecture</p>
+                        <h2 class="case-title">Two-Phase EfficientNetB0 Transfer Learning</h2>
+                        <p class="case-body">
+                            A scratch-trained CNN baseline suffered from overfitting and recall limitations. To address this, a pre-trained EfficientNetB0 model was implemented using a strict two-phase transfer learning strategy — yielding a +17.1 percentage point improvement in recall.
+                        </p>
+
+                        <ol class="pipeline-steps">
+                            <li>
+                                <span class="step-num">1</span>
+                                <div class="step-content">
+                                    <h4>Phase 1 — Feature Extraction (Frozen Backbone)</h4>
+                                    <p>Trained only the classification head, mapping the pre-learned ImageNet feature space to the forensic detection objective. Backbone weights were frozen to preserve low-level texture representations.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">2</span>
+                                <div class="step-content">
+                                    <h4>Phase 2 — Fine-Tuning (Unfrozen Top Layers)</h4>
+                                    <p>Gradually unfroze the final EfficientNet blocks with a reduced learning rate. This allowed the model to adapt its texture perception specifically to generative artifact patterns without catastrophic forgetting.</p>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <h3 style="font-size:1rem; margin-bottom:0.75rem; margin-top:1.5rem;">Performance Comparison</h3>
+                        <table class="perf-table" aria-label="Model performance comparison table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Baseline CNN</th>
+                                    <th>EfficientNetB0</th>
+                                    <th>Improvement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Accuracy</td>
+                                    <td>89.7%</td>
+                                    <td>95.1%</td>
+                                    <td>+5.37 pp</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td>Recall</td>
+                                    <td>80.0%</td>
+                                    <td>97.2%</td>
+                                    <td>+17.1 pp</td>
+                                </tr>
+                                <tr>
+                                    <td>F1 Score</td>
+                                    <td>0.886</td>
+                                    <td>0.952</td>
+                                    <td>+0.066</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p class="case-heading">Explainability</p>
+                        <h2 class="case-title">Grad-CAM Interpretability</h2>
+                        <p class="case-body">
+                            For content moderation, trust in the model is essential. Gradient-weighted Class Activation Mapping (Grad-CAM) was implemented to validate that the model focuses on synthetic texture cues and boundaries — rather than memorizing irrelevant dataset biases such as background scenes or lighting conditions.
+                        </p>
+
+                        <figure class="project-image">
+                            <img src="../assets/images/fake-image/gradcam.png" alt="Grad-CAM heatmaps showing model attention on texture boundaries and edge irregularities">
+                            <figcaption>Fig 2 — Grad-CAM Error Analysis: Model attention focuses on texture anomalies and edge irregularities, confirming it learns structural forensic features rather than semantic content.</figcaption>
+                        </figure>
+
+                    </article>
+
+                    <!-- Sidebar -->
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Objective</strong><br>Forensic deepfake & AI-generated image detection</li>
+                                <li><strong>Category</strong><br>Computer Vision · Deep Learning</li>
+                                <li><strong>Performance</strong><br>95.1% Accuracy, 97.2% Recall</li>
+                                <li><strong>Deployment</strong><br>Streamlit real-time inference app</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Core Technology</h3>
+                            <ul>
+                                <li><strong>PyTorch</strong> — Deep learning framework</li>
+                                <li><strong>EfficientNetB0</strong> — Transfer learning backbone</li>
+                                <li><strong>FFT</strong> — Frequency domain analysis</li>
+                                <li><strong>Grad-CAM</strong> — Model explainability</li>
+                                <li><strong>Streamlit</strong> — Inference application</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Related Projects</h3>
+                            <ul>
+                                <li><a href="violence-detection.html">Real-Time Crisis Detection</a></li>
+                                <li><a href="wildfire-early-warning.html">Wildfire Early Warning System</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
