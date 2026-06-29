@@ -77,19 +77,19 @@
         <!-- PROJECTS SECTION -->
         <section id="projects" class="section" aria-labelledby="projects-heading">
             <div class="container">
-                <h2 id="projects-heading" class="section-title">Featured Projects</h2>
-                
+                <h2 id="projects-heading" class="section-title">Projects</h2>
+
                 <div class="projects-list">
-                    
-                    <!-- Project 1: Wildfire -->
+
+                    <!-- 1: Wildfire -->
                     <article class="project-card">
                         <div class="project-content">
                             <h3>Wildfire Early Warning System</h3>
                             <ul class="project-bullets">
-                                <li>Architected a predictive ML system for indigenous forest communities to forecast wildfire risks 72 hours in advance.</li>
-                                <li>Integrated and preprocessed multimodal geospatial data, including NASA active fire detections (VIIRS/MODIS), CHIRPS rainfall, and ERA5 wind models.</li>
-                                <li>Developed an XGBoost classification pipeline utilizing walk-forward temporal cross-validation, optimized via Optuna to achieve an 85% recall rate.</li>
-                                <li>Deployed an interactive Folium web dashboard with SHAP TreeExplainer for per-district risk explainability and automated bilingual alerting.</li>
+                                <li>Architected a predictive ML system to forecast wildfire risks 72 hours in advance for indigenous communities in Borneo &amp; Sumatra.</li>
+                                <li>Integrated NASA FIRMS (VIIRS/MODIS), CHIRPS rainfall, and ERA5 wind models; engineered 26 geospatial features.</li>
+                                <li>Optimized XGBoost via Optuna with walk-forward temporal cross-validation, achieving 85% recall.</li>
+                                <li>Deployed an interactive Folium dashboard with SHAP per-district explainability and automated bilingual alerting.</li>
                             </ul>
                             <div class="project-actions">
                                 <a href="projects/wildfire-early-warning.html" class="button button-small">View Case Study</a>
@@ -97,14 +97,14 @@
                         </div>
                     </article>
 
-                    <!-- Project 2: Oil Palm -->
+                    <!-- 2: Oil Palm -->
                     <article class="project-card">
                         <div class="project-content">
                             <h3>Oil Palm Tree Health Detection System</h3>
                             <ul class="project-bullets">
-                                <li>Developed an automated detection system for oil palm tree health monitoring using UAV imagery, achieving 94.7% mAP.</li>
-                                <li>Performed tree detection, counting, and multiclass health classification (Healthy, Yellowing, Small, Dead) using YOLOv8 and YOLOv12.</li>
-                                <li>Deployed a web application using Streamlit for real-time field monitoring by agricultural teams.</li>
+                                <li>Developed an automated detection system for oil palm health monitoring using UAV imagery, achieving 99.4% mAP@0.5 (YOLOv12s).</li>
+                                <li>Benchmarked 6 YOLO variants (YOLOv8/v12) across 3,499 images and 5 health classes (Healthy, Yellowing, Small, Dead, Grass).</li>
+                                <li>Deployed a Streamlit web app for real-time field monitoring by agricultural teams.</li>
                                 <li><strong>Published:</strong> IEEE AGERS 2025.</li>
                             </ul>
                             <div class="project-actions">
@@ -113,13 +113,13 @@
                         </div>
                     </article>
 
-                    <!-- Project 3: Protest Violence -->
+                    <!-- 3: Crisis Recognition -->
                     <article class="project-card">
                         <div class="project-content">
-                            <h3>Real-Time Crisis Recognition & Response System</h3>
+                            <h3>Real-Time Crisis Recognition &amp; Response System</h3>
                             <ul class="project-bullets">
-                                <li>Architected a multimodal AI framework combining object detection, 17-keypoint pose estimation, and behavioral scoring for protest violence detection.</li>
-                                <li>Analyzed joint angles motion and hand-object proximity for violence classification (Throwing, Fighting, Pushing) using YOLO and OpenCV.</li>
+                                <li>Architected a multimodal AI framework combining YOLO object detection, 17-keypoint pose estimation, and behavioral scoring for protest violence detection.</li>
+                                <li>Analyzed joint angles, motion trajectories, and hand-object proximity for violence classification (Throwing, Fighting).</li>
                                 <li>Generated timestamped crisis alerts with annotated keyframes for law enforcement situational awareness.</li>
                                 <li><strong>Published:</strong> ICCED 2025.</li>
                             </ul>
@@ -129,14 +129,14 @@
                         </div>
                     </article>
 
-                    <!-- Project 4: Food Crisis -->
+                    <!-- 4: Food Crisis -->
                     <article class="project-card">
                         <div class="project-content">
                             <h3>Conflict-Induced Food Crisis Prediction</h3>
                             <ul class="project-bullets">
-                                <li>Developed a machine learning system to forecast IPC Phase 3+ food crises 90 days ahead using conflict, climate, and historical food security data.</li>
-                                <li>Applied data fusion, feature engineering, and temporal modeling to capture complex crisis patterns across 14 African countries.</li>
-                                <li>Implemented a hyperparameter-tuned XGBoost model, integrated with SHAP explainability for accurate, interpretable humanitarian predictions.</li>
+                                <li>Built an ML early warning system forecasting IPC Phase 3+ food crises 90 days in advance across 14 African countries.</li>
+                                <li>Fused 207,682 ACLED conflict events, CHIRPS satellite rainfall, and historical IPC phases into a 32-feature dataset.</li>
+                                <li>Deployed XGBoost with Optuna tuning and a Humanitarian-Mode threshold achieving 99.1% F1 and only 1.6% false negatives.</li>
                             </ul>
                             <div class="project-actions">
                                 <a href="projects/conflict-food-crisis-prediction.html" class="button button-small">View Case Study</a>
@@ -144,17 +144,185 @@
                         </div>
                     </article>
 
-                    <!-- Project 5: Fake Image -->
+                    <!-- 5: Fake Image -->
                     <article class="project-card">
                         <div class="project-content">
                             <h3>Forensic Fake Image Detection</h3>
                             <ul class="project-bullets">
-                                <li>Built a deep learning pipeline to detect AI-generated images using pixel-level forensic features and frequency domain analysis (FFT).</li>
-                                <li>Utilized CNNs and transfer learning (EfficientNetB0) to improve classification performance, achieving a 97.2% recall rate.</li>
-                                <li>Incorporated explainability techniques (Grad-CAM) to validate that the model focused on meaningful visual texture artifacts rather than semantic biases.</li>
+                                <li>Built a deep learning pipeline to detect AI-generated images using FFT frequency-domain forensic analysis.</li>
+                                <li>Applied two-phase EfficientNetB0 transfer learning, achieving 97.2% recall — a +17.1 pp gain over the CNN baseline.</li>
+                                <li>Validated model focus on texture artifacts (not semantic content) using Grad-CAM explainability.</li>
                             </ul>
                             <div class="project-actions">
                                 <a href="projects/fake-image-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 6: Credit Risk -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Credit Risk Assessment Model</h3>
+                            <ul class="project-bullets">
+                                <li>Built an ML credit scoring system using alternative data (mobile money, transaction patterns) to include unbanked borrowers.</li>
+                                <li>Engineered features from 3.9M+ transactions (Xente Challenge dataset) with Random Forest and XGBoost models.</li>
+                                <li>Packaged with a FastAPI inference endpoint and Docker container for production deployment; tracked with MLflow.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/credit-risk-model.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 7: Financial News Sentiment -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Financial News Sentiment Analysis</h3>
+                            <ul class="project-bullets">
+                                <li>Developed an NLP pipeline to classify financial news sentiment (Positive, Neutral, Negative) for market signal extraction.</li>
+                                <li>Applied fine-tuned transformer models (FinBERT) and traditional ML baselines for comparative evaluation.</li>
+                                <li>Built an interactive Streamlit dashboard for real-time sentiment monitoring and trend visualization.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/financial-news-sentiment-analysis.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 8: Insurance Risk Analytics -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Insurance Risk Analytics &amp; Predictive Modeling</h3>
+                            <ul class="project-bullets">
+                                <li>Designed a predictive analytics pipeline to model insurance claim risk and customer segmentation.</li>
+                                <li>Applied XGBoost, statistical analysis, and DVC pipelines for reproducible, version-controlled experiments.</li>
+                                <li>Delivered actionable risk stratification insights to support underwriting decision-making.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/insurance-risk-analytics.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 9: License Plate Recognition -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>License Plate Recognition System</h3>
+                            <ul class="project-bullets">
+                                <li>Built an end-to-end ANPR pipeline using YOLO for plate localization and Tesseract OCR for character extraction.</li>
+                                <li>Applied image preprocessing (adaptive thresholding, morphological filtering) to improve OCR accuracy under varied lighting.</li>
+                                <li>Designed for real-time integration with parking and access control systems.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/license-plate-recognition.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 10: Weapon Detection -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Weapon Detection System</h3>
+                            <ul class="project-bullets">
+                                <li>Trained a YOLO-based object detector to identify weapons (firearms, bladed objects) in CCTV and surveillance footage.</li>
+                                <li>Fine-tuned on a custom annotated dataset to minimize false positives in crowded public scene environments.</li>
+                                <li>Integrated with an alert pipeline to support real-time security response workflows.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/weapon-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 11: Police Officer Detection -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Police Officer Detection System</h3>
+                            <ul class="project-bullets">
+                                <li>Developed a computer vision model to detect and identify uniformed police officers in crowd scenes using YOLO.</li>
+                                <li>Trained on a curated dataset of uniform color and badge features to distinguish officers from civilians.</li>
+                                <li>Designed for integration into public safety and crowd management systems.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/police-officer-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 12: People Detection & Counting -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>People Detection &amp; Counting</h3>
+                            <ul class="project-bullets">
+                                <li>Built a real-time people detection and counting system for crowd density monitoring using YOLO and DeepSORT tracking.</li>
+                                <li>Implemented line-crossing and zone-entry counting logic for retail, transportation, and public safety use cases.</li>
+                                <li>Achieved reliable counting accuracy in occlusion-heavy scenes through multi-frame tracking.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/people-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 13: Face Mask Detection -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Face Mask Detection</h3>
+                            <ul class="project-bullets">
+                                <li>Trained a CNN-based classifier to detect face mask compliance (Mask, No Mask, Incorrect) in real-time video streams.</li>
+                                <li>Utilized transfer learning on MobileNetV2 for lightweight inference suitable for edge-device deployment.</li>
+                                <li>Designed for automated compliance monitoring in healthcare and public transport settings.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/face-mask-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 14: Parking Lot Classification -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Smart Parking Lot Space Classification</h3>
+                            <ul class="project-bullets">
+                                <li>Built an image classification system to detect occupied vs. vacant parking spaces from overhead CCTV cameras.</li>
+                                <li>Applied CNNs with transfer learning (ResNet) and optimized inference for real-time slot-level availability updates.</li>
+                                <li>Designed as the vision backbone for a smart parking guidance system.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/parking-lot-classification.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 15: Customer Experience Analytics -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Customer Experience Analytics (Fintech)</h3>
+                            <ul class="project-bullets">
+                                <li>Analyzed customer interaction data across digital fintech touchpoints to identify friction, churn signals, and satisfaction drivers.</li>
+                                <li>Built segmentation models and cohort analyses to quantify behavioral patterns across customer lifecycle stages.</li>
+                                <li>Delivered insights via an interactive Power BI dashboard for product and CX strategy teams.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/customer-experience-analytics.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 16–19: Alfamart BI Dashboards -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Alfamart Business Intelligence Dashboards</h3>
+                            <ul class="project-bullets">
+                                <li>Designed and developed a suite of 4 interactive Power BI dashboards covering Financial Performance, HR Management, Operations &amp; Innovation, and Customer Engagement for Indonesia's largest convenience chain.</li>
+                                <li>Integrated transactional and HR data sources, built calculated measures with DAX, and structured data models for cross-functional reporting.</li>
+                                <li>Enabled C-level executives to monitor KPIs, track workforce metrics, and identify operational inefficiencies in real time.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/alfamart-financial-dashboard.html" class="button button-small">Financial</a>
+                                <a href="projects/alfamart-hr-dashboard.html" class="button button-small">HR</a>
+                                <a href="projects/alfamart-operations-dashboard.html" class="button button-small">Operations</a>
+                                <a href="projects/alfamart-customer-dashboard.html" class="button button-small">Customer</a>
                             </div>
                         </div>
                     </article>
@@ -163,7 +331,9 @@
             </div>
         </section>
 
+
         <!-- EXPERIENCE SECTION -->
+
         <section id="experience" class="section bg-light" aria-labelledby="experience-heading">
             <div class="container">
                 <div class="experience-grid">
