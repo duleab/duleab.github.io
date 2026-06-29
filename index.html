@@ -1,1283 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dule Abera | Data Scientist & ML Engineer</title>
-    <meta name="description"
-        content="Dule Abera — Data Scientist and ML Engineer specializing in Computer Vision, NLP, MLOps, and Business Intelligence. Proven track record in enterprise-scale analytics and machine learning solutions.">
+    <meta name="description" content="Portfolio of Dule Abera, Data Scientist and ML Engineer specializing in Computer Vision, NLP, and Predictive Analytics.">
     <meta name="author" content="Dule Abera">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Dule Abera | Data Scientist & ML Engineer">
-    <meta property="og:description"
-        content="Transforming complex data into actionable insights through advanced machine learning and enterprise-scale BI solutions.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://duleab.github.io">
-
-    <!-- Fonts -->
+    
+    <!-- Modern, highly readable typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-
-    <!-- Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Simple, accessible stylesheet -->
+    <link rel="stylesheet" href="css/simple.css">
 </head>
-
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Skip Link -->
-    <a href="#main" class="skip-link">Skip to main content</a>
-
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen" aria-hidden="true">
-        <div class="loader-ring"></div>
-    </div>
-
-    <!-- Background dots -->
-    <div class="bg-dots" aria-hidden="true"></div>
-
-    <!-- ── NAVIGATION ──────────────────────────────────────── -->
-    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
-        <div class="nav-container">
-            <a href="#home" class="logo" aria-label="Dule Abera — home">Dule<span>.</span></a>
-
-            <ul class="nav-links" role="list">
-                <li><a href="#home" class="nav-link active" id="nav-home">Home</a></li>
-                <li><a href="#experience" class="nav-link" id="nav-experience">Experience</a></li>
-                <li><a href="#publications" class="nav-link" id="nav-publications">Publications</a></li>
-                <li><a href="#certifications" class="nav-link" id="nav-certifications">Certifications</a></li>
-                <li><a href="#projects" class="nav-link" id="nav-projects">Projects</a></li>
-                <li><a href="#contact" class="nav-link" id="nav-contact">Contact</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
-                <a href="mailto:duleabera05@gmail.com" class="btn-cv">
-                    <i class="fas fa-paper-plane"></i> Hire Me
-                </a>
-            </div>
-
-            <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="#" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <!-- Mobile Nav Overlay -->
-    <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-        <a href="#home" class="mobile-nav-link">Home</a>
-        <a href="#experience" class="mobile-nav-link">Experience</a>
-        <a href="#publications" class="mobile-nav-link">Publications</a>
-        <a href="#certifications" class="mobile-nav-link">Certifications</a>
-        <a href="#projects" class="mobile-nav-link">Projects</a>
-        <a href="#contact" class="mobile-nav-link">Contact</a>
-    </div>
-
-    <!-- ── MAIN ───────────────────────────────────────────── -->
-    <main id="main">
-
-        <!-- ── HERO ─────────────────────────────────────────── -->
-        <section id="home" class="hero" aria-label="Introduction">
-            <div class="hero-container">
-
-                <!-- Left: Content -->
-                <div class="hero-content">
-
-                    <h1 class="hero-name fade-in" style="--i:1">
-                        Dule Abera
-                    </h1>
-
-                    <p class="hero-role fade-in" style="--i:2">Data Scientist & ML Engineer</p>
-
-                    <p class="hero-tagline fade-in" style="--i:3">
-                        I build practical machine learning and analytics tools — from computer vision pipelines to NLP
-                        and BI dashboards — with an emphasis on clarity, reproducibility, and real-world use.
+    <main id="main-content">
+        <!-- HERO / ABOUT SECTION -->
+        <section id="about" class="section hero-section" aria-labelledby="hero-heading">
+            <div class="container hero-container">
+                <div class="hero-text">
+                    <h1 id="hero-heading" class="hero-title">Data Scientist & ML Engineer</h1>
+                    <p class="hero-subtitle">
+                        I build practical machine learning and analytics tools—from computer vision pipelines to predictive models and humanitarian AI systems—with an emphasis on clarity, reproducibility, and real-world impact.
                     </p>
-
-                    <div class="hero-stats fade-in" style="--i:4" aria-label="Key statistics">
-                        <div class="stat-item">
-                            <span class="stat-number">12+</span>
-                            <span class="stat-label">ML Projects</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">4</span>
-                            <span class="stat-label">BI Dashboards</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">2</span>
-                            <span class="stat-label">Peer‑reviewed Papers</span>
-                        </div>
-                    </div>
-
-                    <div class="hero-ctas fade-in" style="--i:5">
-                        <a href="#projects" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i> View Projects
-                        </a>
-                        <a href="#contact" class="btn btn-outline">
-                            <i class="fas fa-envelope"></i> Get in Touch
-                        </a>
+                    <div class="hero-links">
+                        <a href="mailto:duleabera05@gmail.com" class="button button-primary" aria-label="Email Dule Abera">Contact Me</a>
+                        <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer" class="button button-secondary">GitHub Profile</a>
                     </div>
                 </div>
-
-                <!-- Right: Profile Card -->
-                <div class="hero-image fade-in" style="--i:3">
-                    <div class="profile-card">
-                        <div class="profile-photo-wrap">
-                            <img src="assets/images/profile.jpg" alt="Dule Abera profile photo" class="profile-photo"
-                                width="140" height="140" loading="eager">
-                        </div>
-
-                        <p class="profile-name">Dule Abera</p>
-                        <p class="profile-title">Data Scientist & ML Engineer</p>
-
-                        <div class="profile-chips">
-                            <span class="chip">Computer Vision</span>
-                            <span class="chip">NLP</span>
-                            <span class="chip">MLOps</span>
-                            <span class="chip">Power BI</span>
-                        </div>
-
-                        <p class="profile-location">
-                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                            Addis Ababa, Ethiopia
-                        </p>
-                    </div>
+                <div class="hero-image-wrapper">
+                    <img src="assets/images/profile.jpg" alt="Dule Abera" class="profile-image">
                 </div>
-
             </div>
-
         </section>
 
-        <!-- ── EDUCATION ────────────────────────────────────── -->
-        <section id="education" class="experience" aria-label="Education background">
+        <!-- CORE SKILLS -->
+        <section id="skills" class="section bg-light" aria-labelledby="skills-heading">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Education</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Academic foundations in data science, computer vision, and engineering.
-                    </p>
-                </div>
-
-                <div class="timeline" role="list">
-                    <!-- Master's Degree -->
-                    <div class="timeline-item current fade-in" style="--i:3" role="listitem">
-                        <span class="timeline-year">2024</span>
-                        <div class="timeline-dot" aria-hidden="true"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-role">Master's Degree, Data Science</h3>
-                            <p class="timeline-org">Universitas Nusa Putra — Indonesia</p>
-                            <p class="timeline-period"><i class="fas fa-calendar-alt" aria-hidden="true"></i> December 2024 — Present</p>
-                            <p class="timeline-desc">
-                                <strong>Thesis:</strong> Real-Time Crisis Recognition and Response System for Protest Violence Detection.<br>
-                                <strong>Focus:</strong> Computer Vision, Human Activity Recognition, Crisis Intelligence Systems, and Multimodal Learning.
-                            </p>
-                        </div>
+                <h2 id="skills-heading" class="section-title">Core Capabilities</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Machine Learning & AI</h3>
+                        <p>TensorFlow, PyTorch, Computer Vision (YOLO, OpenCV), Transfer Learning, Explainable AI (SHAP, Grad-CAM)</p>
                     </div>
-
-                    <!-- Bachelor's Degree -->
-                    <div class="timeline-item fade-in" style="--i:4" role="listitem">
-                        <span class="timeline-year">2023</span>
-                        <div class="timeline-dot" aria-hidden="true"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-role">Bachelor of Electrical and Computer Engineering (Computer Stream)</h3>
-                            <p class="timeline-org">Haramaya University — Ethiopia</p>
-                            <p class="timeline-period"><i class="fas fa-calendar-alt" aria-hidden="true"></i> 2018 — 2023</p>
-                            <p class="timeline-desc">
-                                Focused on Computer Stream within Electrical and Computer Engineering. Developed a solid foundation in computer science principles and electrical engineering concepts.
-                            </p>
-                        </div>
+                    <div class="skill-category">
+                        <h3>Data Analytics</h3>
+                        <p>Python (Pandas, NumPy), Power BI, Statistical Modeling, Data Visualization (Seaborn, Matplotlib)</p>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Research & Deployment</h3>
+                        <p>Multimodal Learning Systems, Precision Agriculture, Crisis Intelligence, Streamlit, Git, Docker</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── EXPERIENCE ────────────────────────────────────── -->
-        <section id="experience" class="experience" aria-label="Professional experience" style="margin-top: 60px;">
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="section" aria-labelledby="projects-heading">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Work Experience</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Professional journey applying AI and machine learning to real-world problems.
-                    </p>
-                </div>
-
-                <div class="timeline" role="list">
-                    <!-- Role 1 -->
-                    <div class="timeline-item fade-in" style="--i:3" role="listitem">
-                        <span class="timeline-year">2024</span>
-                        <div class="timeline-dot" aria-hidden="true"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-role">Graduate Trainee</h3>
-                            <p class="timeline-org">Cooperative Bank of Oromia — Addis Ababa, Ethiopia</p>
-                            <p class="timeline-period"><i class="fas fa-calendar-alt" aria-hidden="true"></i> March 2024 — December 2024</p>
-                            <p class="timeline-desc">
-                                Contributed to the deployment of a machine learning model used by internal analytics teams, improving data-driven decision-making efficiency. Collaborated with cross-functional teams to integrate AI solutions into existing banking infrastructure.
-                            </p>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Machine Learning Deployment</span>
-                                <span class="tech-tag">Data Analytics</span>
-                                <span class="tech-tag">Banking Infrastructure</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Role 2 -->
-                    <div class="timeline-item fade-in" style="--i:4" role="listitem">
-                        <span class="timeline-year">2022</span>
-                        <div class="timeline-dot" aria-hidden="true"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-role">AI/ML Research Intern</h3>
-                            <p class="timeline-org">Ethiopian Artificial Intelligence (AI) Company — Addis Ababa, Ethiopia</p>
-                            <p class="timeline-period"><i class="fas fa-calendar-alt" aria-hidden="true"></i> October 2022 — January 2023</p>
-                            <p class="timeline-desc">
-                                Collaborated with AI development teams to enhance AI model performance. Conducted systematic hyperparameter optimization and architecture refinement experiments. Contributed to research initiatives focused on improving model efficiency and interpretability.
-                            </p>
-                            <div class="tech-stack">
-                                <span class="tech-tag">Hyperparameter Optimization</span>
-                                <span class="tech-tag">Model Architecture</span>
-                                <span class="tech-tag">Model Interpretability</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── SKILLS ────────────────────────────────────────── -->
-        <section id="skills" class="certifications" aria-label="Technical Skills" style="padding: 100px 0; background: var(--color-surface);">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Skills & Capabilities</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Technical stack and professional proficiencies.
-                    </p>
-                </div>
-
-                <div class="cert-group" style="margin-top: 2rem;">
-                    <p class="cert-group-title fade-in" style="--i:3">Core Competencies</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;" class="fade-in" style="--i:4">
-                        <span class="tech-tag" style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Strong work ethic</span>
-                        <span class="tech-tag" style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Teamwork</span>
-                        <span class="tech-tag" style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Problem-solving</span>
-                        <span class="tech-tag" style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Critical thinking</span>
-                        <span class="tech-tag" style="background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Communication</span>
-                    </div>
-                </div>
-
-                <div class="cert-group" style="margin-top: 2rem;">
-                    <p class="cert-group-title fade-in" style="--i:5">ML / AI Frameworks</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;" class="fade-in" style="--i:6">
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">TensorFlow</span>
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">PyTorch</span>
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">OpenCV</span>
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">YOLO</span>
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">Transfer Learning</span>
-                        <span class="tech-tag" style="background: rgba(139,92,246,0.1); color: #c4b5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(139,92,246,0.2);">Model Optimization & Deployment</span>
-                    </div>
-                </div>
-
-                <div class="cert-group" style="margin-top: 2rem;">
-                    <p class="cert-group-title fade-in" style="--i:7">Data Analytics</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;" class="fade-in" style="--i:8">
-                        <span class="tech-tag" style="background: rgba(59,130,246,0.1); color: #93c5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(59,130,246,0.2);">Pandas</span>
-                        <span class="tech-tag" style="background: rgba(59,130,246,0.1); color: #93c5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(59,130,246,0.2);">NumPy</span>
-                        <span class="tech-tag" style="background: rgba(59,130,246,0.1); color: #93c5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(59,130,246,0.2);">Power BI</span>
-                        <span class="tech-tag" style="background: rgba(59,130,246,0.1); color: #93c5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(59,130,246,0.2);">Seaborn</span>
-                        <span class="tech-tag" style="background: rgba(59,130,246,0.1); color: #93c5fd; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(59,130,246,0.2);">Matplotlib</span>
-                    </div>
-                </div>
-
-                <div class="cert-group" style="margin-top: 2rem;">
-                    <p class="cert-group-title fade-in" style="--i:9">Other Technologies</p>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;" class="fade-in" style="--i:10">
-                        <span class="tech-tag" style="background: rgba(16,185,129,0.1); color: #6ee7b7; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(16,185,129,0.2);">Streamlit</span>
-                        <span class="tech-tag" style="background: rgba(16,185,129,0.1); color: #6ee7b7; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(16,185,129,0.2);">Git</span>
-                        <span class="tech-tag" style="background: rgba(16,185,129,0.1); color: #6ee7b7; padding: 0.5rem 1rem; font-size: 0.9rem; border: 1px solid rgba(16,185,129,0.2);">Docker</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── PUBLICATIONS ──────────────────────────────────── -->
-        <section id="publications" class="publications" aria-label="Published research papers"
-            style="padding: 100px 0; background: var(--color-surface);">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Publications</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Peer-reviewed research published in international conferences and IEEE journals.
-                    </p>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-8); margin-top: var(--space-12);">
-
-                    <!-- Paper 1 -->
-                    <article class="publication-card fade-in" style="--i:3; background: var(--color-bg); padding: var(--space-8); border-radius: var(--radius-lg); border: 1px solid var(--color-border); position: relative; transition: var(--transition-base);">
-                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <span style="background: var(--color-primary); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">First Author</span>
-                            <span style="background: var(--color-success, #10b981); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">IEEE AGERS 2025</span>
-                        </div>
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-text-1); line-height: 1.4; margin-bottom: var(--space-3);">
-                            Oil Palm Tree Health Detection System Using YOLO-based Deep Learning Models and UAV Imagery
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); font-size: 0.85rem; color: var(--color-text-3);">
-                            <span><i class="fas fa-link"></i> DOI: 10.1109/AGERS67633.2025.11446373</span>
-                        </div>
-                        <a href="https://doi.org/10.1109/AGERS67633.2025.11446373" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.9rem;">
-                            View Publication <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </article>
-
-                    <!-- Paper 2 -->
-                    <article class="publication-card fade-in" style="--i:4; background: var(--color-bg); padding: var(--space-8); border-radius: var(--radius-lg); border: 1px solid var(--color-border); position: relative; transition: var(--transition-base);">
-                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <span style="background: var(--color-primary); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">First Author</span>
-                            <span style="background: var(--color-success, #10b981); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">ICCED 2025</span>
-                        </div>
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-text-1); line-height: 1.4; margin-bottom: var(--space-3);">
-                            Real-Time Crisis Recognition and Response System for Protest Violence Detection
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); font-size: 0.85rem; color: var(--color-text-3);">
-                            <span><i class="fas fa-link"></i> DOI: 10.1109/ICCED68324.2025.11324702</span>
-                        </div>
-                        <a href="https://doi.org/10.1109/ICCED68324.2025.11324702" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.9rem;">
-                            View Publication <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </article>
-
-                    <!-- Paper 3 -->
-                    <article class="publication-card fade-in" style="--i:5; background: var(--color-bg); padding: var(--space-8); border-radius: var(--radius-lg); border: 1px solid var(--color-border); position: relative; transition: var(--transition-base);">
-                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <span style="background: rgba(255,255,255,0.1); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">Co-Author</span>
-                            <span style="background: var(--color-success, #10b981); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">IC2IE 2025</span>
-                        </div>
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-text-1); line-height: 1.4; margin-bottom: var(--space-3);">
-                            Evaluation of YOLOv11 and RF-DETR Architectures for Detection of Healthy Oil Palm Trees
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); font-size: 0.85rem; color: var(--color-text-3);">
-                            <span><i class="fas fa-link"></i> DOI: 10.1109/IC2IE67206.2025.11283417</span>
-                        </div>
-                        <a href="https://doi.org/10.1109/IC2IE67206.2025.11283417" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.9rem;">
-                            View Publication <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </article>
-
-                    <!-- Paper 4 -->
-                    <article class="publication-card fade-in" style="--i:6; background: var(--color-bg); padding: var(--space-8); border-radius: var(--radius-lg); border: 1px solid var(--color-border); position: relative; transition: var(--transition-base);">
-                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <span style="background: rgba(255,255,255,0.1); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">Co-Author</span>
-                            <span style="background: var(--color-success, #10b981); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">ICISIT 2026</span>
-                        </div>
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-text-1); line-height: 1.4; margin-bottom: var(--space-3);">
-                            The Impact of Online Learning on Student Performance Using a Causal Inference Approach
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); font-size: 0.85rem; color: var(--color-text-3);">
-                            <span><i class="fas fa-link"></i> DOI: 10.1007/978-3-032-14750-9_14</span>
-                        </div>
-                        <a href="https://doi.org/10.1007/978-3-032-14750-9_14" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.9rem;">
-                            View Publication <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </article>
-
-                    <!-- Paper 5 -->
-                    <article class="publication-card fade-in" style="--i:7; background: var(--color-bg); padding: var(--space-8); border-radius: var(--radius-lg); border: 1px solid var(--color-border); position: relative; transition: var(--transition-base);">
-                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <span style="background: rgba(255,255,255,0.1); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">Co-Author</span>
-                            <span style="background: var(--color-success, #10b981); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">ICISIT 2026</span>
-                        </div>
-                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-text-1); line-height: 1.4; margin-bottom: var(--space-3);">
-                            Analysis of Web User Behavior for Bandung City
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); font-size: 0.85rem; color: var(--color-text-3);">
-                            <span><i class="fas fa-link"></i> DOI: 10.1007/978-3-032-14750-9_13</span>
-                        </div>
-                        <a href="https://doi.org/10.1007/978-3-032-14750-9_13" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.9rem;">
-                            View Publication <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ── RESEARCH INTERESTS ────────────────────────────── -->
-        <section id="research" class="certifications" aria-label="Research Interests" style="padding: 0 0 100px 0; background: var(--color-surface);">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Research Interests</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Areas of focus and exploration in AI and Data Science.
-                    </p>
-                </div>
+                <h2 id="projects-heading" class="section-title">Featured Projects</h2>
                 
-                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem;" class="fade-in" style="--i:3">
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Computer Vision</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Deep Learning</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Artificial Intelligence</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Machine Learning</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Intelligent Surveillance Systems</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Human Activity Recognition</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Precision Agriculture</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Remote Sensing and UAV-based Analytics</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Crisis Intelligence and Humanitarian AI</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Food Security Prediction</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Multimodal Learning Systems</span>
-                    <span class="tech-tag" style="background: rgba(124,58,237,0.1); color: #c4b5fd; padding: 0.6rem 1.25rem; font-size: 0.95rem; border: 1px solid rgba(124,58,237,0.2); border-radius: 99px;">Data Science and Predictive Analytics</span>
+                <div class="projects-list">
+                    
+                    <!-- Project 1: Wildfire -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Wildfire Early Warning System</h3>
+                            <ul class="project-bullets">
+                                <li>Architected a predictive ML system for indigenous forest communities to forecast wildfire risks 72 hours in advance.</li>
+                                <li>Integrated and preprocessed multimodal geospatial data, including NASA active fire detections (VIIRS/MODIS), CHIRPS rainfall, and ERA5 wind models.</li>
+                                <li>Developed an XGBoost classification pipeline utilizing walk-forward temporal cross-validation, optimized via Optuna to achieve an 85% recall rate.</li>
+                                <li>Deployed an interactive Folium web dashboard with SHAP TreeExplainer for per-district risk explainability and automated bilingual alerting.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/wildfire-early-warning.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 2: Oil Palm -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Oil Palm Tree Health Detection System</h3>
+                            <ul class="project-bullets">
+                                <li>Developed an automated detection system for oil palm tree health monitoring using UAV imagery, achieving 94.7% mAP.</li>
+                                <li>Performed tree detection, counting, and multiclass health classification (Healthy, Yellowing, Small, Dead) using YOLOv8 and YOLOv12.</li>
+                                <li>Deployed a web application using Streamlit for real-time field monitoring by agricultural teams.</li>
+                                <li><strong>Published:</strong> IEEE AGERS 2025.</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Project 3: Protest Violence -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Real-Time Crisis Recognition & Response System</h3>
+                            <ul class="project-bullets">
+                                <li>Architected a multimodal AI framework combining object detection, 17-keypoint pose estimation, and behavioral scoring for protest violence detection.</li>
+                                <li>Analyzed joint angles motion and hand-object proximity for violence classification (Throwing, Fighting, Pushing) using YOLO and OpenCV.</li>
+                                <li>Generated timestamped crisis alerts with annotated keyframes for law enforcement situational awareness.</li>
+                                <li><strong>Published:</strong> ICCED 2025.</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Project 4: Food Crisis -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Conflict-Induced Food Crisis Prediction</h3>
+                            <ul class="project-bullets">
+                                <li>Developed a machine learning system to forecast IPC Phase 3+ food crises 90 days ahead using conflict, climate, and historical food security data.</li>
+                                <li>Applied data fusion, feature engineering, and temporal modeling to capture complex crisis patterns across 14 African countries.</li>
+                                <li>Implemented a hyperparameter-tuned XGBoost model, integrated with SHAP explainability for accurate, interpretable humanitarian predictions.</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Project 5: Fake Image -->
+                    <article class="project-card">
+                        <div class="project-content">
+                            <h3>Forensic Fake Image Detection</h3>
+                            <ul class="project-bullets">
+                                <li>Built a deep learning pipeline to detect AI-generated images using pixel-level forensic features and frequency domain analysis (FFT).</li>
+                                <li>Utilized CNNs and transfer learning (EfficientNetB0) to improve classification performance, achieving a 97.2% recall rate.</li>
+                                <li>Incorporated explainability techniques (Grad-CAM) to validate that the model focused on meaningful visual texture artifacts rather than semantic biases.</li>
+                            </ul>
+                            <div class="project-actions">
+                                <a href="projects/fake-image-detection.html" class="button button-small">View Case Study</a>
+                            </div>
+                        </div>
+                    </article>
+
                 </div>
             </div>
         </section>
 
-        <!-- ── CERTIFICATIONS ────────────────────────────────── -->
-        <section id="certifications" class="certifications" aria-label="Certifications and expertise">
+        <!-- EXPERIENCE SECTION -->
+        <section id="experience" class="section bg-light" aria-labelledby="experience-heading">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:8">Certifications</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Continuous learning across data, cloud, and AI disciplines.
-                    </p>
-                </div>
-
-                <!-- Group: Data & Analytics -->
-                <div class="cert-group">
-                    <p class="cert-group-title fade-in" style="--i:3">Data & Analytics</p>
-                    <div class="cert-grid">
-
-                        <article class="cert-card fade-in" style="--i:4">
-                            <div class="cert-icon-wrap"><i class="fas fa-database" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Complete MySQL Bootcamp</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-8a75fa69-d2be-4803-adff-54de4c6ebb30/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View MySQL Bootcamp certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                        <article class="cert-card fade-in" style="--i:5">
-                            <div class="cert-icon-wrap"><i class="fas fa-chart-bar" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Google Analytics 4 Specialist</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-17bc4983-b605-4acd-9e3c-69d08551bb93/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View Google Analytics 4 certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                        <article class="cert-card fade-in" style="--i:6">
-                            <div class="cert-icon-wrap" style="background:hsl(260 60% 92%);color:hsl(260 60% 45%)"><i
-                                    class="fas fa-chart-line" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Power BI Report Design Mastery</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-c07892e2-f4b8-4b99-b35d-88bfce647de7/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View Power BI Report Design certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                        <article class="cert-card fade-in" style="--i:7">
-                            <div class="cert-icon-wrap" style="background:hsl(260 60% 92%);color:hsl(260 60% 45%)"><i
-                                    class="fas fa-chart-pie" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Power BI Mastery: Zero to Hero</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-0c789024-1c2c-440f-b31c-6dc7a0766e5c/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View Power BI Mastery certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-
-                <!-- Group: AI & Programming -->
-                <div class="cert-group">
-                    <p class="cert-group-title fade-in" style="--i:8">AI & Programming</p>
-                    <div class="cert-grid">
-
-                        <article class="cert-card fade-in" style="--i:9">
-                            <div class="cert-icon-wrap" style="background:hsl(168 55% 90%);color:var(--cat-cv)"><i
-                                    class="fas fa-brain" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">AI Projects: Machine Learning & Deep Learning</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-dc70f5e4-e6a6-4a84-8bb9-0e9618d97228/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View AI Machine Learning certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                        <article class="cert-card fade-in" style="--i:10">
-                            <div class="cert-icon-wrap" style="background:hsl(45 95% 90%);color:hsl(32 90% 40%)"><i
-                                    class="fab fa-python" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Python Zero-to-Hero</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-0d1a84b4-7f44-4bc3-b866-7463c95029b8/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View Python Zero-to-Hero certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-
-                <!-- Group: Cloud -->
-                <div class="cert-group">
-                    <p class="cert-group-title fade-in" style="--i:11">Cloud Infrastructure</p>
-                    <div class="cert-grid">
-
-                        <article class="cert-card fade-in" style="--i:12">
-                            <div class="cert-icon-wrap" style="background:hsl(30 88% 92%);color:hsl(30 88% 42%)"><i
-                                    class="fas fa-cloud" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">AWS Certified Cloud Practitioner</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-6b98a412-5554-4693-aa3c-4ee134e56e04/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View AWS Cloud Practitioner certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                        <article class="cert-card fade-in" style="--i:13">
-                            <div class="cert-icon-wrap" style="background:hsl(30 88% 92%);color:hsl(30 88% 42%)"><i
-                                    class="fas fa-cloud-upload-alt" aria-hidden="true"></i></div>
-                            <div class="cert-body">
-                                <h3 class="cert-title">Cloud Computing Fundamentals</h3>
-                                <p class="cert-meta">Udemy · 2024</p>
-                                <a href="https://www.udemy.com/certificate/UC-db1e94a6-4c51-4e3d-b195-b1f11b5d0aac/"
-                                    target="_blank" rel="noopener noreferrer" class="cert-link"
-                                    aria-label="View Cloud Computing certificate">
-                                    View Certificate <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ── PROJECTS ──────────────────────────────────────── -->
-        <section id="projects" class="projects" aria-label="Featured projects">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title fade-in" style="--i:1">Recent Projects</h2>
-                    <p class="section-subtitle fade-in" style="--i:2">
-                        Production-grade ML systems, computer vision pipelines, and enterprise analytics solutions.
-                    </p>
-                </div>
-
-                <!-- Filter buttons -->
-                <div class="project-filters fade-in" style="--i:3" role="group"
-                    aria-label="Filter projects by category">
-                    <button class="filter-btn active" data-filter="all">All Projects</button>
-                    <button class="filter-btn" data-filter="computer-vision">Computer Vision</button>
-                    <button class="filter-btn" data-filter="nlp">NLP</button>
-                    <button class="filter-btn" data-filter="analytics">Analytics</button>
-                    <button class="filter-btn" data-filter="bi">Business Intelligence</button>
-                    <button class="filter-btn" data-filter="safety">Public Safety</button>
-                </div>
-
-                <!-- Featured (top 3) -->
-                <div class="projects-featured" id="featuredProjects">
-
-                    <!-- Real-Time Crisis Detection — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="nlp safety">
-                        <div class="project-image">
-                            <img src="assets/images/crisis-detection/crisis_map_preview.png"
-                                alt="Real-Time Crisis Detection — interactive map preview" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category" style="background:var(--cat-nlp);color:#fff">NLP</span>
-                                <span class="badge-category" style="background:var(--cat-safety);color:#fff">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Real-Time Crisis Detection</h3>
-                            <p class="project-description">
-                                End-to-end NLP pipeline classifying 7 crisis types from multilingual social media using a fine-tuned XLM-RoBERTa model with 96.7% accuracy. Includes SHAP explainability and interactive geospatial mapping.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 96.7% Accuracy</span>
-                                <span><i class="fas fa-globe"></i> Multilingual</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">XLM-RoBERTa</span>
-                                <span class="tech-tag">PyTorch</span>
-                                <span class="tech-tag">SHAP</span>
-                                <span class="tech-tag">Folium</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/crisis-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Case Study
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Wildfire Early Warning System — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="analytics safety">
-                        <div class="project-image">
-                            <img src="assets/images/wildfire/risk_map_2024.png"
-                                alt="Wildfire Risk Map — interactive map preview" loading="lazy" onerror="this.src='assets/images/wildfire/alert_timeline.png'">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category" style="background:var(--cat-analytics);color:#fff">Analytics</span>
-                                <span class="badge-category" style="background:var(--cat-safety);color:#fff">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Wildfire Early Warning System</h3>
-                            <p class="project-description">
-                                An AI system predicting 72-hour fire risks for Borneo and Sumatra using NASA satellite data, meteorological variables, and XGBoost. Features SHAP explainability and automated bilingual alerts.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 85% Recall Target</span>
-                                <span><i class="fas fa-stopwatch"></i> 72-Hour Warning</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">XGBoost</span>
-                                <span class="tech-tag">Optuna</span>
-                                <span class="tech-tag">NASA FIRMS</span>
-                                <span class="tech-tag">Folium</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/wildfire-early-warning.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Case Study
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Fake Image Detection System — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="computer-vision">
-                        <div class="project-image">
-                            <img src="assets/images/fake-image/dashboard.png"
-                                alt="Fake Image Detection Dashboard preview" loading="lazy" onerror="this.src='assets/images/fake-image/fft_spectra.png'">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category" style="background:var(--cat-cv);color:#fff">Computer Vision</span>
-                            </div>
-                            <h3 class="project-title">Forensic Fake Image Detection</h3>
-                            <p class="project-description">
-                                An end-to-end computer vision pipeline explicitly designed to detect AI-generated media using frequency-domain artifact analysis and EfficientNetB0 transfer learning.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 97.2% Recall</span>
-                                <span><i class="fas fa-microchip"></i> EfficientNetB0</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">PyTorch</span>
-                                <span class="tech-tag">FFT</span>
-                                <span class="tech-tag">Grad-CAM</span>
-                                <span class="tech-tag">Streamlit</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/fake-image-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Case Study
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Conflict-Induced Food Crisis Prediction — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="analytics safety">
-                        <div class="project-image">
-                            <img src="assets/images/food-crisis/crisis_risk_map.jpg"
-                                alt="Africa Food Crisis Early Warning System — risk map" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category">Early Warning System</span>
-                                <span class="badge-category" style="background:var(--cat-safety);color:#fff">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Conflict-Induced Food Crisis Prediction</h3>
-                            <p class="project-description">
-                                A humanitarian ML system predicting IPC Phase 3+ food crises 90 days ahead across 14 African countries. 
-                                Achieved 99.1% F1-score using XGBoost and SHAP forensic explainability.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 99.1% F1-Score</span>
-                                <span><i class="fas fa-clock"></i> 90-Day Lead Time</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">XGBoost</span>
-                                <span class="tech-tag">SHAP</span>
-                                <span class="tech-tag">Folium</span>
-                                <span class="tech-tag">Streamlit</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/conflict-food-crisis-prediction.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Case Study
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Customer Experience Analytics — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="analytics nlp">
-                        <div class="project-image">
-                            <img src="assets/images/customer-experience-analytics/chart1_executive_overview.png"
-                                alt="Customer Experience Analytics — sentiment overview dashboard" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category">Fintech Analytics</span>
-                                <span class="badge-category" style="background:var(--cat-nlp);color:#fff">NLP</span>
-                            </div>
-                            <h3 class="project-title">Customer Experience Analytics for Fintech Apps</h3>
-                            <p class="project-description">
-                                Competitive benchmarking of Ethiopia's top mobile banking apps. Leveraged RoBERTa for sentiment classification, 
-                                BERTopic for theme discovery, and DuckDB for analytical SQL.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-database"></i> 2.2K+ Reviews</span>
-                                <span><i class="fas fa-brain"></i> RoBERTa (NLP)</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">Sentiment Analysis</span>
-                                <span class="tech-tag">BERTopic</span>
-                                <span class="tech-tag">DuckDB</span>
-                                <span class="tech-tag">SQL Window Fns</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/customer-experience-analytics.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Case Study
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Insurance Risk Analytics — FEATURED -->
-                    <article class="project-card featured fade-in" style="--i:4" data-category="analytics">
-                        <div class="project-image">
-                            <img src="assets/images/insurance-risk-analytics/risk_segmentation_matrix.png"
-                                alt="Insurance Risk Analytics — risk segmentation matrix visualization" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-featured">⭐ Featured</span>
-                                <span class="badge-category">Analytics</span>
-                            </div>
-                            <h3 class="project-title">Insurance Risk Analytics & Predictive Modeling</h3>
-                            <p class="project-description">
-                                Enterprise-scale risk analysis with statistical A/B testing, ensemble ML models,
-                                and DVC pipeline for premium optimization — serving 1M+ customer records.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye" aria-hidden="true"></i> 92.5% Accuracy</span>
-                                <span><i class="fas fa-database" aria-hidden="true"></i> 1M+ Records</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">Random Forest</span>
-                                <span class="tech-tag">Statistical Testing</span>
-                                <span class="tech-tag">DVC Pipeline</span>
-                                <span class="tech-tag">Risk Analytics</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/insurance-risk-analytics.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> View Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i> GitHub
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-
-                <!-- Secondary grid -->
-                <div class="projects-grid" id="projectsGrid">
-
-                    <!-- Fake Image Detection -->
-                    <article class="project-card fade-in" style="--i:6" data-category="computer-vision">
-                        <div class="project-image">
-                            <img src="assets/images/fake-image/dashboard_overview.png"
-                                alt="Fake Image Detection Dashboard — forensic deep learning" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                                <span class="badge-category" style="background:var(--cat-safety);color:#fff">Safety</span>
-                            </div>
-                            <h3 class="project-title">Fake Image Detection (Forensics)</h3>
-                            <p class="project-description">
-                                Forensic pipeline detecting AI artifacts in the frequency domain using FFT and EfficientNet. 
-                                Achieved 97.2% recall with Grad-CAM explainability.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-fingerprint"></i> 97.2% Recall</span>
-                                <span><i class="fas fa-microchip"></i> EfficientNet</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">PyTorch</span>
-                                <span class="tech-tag">Grad-CAM</span>
-                                <span class="tech-tag">Forensics</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/fake-image-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- License Plate Recognition -->
-                    <article class="project-card fade-in" style="--i:7" data-category="computer-vision">
-                        <div class="project-image">
-                            <img src="assets/images/license-plate/pipeline_showcase.png"
-                                alt="License Plate Recognition System — YOLO detection" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                            </div>
-                            <h3 class="project-title">License Plate Recognition (ALPR)</h3>
-                            <p class="project-description">
-                                High-speed 4-stage pipeline (Detect, Crop, Preprocess, Read) using YOLO26s and EasyOCR. 
-                                Processes video at 17 FPS with 92% mAP.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bolt"></i> 17 FPS</span>
-                                <span><i class="fas fa-bullseye"></i> 92% mAP</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">YOLOv8</span>
-                                <span class="tech-tag">EasyOCR</span>
-                                <span class="tech-tag">OpenCV</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/license-plate-recognition.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Oil Palm Tree Detection -->
-                    <article class="project-card fade-in" style="--i:8" data-category="computer-vision">
-                        <div class="project-image">
-                            <img src="assets/images/oil-palm.jpg"
-                                alt="Oil palm tree health detection — YOLOv8 detection output" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                            </div>
-                            <h3 class="project-title">Oil Palm Tree Health Detection</h3>
-                            <p class="project-description">
-                                YOLOv8-powered agricultural monitoring with 5-class health classification and Streamlit
-                                web interface for real-time field analysis.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 94.7% mAP</span>
-                                <span><i class="fas fa-leaf"></i> 5 Classes</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">YOLOv8</span>
-                                <span class="tech-tag">Streamlit</span>
-                                <span class="tech-tag">Agriculture</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/oil-palm-tree-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Alfamart BI Suite -->
-                    <article class="project-card fade-in" style="--i:9" data-category="bi">
-                        <div class="project-image">
-                            <img src="assets/images/alfamart customer engegemnt.png"
-                                alt="Alfamart BI Analytics Suite — customer engagement dashboard" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Business Intelligence</span>
-                            </div>
-                            <h3 class="project-title">Alfamart BI Analytics Suite</h3>
-                            <p class="project-description">
-                                Enterprise BI solution analyzing 4 years of retail operations across HR, Finance,
-                                Operations, and Customer domains with 50+ KPIs.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-calendar"></i> 4 Years Data</span>
-                                <span><i class="fas fa-chart-bar"></i> 50+ KPIs</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">Power BI</span>
-                                <span class="tech-tag">DAX</span>
-                                <span class="tech-tag">Data Modeling</span>
-                            </div>
-                            <div class="project-links"
-                                style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;flex-wrap:wrap">
-                                <a href="projects/alfamart-customer-dashboard.html" class="btn btn-primary"
-                                    style="font-size:0.78rem;padding:0.45rem 0.75rem;justify-content:center"><i
-                                        class="fas fa-users"></i> Customer</a>
-                                <a href="projects/alfamart-financial-dashboard.html" class="btn btn-outline"
-                                    style="font-size:0.78rem;padding:0.45rem 0.75rem;justify-content:center"><i
-                                        class="fas fa-chart-line"></i> Financial</a>
-                                <a href="projects/alfamart-hr-dashboard.html" class="btn btn-outline"
-                                    style="font-size:0.78rem;padding:0.45rem 0.75rem;justify-content:center"><i
-                                        class="fas fa-user-tie"></i> HR</a>
-                                <a href="projects/alfamart-operations-dashboard.html" class="btn btn-outline"
-                                    style="font-size:0.78rem;padding:0.45rem 0.75rem;justify-content:center"><i
-                                        class="fas fa-cogs"></i> Ops</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Financial News Sentiment -->
-                    <article class="project-card fade-in" style="--i:10" data-category="nlp analytics">
-                        <div class="project-image">
-                            <img src="assets/images/financial-news-sentiment-analysis/newplot.png"
-                                alt="Financial News Sentiment Analysis — market correlation plot" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">NLP</span>
-                                <span class="badge-category">Fintech</span>
-                            </div>
-                            <h3 class="project-title">Financial News Sentiment Analysis</h3>
-                            <p class="project-description">
-                                Advanced NLP system analyzing market sentiment correlation with stock movements
-                                using transformer models across 50K+ articles.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 89.3% Accuracy</span>
-                                <span><i class="fas fa-newspaper"></i> 50K+ Articles</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">DistilBERT</span>
-                                <span class="tech-tag">CNN/LSTM</span>
-                                <span class="tech-tag">Plotly</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/financial-news-sentiment-analysis.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Parking Lot Classification -->
-                    <article class="project-card fade-in" style="--i:12" data-category="computer-vision">
-                        <div class="project-image">
-                            <img src="assets/images/parking-lot.jpg"
-                                alt="Smart Parking System — real-time space classification" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                            </div>
-                            <h3 class="project-title">Smart Parking System</h3>
-                            <p class="project-description">
-                                Computer vision system for parking space classification and real-time availability
-                                monitoring with IoT integration.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-bullseye"></i> 93.5% Accuracy</span>
-                                <span><i class="fas fa-parking"></i> Smart Monitor</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">CNN</span>
-                                <span class="tech-tag">OpenCV</span>
-                                <span class="tech-tag">IoT</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/parking-lot-classification.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Police Officer Detection -->
-                    <article class="project-card fade-in" style="--i:13" data-category="safety">
-                        <div class="project-image">
-                            <img src="assets/images/Police_Detection/Screenshot 2025-12-12 161219.png"
-                                alt="Police Officer Detection System — YOLOv8 officer vs civilian classification"
-                                loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                                <span class="badge-category"
-                                    style="background:hsl(222 72% 92%);color:hsl(222 72% 30%)">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Police Officer Detection System</h3>
-                            <p class="project-description">
-                                YOLOv8 model that distinguishes police officers from civilians in real-time using
-                                uniform, badge and equipment recognition across diverse environments.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-user-shield"></i> 2 Classes</span>
-                                <span><i class="fas fa-video"></i> Real-time</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">YOLOv8</span>
-                                <span class="tech-tag">PyTorch</span>
-                                <span class="tech-tag">Roboflow</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/police-officer-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Weapon Detection -->
-                    <article class="project-card fade-in" style="--i:14" data-category="safety">
-                        <div class="project-image">
-                            <img src="assets/images/weapon-detection/0ab2ed919df71004226a7eeb3f76d0e898a5fe150bca1c451de646a0.jpg"
-                                alt="Weapon Detection System — YOLOv8 real-time weapon identification" loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                                <span class="badge-category"
-                                    style="background:hsl(222 72% 92%);color:hsl(222 72% 30%)">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Weapon Detection System</h3>
-                            <p class="project-description">
-                                Real-time weapon detection using YOLOv8 — identifies firearms, knives, and dangerous
-                                objects in video streams for automated security alerting.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-crosshairs"></i> Multi-class</span>
-                                <span><i class="fas fa-shield-alt"></i> 17+ Samples</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">YOLOv8</span>
-                                <span class="tech-tag">OpenCV</span>
-                                <span class="tech-tag">Security</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/weapon-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Violence Detection -->
-                    <article class="project-card fade-in" style="--i:15" data-category="safety">
-                        <div class="project-image">
-                            <img src="assets/images/throwing-detection/Picture1.png"
-                                alt="Violence Detection System — CNN+LSTM behavioural AI for fights and throwing"
-                                loading="lazy">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-badges">
-                                <span class="badge-category">Computer Vision</span>
-                                <span class="badge-category"
-                                    style="background:hsl(222 72% 92%);color:hsl(222 72% 30%)">Public Safety</span>
-                            </div>
-                            <h3 class="project-title">Violence Detection System</h3>
-                            <p class="project-description">
-                                CNN + LSTM deep learning system that detects violent behaviour — physical fights and
-                                object-throwing — from video frame sequences using temporal analysis.
-                            </p>
-                            <div class="project-metrics">
-                                <span><i class="fas fa-brain"></i> CNN + LSTM</span>
-                                <span><i class="fas fa-exclamation-triangle"></i> Temporal AI</span>
-                            </div>
-                            <div class="tech-stack" style="margin-bottom:1rem">
-                                <span class="tech-tag">CNN</span>
-                                <span class="tech-tag">LSTM</span>
-                                <span class="tech-tag">TensorFlow</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="projects/violence-detection.html" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt"></i> Details
-                                </a>
-                                <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                    class="btn btn-outline">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ── CONTACT ────────────────────────────────────────── -->
-        <section id="contact" class="contact" aria-label="Contact information">
-            <div class="container">
-                <div class="contact-layout">
-
-                    <!-- Links side -->
+                <div class="experience-grid">
                     <div>
-                        <h2 class="section-title fade-in" style="--i:1">Contact</h2>
-                        <p class="section-subtitle fade-in" style="--i:2">
-                            Open to data science roles, ML consulting, and research collaborations.
-                        </p>
-
-                        <nav class="contact-links fade-in" style="--i:3" aria-label="Contact links">
-                            <a href="mailto:duleabera05@gmail.com" class="contact-item">
-                                <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
-                                <div class="contact-info">
-                                    <h3>Email</h3>
-                                    <p>duleabera05@gmail.com</p>
+                        <h2 id="experience-heading" class="section-title">Work Experience</h2>
+                        <div class="timeline">
+                            <article class="timeline-item">
+                                <div class="timeline-meta">
+                                    <span class="timeline-date">Mar 2024 – Dec 2024</span>
                                 </div>
-                                <i class="fas fa-arrow-right" aria-hidden="true"
-                                    style="margin-left:auto;opacity:.5"></i>
-                            </a>
-
-                            <a href="https://www.linkedin.com/in/duleabera" target="_blank" rel="noopener noreferrer"
-                                class="contact-item">
-                                <div class="contact-icon"><i class="fab fa-linkedin" aria-hidden="true"></i></div>
-                                <div class="contact-info">
-                                    <h3>LinkedIn</h3>
-                                    <p>linkedin.com/in/duleabera</p>
+                                <div class="timeline-content">
+                                    <h3 class="role-title">Graduate Trainee</h3>
+                                    <p class="role-company">Cooperative Bank of Oromia | Addis Ababa, Ethiopia</p>
+                                    <p class="role-desc">Contributed to the deployment of machine learning models used by internal analytics teams, improving data-driven decision-making efficiency. Collaborated cross-functionally to integrate AI solutions into banking infrastructure.</p>
                                 </div>
-                                <i class="fas fa-arrow-right" aria-hidden="true"
-                                    style="margin-left:auto;opacity:.5"></i>
-                            </a>
-
-                            <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer"
-                                class="contact-item">
-                                <div class="contact-icon"><i class="fab fa-github" aria-hidden="true"></i></div>
-                                <div class="contact-info">
-                                    <h3>GitHub</h3>
-                                    <p>github.com/duleab</p>
+                            </article>
+                            <article class="timeline-item">
+                                <div class="timeline-meta">
+                                    <span class="timeline-date">Oct 2022 – Jan 2023</span>
                                 </div>
-                                <i class="fas fa-arrow-right" aria-hidden="true"
-                                    style="margin-left:auto;opacity:.5"></i>
-                            </a>
-
-                            <a href="https://t.me/Duleab211" target="_blank" rel="noopener noreferrer"
-                                class="contact-item">
-                                <div class="contact-icon"><i class="fab fa-telegram" aria-hidden="true"></i></div>
-                                <div class="contact-info">
-                                    <h3>Telegram</h3>
-                                    <p>@Duleab211</p>
+                                <div class="timeline-content">
+                                    <h3 class="role-title">AI/ML Research Intern</h3>
+                                    <p class="role-company">Ethiopian Artificial Intelligence (AI) Company | Addis Ababa, Ethiopia</p>
+                                    <p class="role-desc">Collaborated with AI development teams to enhance model performance. Conducted systematic hyperparameter optimization and architecture refinement experiments focused on efficiency and interpretability.</p>
                                 </div>
-                                <i class="fas fa-arrow-right" aria-hidden="true"
-                                    style="margin-left:auto;opacity:.5"></i>
-                            </a>
-                        </nav>
+                            </article>
+                        </div>
                     </div>
-
-                    <!-- CTA side -->
-                    <div class="contact-cta fade-in" style="--i:4">
-                        <p class="contact-cta-text">
-                            Ready to build something together?
-                        </p>
-                        <a href="mailto:duleabera05@gmail.com" class="contact-btn">
-                            <i class="fas fa-paper-plane"></i> Contact Me
-                        </a>
+                    
+                    <div>
+                        <h2 id="education-heading" class="section-title">Education</h2>
+                        <div class="timeline">
+                            <article class="timeline-item">
+                                <div class="timeline-meta">
+                                    <span class="timeline-date">Dec 2024 – Present</span>
+                                </div>
+                                <div class="timeline-content">
+                                    <h3 class="role-title">Master's Degree, Data Science</h3>
+                                    <p class="role-company">Universitas Nusa Putra | Indonesia</p>
+                                    <p class="role-desc"><strong>Thesis:</strong> Real-Time Crisis Recognition and Response System for Protest Violence Detection.<br><strong>Focus:</strong> Computer Vision, Human Activity Recognition, Multimodal Learning.</p>
+                                </div>
+                            </article>
+                            <article class="timeline-item">
+                                <div class="timeline-meta">
+                                    <span class="timeline-date">2018 – 2023</span>
+                                </div>
+                                <div class="timeline-content">
+                                    <h3 class="role-title">Bachelor of Electrical and Computer Engineering</h3>
+                                    <p class="role-company">Haramaya University | Ethiopia</p>
+                                    <p class="role-desc">Focused on the Computer Stream, developing a solid foundation in computer science principles and electrical engineering systems.</p>
+                                </div>
+                            </article>
+                        </div>
                     </div>
-
                 </div>
+            </div>
+        </section>
+
+        <!-- PUBLICATIONS SECTION -->
+        <section id="publications" class="section" aria-labelledby="publications-heading">
+            <div class="container">
+                <h2 id="publications-heading" class="section-title">Selected Publications</h2>
+                <ul class="publications-list">
+                    <li>
+                        <strong>Oil Palm Tree Health Detection System Using YOLO-based Deep Learning Models and UAV Imagery</strong><br>
+                        <em>IEEE AGERS 2025</em> (First Author) | <a href="https://doi.org/10.1109/AGERS67633.2025.11446373" target="_blank" rel="noopener noreferrer">DOI: 10.1109/AGERS67633.2025.11446373</a>
+                    </li>
+                    <li>
+                        <strong>Real-Time Crisis Recognition and Response System for Protest Violence Detection</strong><br>
+                        <em>ICCED 2025</em> (First Author) | <a href="https://doi.org/10.1109/ICCED68324.2025.11324702" target="_blank" rel="noopener noreferrer">DOI: 10.1109/ICCED68324.2025.11324702</a>
+                    </li>
+                    <li>
+                        <strong>Evaluation of YOLOv11 and RF-DETR Architectures for Detection of Healthy Oil Palm Trees</strong><br>
+                        <em>IC2IE 2025</em> (Co-Author) | <a href="https://doi.org/10.1109/IC2IE67206.2025.11283417" target="_blank" rel="noopener noreferrer">DOI: 10.1109/IC2IE67206.2025.11283417</a>
+                    </li>
+                </ul>
             </div>
         </section>
 
     </main>
 
-    <!-- ── FOOTER ─────────────────────────────────────────── -->
-    <footer>
+    <!-- FOOTER -->
+    <footer id="contact" class="site-footer">
         <div class="container">
-            <div class="footer-inner">
-                <span class="footer-brand"></span>
-                <p class="footer-copy">© 2026 Dule Abera. Built with care &amp; curiosity.</p>
-                <nav class="footer-links" aria-label="Footer links">
-                    <a href="#home">Home</a>
-                    <a href="#projects">Projects</a>
-                    <a href="#contact">Contact</a>
-                </nav>
+            <div class="footer-content">
+                <h2>Get in Touch</h2>
+                <p>I'm always open to discussing data science opportunities, AI research, and innovative projects.</p>
+                <div class="footer-links">
+                    <a href="mailto:duleabera05@gmail.com">duleabera05@gmail.com</a>
+                    <a href="https://github.com/duleab" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
-    <!-- ── SCRIPTS ────────────────────────────────────────── -->
-    <script src="js/main.js"></script>
-
 </body>
-
 </html>
