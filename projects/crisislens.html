@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrisisLens — AI Disaster Intelligence Platform | Dule Abera</title>
+    <meta name="description" content="CrisisLens: An award-winning multi-agent AI platform that turns real-time disaster data into role-specific, actionable intelligence for citizens, responders, and governments.">
+    <meta name="author" content="Dule Abera">
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="CrisisLens — AI-Powered Multi-Agent Disaster Intelligence Platform">
+    <meta property="og:description" content="1st Place – Best AI for Social Impact. Real-time disaster intelligence with 7 role-specific AI copilots powered by Gemini AI.">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/simple.css">
+
+    <style>
+        /* ── Page-specific additions ── */
+        .project-meta-strip {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .kpi-number {
+            display: block;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .kpi-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .page-layout { grid-template-columns: 1fr; }
+        }
+        .case-heading {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            margin-top: 2.5rem;
+        }
+        .case-heading:first-of-type { margin-top: 0; }
+        .case-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .case-body {
+            font-size: 0.97rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .project-image {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1.25rem 0;
+        }
+        .project-image img {
+            width: 100%;
+            display: block;
+        }
+        .project-image figcaption {
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+        }
+        .insight-callout {
+            border-left: 3px solid var(--text-primary);
+            padding: 0.9rem 1.2rem;
+            background: var(--bg-alt);
+            border-radius: 0 6px 6px 0;
+            margin: 1.25rem 0;
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+        }
+        .insight-callout strong { color: var(--text-primary); }
+
+        /* Award banner */
+        .award-banner {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.1rem 1.4rem;
+            background: var(--bg-alt);
+            margin: 1.5rem 0;
+        }
+        .award-banner .award-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .award-banner .award-text strong {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .award-banner .award-text span {
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+        }
+
+        /* Dashboard screenshot grid */
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        @media (max-width: 680px) {
+            .screenshot-grid { grid-template-columns: 1fr; }
+        }
+        .screenshot-grid figure {
+            margin: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .screenshot-grid img {
+            width: 100%;
+            display: block;
+        }
+        .screenshot-grid figcaption {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Pipeline steps */
+        .pipeline-steps {
+            list-style: none;
+            padding: 0;
+            margin: 1.25rem 0;
+            counter-reset: step-counter;
+        }
+        .pipeline-steps li {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .step-content h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .step-content p {
+            font-size: 0.88rem;
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .sidebar-card h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.88rem;
+        }
+        .sidebar-card li {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .sidebar-card li:last-child { border-bottom: none; }
+        .sidebar-card li strong { color: var(--text-primary); }
+
+        /* Tags */
+        .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .tag {
+            font-size: 0.78rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.2rem 0.6rem;
+            color: var(--text-secondary);
+            background: var(--bg-alt);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .breadcrumb a { text-decoration: none; color: var(--text-secondary); }
+        .breadcrumb a:hover { color: var(--text-primary); }
+        .breadcrumb span { margin: 0 0.4rem; }
+
+        /* Agent grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin: 1.25rem 0;
+        }
+        .agent-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+        .agent-card .agent-emoji { font-size: 1.5rem; display: block; margin-bottom: 0.4rem; }
+        .agent-card strong { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.25rem; color: var(--text-primary); }
+        .agent-card p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+
+        /* Certificate image */
+        .cert-image {
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            display: block;
+        }
+
+        /* SDG badges */
+        .sdg-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .sdg-item {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sdg-item strong { color: var(--text-primary); display: block; font-size: 0.8rem; }
+
+        /* Data table */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+        .data-table th {
+            text-align: left;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .data-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+        .data-table td:first-child { color: var(--text-primary); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="brand">Dule Abera</a>
+            <nav class="site-nav" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+        <!-- ── PAGE HEADER ── -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="../index.html">Home</a><span>›</span>
+                    <a href="../index.html#projects">Projects</a><span>›</span>
+                    <span>CrisisLens</span>
+                </nav>
+
+                <h1>CrisisLens</h1>
+                <p style="font-size:1.05rem; color:var(--text-secondary); font-style:italic; margin-bottom:0.75rem;">
+                    "One Crisis. Multiple Perspectives. Smarter Decisions."
+                </p>
+                <p style="font-size:1.1rem; color:var(--text-secondary); max-width:680px; margin-bottom:1.5rem; line-height:1.7;">
+                    An AI-powered multi-agent disaster intelligence platform that transforms scattered real-time crisis data into role-specific, actionable decisions for citizens, emergency responders, governments, and NGOs.
+                </p>
+
+                <div class="tag-list" style="margin-bottom: 2rem;">
+                    <span class="tag">Gemini AI</span>
+                    <span class="tag">FastAPI</span>
+                    <span class="tag">React + TypeScript</span>
+                    <span class="tag">Multi-Agent AI</span>
+                    <span class="tag">PostgreSQL</span>
+                    <span class="tag">Docker</span>
+                    <span class="tag">Real-Time Data</span>
+                    <span class="tag">UN SDGs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── KPI STRIP ── -->
+        <div class="project-meta-strip" style="margin-top: 2.5rem;">
+            <div class="container">
+                <div class="kpi-grid">
+                    <div><span class="kpi-number">7</span><span class="kpi-label">AI Copilots</span></div>
+                    <div><span class="kpi-number">12</span><span class="kpi-label">Data Sources</span></div>
+                    <div><span class="kpi-number">2K+</span><span class="kpi-label">Crisis Events in DB</span></div>
+                    <div><span class="kpi-number">90%</span><span class="kpi-label">Faster Decisions</span></div>
+                    <div><span class="kpi-number">6</span><span class="kpi-label">UN SDGs Addressed</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── MAIN CONTENT ── -->
+        <section class="section">
+            <div class="container">
+                <div class="page-layout">
+
+                    <!-- ── ARTICLE ── -->
+                    <article>
+
+                        <!-- Award -->
+                        <div class="award-banner">
+                            <div class="award-icon">🏆</div>
+                            <div class="award-text">
+                                <strong>1st Place — Best AI Assistant for Social Impact · $500</strong>
+                                <span>Hackathon winner among all competing teams, recognized for innovation, Gemini AI integration, and direct contribution to UN Sustainable Development Goals.</span>
+                            </div>
+                        </div>
+
+                        <!-- Problem -->
+                        <p class="case-heading">The Problem</p>
+                        <h2 class="case-title">Disaster Information is Scattered, Generic, and Slow</h2>
+                        <p class="case-body">
+                            During disasters, critical information is spread across multiple government portals (BMKG, BNPB), news sites, and social media — making it nearly impossible to act quickly. Worse, every platform gives the <em>same generic alerts</em> regardless of who is reading them. A rescue team needs different information than a tourist on a beach, yet they both receive the same notification.
+                        </p>
+                        <div class="insight-callout">
+                            <strong>Key Insight:</strong> The problem isn't a lack of disaster data — it's the absence of a system that turns that data into role-specific, instantly actionable decisions. This gap costs lives.
+                        </div>
+
+                        <!-- Solution -->
+                        <p class="case-heading">The Solution</p>
+                        <h2 class="case-title">One Disaster. Seven Intelligent Responses.</h2>
+                        <p class="case-body">
+                            CrisisLens ingests real-time data from 12 trusted sources, processes it through a Gemini AI reasoning engine, and delivers personalized guidance through seven role-specific AI Copilots — all through a single unified platform.
+                        </p>
+
+                        <!-- Agent Grid -->
+                        <div class="agent-grid">
+                            <div class="agent-card"><span class="agent-emoji">🧑</span><strong>Citizen</strong><p>Safety status, shelters, evacuation routes</p></div>
+                            <div class="agent-card"><span class="agent-emoji">✈️</span><strong>Tourist</strong><p>Travel advisories, hotel safety, airports</p></div>
+                            <div class="agent-card"><span class="agent-emoji">🚒</span><strong>Responder</strong><p>Deployment zones, hospital capacity, routes</p></div>
+                            <div class="agent-card"><span class="agent-emoji">🏛️</span><strong>Government</strong><p>Strategic overview, resource allocation</p></div>
+                            <div class="agent-card"><span class="agent-emoji">🤝</span><strong>NGO</strong><p>Aid distribution, shelter needs, supply chains</p></div>
+                            <div class="agent-card"><span class="agent-emoji">📰</span><strong>Media</strong><p>Verified summaries, press releases, timelines</p></div>
+                            <div class="agent-card"><span class="agent-emoji">🏢</span><strong>Business</strong><p>Logistics disruptions, employee safety, continuity</p></div>
+                        </div>
+
+                        <!-- Dashboards -->
+                        <p class="case-heading">Dashboard Interfaces</p>
+                        <h2 class="case-title">Role-Based Intelligence in Action</h2>
+
+                        <div class="screenshot-grid">
+                            <figure>
+                                <img src="https://github.com/duleab/-CrisisLens./blob/main/figures/CrisisLens%20citizen%20dashboard%20interface.png?raw=true"
+                                     alt="CrisisLens Citizen Dashboard Interface"
+                                     loading="lazy">
+                                <figcaption>🧑 Citizen Dashboard — Real-time safety guidance</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://github.com/duleab/-CrisisLens./blob/main/figures/Travel%20safety%20dashboard%20for%20Bali.png?raw=true"
+                                     alt="Tourist Travel Safety Dashboard for Bali"
+                                     loading="lazy">
+                                <figcaption>✈️ Tourist Dashboard — Bali Travel Safety</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://github.com/duleab/-CrisisLens./blob/main/figures/CrisisLens%20AI%20emergency%20response%20dashboard.png?raw=true"
+                                     alt="Emergency Responder Dashboard"
+                                     loading="lazy">
+                                <figcaption>🚒 Emergency Responder Dashboard</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="https://github.com/duleab/-CrisisLens./blob/main/figures/Government%20crisis%20response%20dashboard%20interface.png?raw=true"
+                                     alt="Government Crisis Response Dashboard"
+                                     loading="lazy">
+                                <figcaption>🏛️ Government Strategic Overview</figcaption>
+                            </figure>
+                        </div>
+
+                        <!-- AI Pipeline -->
+                        <p class="case-heading">AI Pipeline</p>
+                        <h2 class="case-title">From Raw Data to Life-Saving Decisions</h2>
+                        <ol class="pipeline-steps">
+                            <li>
+                                <span class="step-num">1</span>
+                                <div class="step-content">
+                                    <h4>Collect</h4>
+                                    <p>Live ingestion every minute from 12 sources: USGS, BMKG, GDACS, NASA EONET, WHO, UN News, ReliefWeb, OCHA, FloodList, GDELT, Google News, and PreventionWeb.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">2</span>
+                                <div class="step-content">
+                                    <h4>Verify</h4>
+                                    <p>AI-powered source credibility checking, cross-reference validation, duplicate detection via hash-based deduplication, and confidence score assignment.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">3</span>
+                                <div class="step-content">
+                                    <h4>Analyze</h4>
+                                    <p>Gemini Flash classifies crisis type, severity, geographic impact, and population exposure using structured JSON extraction.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">4</span>
+                                <div class="step-content">
+                                    <h4>Reason</h4>
+                                    <p>Gemini Pro generates natural language situation summaries, risk analysis, impact predictions, and explainable decision support with source citations.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="step-num">5</span>
+                                <div class="step-content">
+                                    <h4>Personalize & Deliver</h4>
+                                    <p>Role-based filtering routes the right intelligence to the right Copilot — in real-time, with full Arabic/Indonesian/English language support.</p>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <!-- UN SDGs -->
+                        <p class="case-heading">Social Impact</p>
+                        <h2 class="case-title">Aligned with UN Sustainable Development Goals</h2>
+                        <div class="sdg-list">
+                            <div class="sdg-item"><strong>SDG 3 – Good Health</strong>Hospital recommendations, emergency first-aid, reduced response times</div>
+                            <div class="sdg-item"><strong>SDG 9 – Innovation</strong>AI infrastructure for public safety and digital resilience</div>
+                            <div class="sdg-item"><strong>SDG 11 – Sustainable Cities ⭐</strong>Early warning systems, evacuation planning, community resilience</div>
+                            <div class="sdg-item"><strong>SDG 13 – Climate Action</strong>Flood, storm, and heatwave monitoring; climate adaptation</div>
+                            <div class="sdg-item"><strong>SDG 16 – Strong Institutions</strong>Transparent verified info, reduced misinformation</div>
+                            <div class="sdg-item"><strong>SDG 17 – Partnerships</strong>Multi-agency coordination across government, NGOs, media</div>
+                        </div>
+
+                        <!-- Data sources table -->
+                        <p class="case-heading">Data Sources</p>
+                        <h2 class="case-title">12 Trusted Real-Time Feeds</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th>Type</th>
+                                    <th>Frequency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>USGS</td><td>Global earthquakes (M2.5+)</td><td>Real-time</td></tr>
+                                <tr><td>BMKG</td><td>Indonesian earthquakes & weather</td><td>Real-time</td></tr>
+                                <tr><td>GDACS (UN)</td><td>Multi-hazard alerts</td><td>Hourly</td></tr>
+                                <tr><td>NASA EONET</td><td>Wildfires, volcanoes, storms</td><td>3 Hours</td></tr>
+                                <tr><td>WHO</td><td>Disease outbreaks</td><td>Daily</td></tr>
+                                <tr><td>GDELT</td><td>65,000+ news outlets (AI classified)</td><td>Real-time</td></tr>
+                                <tr><td>FloodList</td><td>Global flood monitoring</td><td>Real-time</td></tr>
+                                <tr><td>ReliefWeb / OCHA</td><td>Humanitarian situation reports</td><td>Daily</td></tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Tech Stack -->
+                        <p class="case-heading">Technology Stack</p>
+                        <h2 class="case-title">Built for Scale and Reliability</h2>
+                        <p class="case-body">
+                            A fully containerized, production-ready architecture built in 48–72 hours for the hackathon, yet designed to scale to ASEAN-wide deployment.
+                        </p>
+                        <ul class="case-body" style="padding-left: 1.5rem;">
+                            <li style="margin-bottom: 0.5rem;"><strong>Frontend:</strong> React 18 + TypeScript + Vite, Leaflet.js interactive maps, Vanilla CSS</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Backend:</strong> FastAPI (Python 3.12), async SQLAlchemy, APScheduler for auto-ingestion</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>AI / LLM:</strong> Gemini Flash (fast classification) + Gemini Pro (deep reasoning & chat copilots)</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Database:</strong> PostgreSQL 16 with 2,000+ real crisis events; hash-based deduplication</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Infrastructure:</strong> Docker Compose (3-container stack), GitHub Actions CI/CD for daily data collection</li>
+                        </ul>
+
+                    </article>
+
+                    <!-- ── SIDEBAR ── -->
+                    <aside>
+                        <div class="sidebar-card">
+                            <h3>Project Details</h3>
+                            <ul>
+                                <li><strong>Category</strong><br>Humanitarian AI</li>
+                                <li><strong>Context</strong><br>Hackathon (48–72 hrs)</li>
+                                <li><strong>Status</strong><br>Live & Active</li>
+                                <li><strong>Events in DB</strong><br>2,029+</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Award</h3>
+                            <ul>
+                                <li>🏆 <strong>1st Place</strong></li>
+                                <li>Best AI for Social Impact</li>
+                                <li>$500 Prize</li>
+                                <li>Gemini AI Hackathon</li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card" style="text-align: center;">
+                            <h3>Certificate</h3>
+                            <!-- Certificate photo provided by user -->
+                            <img src="../assets/images/crisislens/certificate.jpg"
+                                 alt="1st Place Certificate – Best AI Assistant for Social Impact"
+                                 class="cert-image"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <p style="display:none; font-size:0.85rem; color:var(--text-secondary);">1st Place · Best AI for Social Impact · $500</p>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Links</h3>
+                            <ul>
+                                <li><a href="https://github.com/duleab/-CrisisLens." target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3>Tech Stack</h3>
+                            <div class="tag-list">
+                                <span class="tag">Gemini AI</span>
+                                <span class="tag">FastAPI</span>
+                                <span class="tag">React</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">PostgreSQL</span>
+                                <span class="tag">Docker</span>
+                                <span class="tag">Leaflet.js</span>
+                                <span class="tag">Python 3.12</span>
+                                <span class="tag">GitHub Actions</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Dule Abera. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
